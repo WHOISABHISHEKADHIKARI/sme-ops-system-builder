@@ -115,6 +115,14 @@ own `SKILL.md`; otherwise it is a module. Nothing is hardcoded, so a second pack
 no tool change. `validate.py` and `seo.py` take their file list from here, and
 `excel.py` and `appsscript.py` already resolved paths through `module_dir`.
 
+`section(text, name)` returns one `## ` section, and both `select_options` and the FAQ
+extraction in `seo.py` go through it. It stops at the next H2 **or at end of file**.
+That second alternative is the point: a pattern that only looks ahead for another
+heading returns nothing when the section happens to be last, and it fails silently. A
+trailing FAQ section would lose its `FAQPage` schema, and a trailing `## Select
+Options` would lose every dropdown in the generated workbook, with no error anywhere
+to say why. Use this helper rather than a bare `(?=\n## )` lookahead.
+
 Naming stays unchanged for compatibility: frontmatter `name:` is the module's own
 folder name, and the pack prefix is a path detail that only appears in slugs and URLs.
 A router is any `SKILL.md` whose directory is the root or a pack, and a router defines no

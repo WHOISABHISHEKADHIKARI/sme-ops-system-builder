@@ -35,7 +35,8 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from skillmd import all_slugs, read_module, keyword_for, slugify  # noqa: E402
+from skillmd import (all_slugs, read_module, keyword_for, slugify,  # noqa: E402
+                     section)
 
 AUTHOR = 'Abhishek Adhikari'
 HEAD_OPEN, HEAD_CLOSE = '<!-- seo:head -->', '<!-- /seo:head -->'
@@ -332,14 +333,13 @@ def collect():
 
         title = re.search(r'^# (.+)$', text, re.M)
         desc = re.search(r'> \*\*Meta description:\*\* (.+?)\s*$', text, re.M)
-        # FAQ entries come only from the FAQ section, so no other H3 can leak in
-        faq_sec = re.search(r'## Frequently asked questions\n(.*?)(?=\n## )',
-                            text, re.S)
-        faqs = []
-        if faq_sec:
-            faqs = [(q.strip(), re.sub(r'\s+', ' ', a.strip())[:400])
-                    for q, a in re.findall(r'^### (.+?)\n\n(.+?)(?=\n\n|\Z)',
-                                           faq_sec.group(1), re.S | re.M)]
+        # FAQ entries come only from the FAQ section, so no other H3 can leak in.
+        # skillmd.section stops at the next H2 or at end of file, so a README whose
+        # FAQ is the final section still yields its questions instead of none.
+        faqs = [(q.strip(), re.sub(r'\s+', ' ', a.strip())[:400])
+                for q, a in re.findall(r'^### (.+?)\n\n(.+?)(?=\n\n|\Z)',
+                                       section(text, 'Frequently asked questions'),
+                                       re.S | re.M)]
 
         mods.append({
             'slug': slug,

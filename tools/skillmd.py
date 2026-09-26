@@ -40,6 +40,19 @@ def keyword_for(slug, title):
     return re.sub(r'\s+', ' ', t).strip().lower(), title
 
 
+def section(text, name):
+    """Body of `## <name>`, up to the next H2 or the end of the document.
+
+    The terminator has to allow end-of-text as well as the next heading. A pattern
+    that only looks ahead for another `## ` silently returns nothing when the section
+    happens to be last, which loses content with no error: a trailing FAQ section
+    yields no FAQPage schema, and a trailing `## Select Options` yields no dropdowns
+    in the generated workbook.
+    """
+    m = re.search(r'## %s\n(.*?)(?=\n## |\Z)' % re.escape(name), text, re.S)
+    return m.group(1) if m else ''
+
+
 def select_options(text):
     """Map select field name -> its options, from the `## Select Options` section.
 
@@ -53,11 +66,9 @@ def select_options(text):
 
     A module with no select fields still has the section, just with no pairs in it.
     """
-    m = re.search(r'## Select Options\n(.*?)(?=\n## )', text, re.S)
-    if not m:
-        return {}
     out = {}
-    for field, block in re.findall(r'\*\*(.+?)\*\*\n+```\n(.*?)\n```', m.group(1), re.S):
+    for field, block in re.findall(r'\*\*(.+?)\*\*\n+```\n(.*?)\n```',
+                                   section(text, 'Select Options'), re.S):
         out[field.strip()] = [o.strip() for o in block.split('|') if o.strip()]
     return out
 
@@ -72,9 +83,8 @@ def read_skill(path):
     fm = re.match(r'---\n(.*?)\n---\n', t, re.S)
     d = {'path': path, 'slug': os.path.basename(os.path.dirname(path))}
 
-    def sec(name, nxt):
-        m = re.search(r'## %s\n(.*?)(?=\n## %s\n)' % (name, nxt), t, re.S)
-        return m.group(1).strip() if m else ''
+    def sec(name, nxt=None):
+        return section(t, name).strip()
 
     d['title'] = re.search(r'^# (.+)$', t, re.M).group(1).strip()
     d['what_is'] = sec('Overview', 'When to Use This Skill')
