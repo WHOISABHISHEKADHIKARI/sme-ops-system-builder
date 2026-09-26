@@ -1,0 +1,18 @@
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+
+# Editors
+.idea/
+.vscode/
+*.swp
+
+# Secrets and local env
+.env
+.env.*

@@ -1,0 +1,297 @@
+---
+name: attendance
+description: "Attendance: context-first intake, then CSV, SQL, JSON Schema and Notion on request. One short question per message. Use for attendance tracker."
+category: business
+risk: safe
+source: self
+source_type: self
+date_added: "2026-09-26"
+author: WHOISABHISHEKADHIKARI
+tags: [sme, business, operations, database, csv, notion, sql, manage]
+tools: [claude, cursor, gemini, antigravity]
+---
+
+# Attendance
+
+**What it is:** Daily check-in, check-out, late and absent records.
+
+## Overview
+
+Works out the smallest useful **Attendance** setup for the business in front of it, then
+builds it only when asked. The default output is a short recommendation, not a
+spreadsheet. Artifacts - CSV, SQL DDL, JSON Schema, Notion mapping - are produced on
+request, from one field list so they cannot drift apart.
+
+Layer: Layer 4: Manage. Fits: Starter stage. Table code: n/a.
+
+## When to Use This Skill
+
+- attendance tracker
+- daily attendance sheet
+- check in check out log
+- absent and late tracker
+
+Also use it when the user says "daily check-in, check-out, late and absent records", or describes the same process happening in a
+spreadsheet, a document or someone inboxes.
+
+Do not use it for: payroll calculation, tax filing, or legal advice. This skill produces
+empty templates only - it never holds or processes real employee or customer data.
+
+## How It Works
+
+### Step 1 - Identify intent
+
+Read the request and pick the intent before asking anything.
+
+- "set up" or "build" or "create" -> the user wants artifacts; go to Step 2.
+- "our process is ..." or "it is in a sheet" -> the user wants to move an existing process; capture it, then Step 2.
+- "is this right" or "review" or "audit" -> the user wants a check, not a build; answer from what they share.
+- "how do I ..." -> advice question; answer directly and offer the build only if it helps.
+
+One message, one question, no batching. Open with:
+
+> **Q:** What are your working hours?
+
+### Step 2 - Ask only what is missing
+
+Skip anything the user already answered, in any earlier message. Ask the rest one at a
+time, and stop as soon as the remaining answers would not change the output.
+
+- **Hours** - Shift timings? / Flexible or fixed? / Any night shift?
+- **Method** - Check in, check out or both? / How recorded? / Self or auto?
+- **Rules** - Late tolerance? / Half day rules? / Geofence needed?
+- **Current process** - How is it done now? / Biometric, app or paper? / What gets disputed?
+- **Outcome** - What do you need? / A record, payroll input or reports?
+
+Never invent an answer. If the user does not know, record it as unknown and carry on.
+
+### Step 3 - Build the internal context
+
+Hold the answers in this shape. It stays internal - it is not shown to the user unless
+they ask, and it never carries a value the user did not give.
+
+```yaml
+module: attendance
+intent: null            # set in Step 1, one of: set up, fix, review, report, import
+scale: null             # Starter | Growth | Scale, only if the answer changes it
+areas:
+  "Hours": null
+  "Method": null
+  "Rules": null
+  "Current process": null
+  "Outcome": null
+requested_outputs: []   # csv | sql | json | notion - only what was explicitly asked for
+confirmed_facts: []     # only what the user actually said
+open_questions: []      # the unanswered ones, in the order worth asking
+```
+
+### Step 4 - Recommend the smallest workflow
+
+Give a short recommendation, then ask whether to build it. Do not build unprompted.
+
+**Recommended approach:** Collect one row per person per day, and only build rules for the cases that actually happen. Overtime and payroll join later if needed.
+
+**Why this one:** Attendance fails when corrections have no owner. Add a regularisation step and the record stays trustworthy without surveillance.
+
+**Workflow:** Daily log → Late or absent flag → Correction request → Manager approval → Monthly report
+
+### Step 5 - Build only on request
+
+Once the user asks for it, derive the fields from the confirmed context and emit the
+artifacts as data only. No preamble, no summary, no closing line.
+
+```csv
+Attendance Record,Employee Name,Department,Date,Check-in Time,Check-out Time,Hours Worked,Work Mode,Attendance Status,Late (Minutes),On Approved Leave,Manager,Regularisation Requested,Notes,Attendance ID
+ATT-2026-014,Aarav Sharma,Delivery,2026-01-15,09:58,18:30,8.5,Office,Present,12,FALSE,Sneha Iyer,FALSE,"Late arrivals cluster on Mondays; discussed with the team rather than logged as a penalty.",
+```
+
+```sql
+CREATE TABLE attendance (
+  attendance_record VARCHAR(255),
+  employee_name VARCHAR(255),
+  department VARCHAR(255),
+  date DATE NOT NULL,
+  check_in_time VARCHAR(255),
+  check_out_time VARCHAR(255),
+  hours_worked NUMERIC NOT NULL,
+  work_mode VARCHAR(255),
+  attendance_status VARCHAR(100) NOT NULL,
+  late_minutes NUMERIC NOT NULL,
+  on_approved_leave BOOLEAN NOT NULL,
+  manager VARCHAR(255),
+  regularisation_requested BOOLEAN NOT NULL,
+  notes TEXT,
+  attendance_id SERIAL PRIMARY KEY,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Attendance",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+      "Attendance Record": { "type": "string" },
+      "Employee Name": { "type": "string" },
+      "Department": { "type": "string" },
+      "Date": { "type": "string", "format": "date" },
+      "Check-in Time": { "type": "string" },
+      "Check-out Time": { "type": "string" },
+      "Hours Worked": { "type": "number" },
+      "Work Mode": { "type": "string" },
+      "Attendance Status": { "type": "string" },
+      "Late (Minutes)": { "type": "number" },
+      "On Approved Leave": { "type": "boolean" },
+      "Manager": { "type": "string" },
+      "Regularisation Requested": { "type": "boolean" },
+      "Notes": { "type": "string" },
+      "Attendance ID": { "type": "integer" }
+  },
+  "required": [
+      "Date",
+      "Hours Worked",
+      "Attendance Status",
+      "Late (Minutes)"
+  ]
+}
+```
+
+```markdown
+| CSV column | Notion property | Set after import |
+|---|---|---|
+| Attendance Record | Text | Leave as Text |
+| Employee Name | Text | Leave as Text |
+| Department | Text | Leave as Text |
+| Date | Date | Convert to Date |
+| Check-in Time | Text | Leave as Text |
+| Check-out Time | Text | Leave as Text |
+| Hours Worked | Number | Convert to Number |
+| Work Mode | Text | Leave as Text |
+| Attendance Status | Select (add options after import) | Convert to Select, add options: "Present", "Late", "Absent", "On Leave", "Half Day", "Holiday" |
+| Late (Minutes) | Number | Convert to Number |
+| On Approved Leave | Checkbox | Convert to Checkbox |
+| Manager | Text | Leave as Text |
+| Regularisation Requested | Checkbox | Convert to Checkbox |
+| Notes | Text | Leave as Text |
+| Attendance ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
+```
+
+One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+and anything pointing at another table stays `relation`.
+
+## Field Reference
+
+| # | Field | Type | SQL | JSON Schema | Notion | CSV example |
+|---:|---|---|---|---|---|---|
+| 1 | Attendance Record | `text` | `VARCHAR(255)` | `string` | Text | `ATT-2026-014` |
+| 2 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
+| 3 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
+| 4 | Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
+| 5 | Check-in Time | `text` | `VARCHAR(255)` | `string` | Text | `09:58` |
+| 6 | Check-out Time | `text` | `VARCHAR(255)` | `string` | Text | `18:30` |
+| 7 | Hours Worked | `number` | `NUMERIC` | `number` | Number | `8.5` |
+| 8 | Work Mode | `text` | `VARCHAR(255)` | `string` | Text | `Office` |
+| 9 | Attendance Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Present` |
+| 10 | Late (Minutes) | `number` | `NUMERIC` | `number` | Number | `12` |
+| 11 | On Approved Leave | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
+| 12 | Manager | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
+| 13 | Regularisation Requested | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
+| 14 | Notes | `long_text` | `TEXT` | `string` | Text | `Late arrivals cluster on Mondays; discussed with the team rather than logged as a penalty.` |
+| 15 | Attendance ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
+
+## Select Options
+
+**Attendance Status**
+
+```
+Present | Late | Absent | On Leave | Half Day | Holiday
+```
+
+## Relations
+
+Link fields: none
+
+## Examples
+
+**Prompt**
+
+```
+We need attendance for payroll and half-days are a mess.
+```
+
+**Context first** - one question per message, nothing already answered:
+
+> **Q:** Shift timings?
+> **A:** 9 to 6.
+>
+> **Q:** How recorded?
+> **A:** Manual, in a register.
+>
+> **Q:** What gets disputed?
+> **A:** Half days mostly.
+
+**Recommended next step** - offered, not built:
+
+> Collect one row per person per day, and only build rules for the cases that actually happen. Overtime and payroll join later if needed.
+>
+> Workflow: Daily log → Late or absent flag → Correction request → Manager approval → Monthly report
+>
+> Want the CSV, SQL, JSON Schema and Notion mapping for this?
+
+## Best Practices
+
+- Recommend before building. The recommendation is the product; the files are the follow-up.
+- One question per message. A batched intake reads as a form and gets guessed at.
+- Keep every field name identical across CSV, SQL and JSON Schema.
+- Use `relation` for anything that points at another table, `text` only for free text.
+- Money fields are `currency`, never `text`. Dates are `date`, never free text.
+- Keep the example row obviously fake so nobody imports it as real data.
+
+## Limitations
+
+- Empty template only. It does not compute payroll, tax, leave balances or KPIs.
+- Notion relations need both databases imported before the link column resolves.
+- Select options are a starting set. Rename them to match how the business talks.
+- No automation, reminders or sync. Those need the integration layer.
+- Does not enforce punctuality, geofence location or decide payroll.
+- Legal, tax and HR review is still required before this drives real decisions.
+
+## Security & Safety Notes
+
+- Never fill in real names, salaries, medical or banking data. Placeholders only.
+- Never mark an example row `Confidential`, and keep bank details masked.
+- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- If the user pastes real employee data, generate the template and tell them to delete
+  the pasted data from the conversation.
+- Privacy, legal and disciplinary cases need a qualified human reviewer before anything
+  is acted on.
+
+## Common Pitfalls
+
+- **Problem:** asked all six questions in one message.
+  **Solution:** ask one, wait, and drop any the first answer already covered.
+- **Problem:** built a full system when one table was asked for.
+  **Solution:** build what was requested; mention the parent skill separately.
+- **Problem:** all four artifacts drift apart.
+  **Solution:** derive all four from the field list in this file, never by hand.
+- **Problem:** Notion import shows every column as Text.
+  **Solution:** that is expected. Apply the property mapping table once, after import.
+
+## Related Skills
+
+- `sme-ops-system-builder` - routes to this skill and the other 70 modules.
+- `people-directory` - the employee master record most modules link to.
+- `notification-reminder-hub` - turns due dates in this module into reminders.
+
+## Reusable Prompt
+
+```
+I want to set up daily check-in, check-out, late and absent records for my company.
+Ask me one short question at a time, and only about what I have not already told you.
+Then recommend the smallest setup that fits, and wait for me to ask before you build it.
+When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
+```
+

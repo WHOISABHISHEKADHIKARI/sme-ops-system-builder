@@ -1,0 +1,15 @@
+# https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder
+User-agent: *
+Allow: /
+
+# Answer engines are welcome; the plain-text index is llms.txt.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/sitemap.xml

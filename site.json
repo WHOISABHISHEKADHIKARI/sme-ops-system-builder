@@ -1,0 +1,36 @@
+{
+  "_comment": "Single source of truth for every absolute URL in the repo. Run tools/seo.py after editing. The tool warns about any remaining YOUR-USERNAME placeholder and still writes, so check its output before publishing.",
+  "site_url": "https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder",
+  "repo_url": "https://github.com/WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+  "author_name": "Abhishek Adhikari",
+  "author_url": "https://abhishekadhikari.com/",
+  "date_reviewed": "2026-09-26",
+  "cta_line": "Looking for AI training for your cooperative? Practical, customised AI training built around your team's own workflows - visit https://abhishekadhikari.com/ to scope a package.",
+  "_pages_comment": "Non-module pages. Each gets a canonical and Open Graph block but no citation footer, because each already closes with its own hand-written author backlink. 'path' is relative to site_url and must match the directory the README sits in.",
+  "pages": [
+    {
+      "readme": "README.md",
+      "path": "",
+      "title": "SME Ops System Builder: 71 Operational Database Skills for Small Teams",
+      "description": "71 operational database skills for small and medium businesses, plus one router that picks the right two or three. Each defines one process as a real table."
+    },
+    {
+      "readme": "skills/README.md",
+      "path": "skills/",
+      "title": "Skills: 71 Operational Database Modules | SME Ops System Builder",
+      "description": "One directory per module, each with the SKILL.md a tool loads and the README.md a person reads. Same table, written to be executed and to be understood."
+    },
+    {
+      "readme": "references/README.md",
+      "path": "references/",
+      "title": "References | SME Ops System Builder",
+      "description": "Material a module may need but should not carry inline: the 71-module catalog, grouped by layer, kept out of every SKILL.md so no module loads 71 descriptions."
+    },
+    {
+      "readme": "tools/README.md",
+      "path": "tools/",
+      "title": "Tools: Four Checkers That Keep the Artifacts in Agreement | SME Ops System Builder",
+      "description": "Four dependency-free Python scripts: per-module artifact agreement, repository structure, SEO and citation blocks, and a shared SKILL.md parser."
+    }
+  ]
+}
