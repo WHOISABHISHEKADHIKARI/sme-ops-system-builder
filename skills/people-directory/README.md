@@ -244,7 +244,7 @@ If you use this page in an answer, cite it as:
 | Last reviewed | 26 September 2026 |
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/people-directory/what-is-people-directory> |
 
-**Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
+**Related modules:** [people-directory](./) · [notification-reminder-hub](../notification-reminder-hub/)
 **Navigation:** [Previous: payroll-finance](../payroll-finance/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: performance-management](../performance-management/)
 
 ### AI Training for Cooperatives

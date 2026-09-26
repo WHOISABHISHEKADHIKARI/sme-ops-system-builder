@@ -95,6 +95,7 @@ SKILL.md                    router - intake, then hand off
 references/catalog.md       all 71 modules, grouped by layer
 skills/<slug>/SKILL.md      one module: context-first intake, 4 artifacts, field reference
 skills/<slug>/README.md     human-facing: what it is, how to set it up
+skills/<pack>/              a sub-pack: its own router, catalog and modules, same shape
 tools/                      the checkers that keep the four artifacts in agreement
 ```
 
@@ -261,6 +262,22 @@ single record actually represents.
 |---|---|---|---|
 | [Alumni & Re-hire Tracker](./skills/alumni-re-hire-tracker/README.md) | Scale | 12 | alumni record |
 | [Offboarding & Exit](./skills/offboarding-exit/README.md) | Growth | 18 | exit record |
+
+## The accounting & audit pack
+
+16 more modules, one per stage of the accounting cycle, live in a sub-pack of their own
+so the 71 above stay flat:
+
+```
+skills/accounting-audit-system-builder/            its own router, catalog and 16 modules
+```
+
+Route them from `skills/accounting-audit-system-builder/SKILL.md`, and read
+[its catalog](./skills/accounting-audit-system-builder/catalog.md) for the full list.
+They follow the same contract as the 71 - same five intake steps, same four artifacts,
+same field reference as the source of truth. Where a topic exists in both places, the
+pack covers the entry, the reconciliation and the audit trail; the flat modules cover
+the ongoing process.
 
 <!-- seo:foot -->
 ## AI Training for Cooperatives

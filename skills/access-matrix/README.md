@@ -223,7 +223,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/access-matrix/what-is-access-matrix> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: 360-feedback-system](../360-feedback-system/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: admin-access-register](../admin-access-register/)
+**Navigation:** [Previous: 360-feedback-system](../360-feedback-system/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: accounting-audit-system-builder/accounting-software-selection](../accounting-audit-system-builder/accounting-software-selection/)
 
 ### AI Training for Cooperatives
 

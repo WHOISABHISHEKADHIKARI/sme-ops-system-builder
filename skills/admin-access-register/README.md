@@ -237,7 +237,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/admin-access-register/what-is-admin-access-register> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: access-matrix](../access-matrix/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: advanced-analytics-dashboard](../advanced-analytics-dashboard/)
+**Navigation:** [Previous: accounting-audit-system-builder/tds-booking-payment](../accounting-audit-system-builder/tds-booking-payment/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: advanced-analytics-dashboard](../advanced-analytics-dashboard/)
 
 ### AI Training for Cooperatives
 

@@ -49,9 +49,10 @@ python3 tools/check.py leave-management -v
 ## validate.py
 
 Repository-level structure: frontmatter present and well formed, required sections in
-order, the five intake steps, and the Reusable Prompt block. The parent router is
-exempt from the CSV/SQL/JSON/Notion artifact requirements, because it routes rather
-than defining a table; its other checks still run.
+order, the five intake steps, and the Reusable Prompt block. A router - the root
+`SKILL.md` or a sub-pack's - is exempt from the CSV/SQL/JSON/Notion artifact
+requirements, because it routes rather than defining a table; its other checks still
+run. Routers are not counted as modules.
 
 ## seo.py
 
@@ -71,7 +72,7 @@ python3 tools/seo.py --check     # verify only, write nothing
 
 `--check` verifies that every canonical and title is unique, that each page carries
 exactly one visible author backlink as its final line, that every relative link
-resolves to a file that exists, that all 71 pages appear in the sitemap, that no
+resolves to a file that exists, that all pages appear in the sitemap, that no
 generated region leaks into the rendered page, and that every page carries the CTA
 exactly once followed by the closing author attribution.
 
@@ -96,6 +97,29 @@ from skillmd import read_module
 d = read_module('.', 'leave-management')
 print(d['title'], len(d['fields']), d['related'])
 ```
+
+### Layouts
+
+This module owns discovery, so the tools cannot drift apart on what exists:
+
+| Function | Returns |
+|---|---|
+| `all_slugs(root)` | every module, `pack/slug` inside a pack and bare otherwise |
+| `all_packs(root)` | the sub-pack names |
+| `all_routers(root)` | the root `SKILL.md` plus one per sub-pack |
+| `all_skill_files(root)` | every `SKILL.md`, modules and routers together |
+| `module_dir(root, slug)` | a module's directory, for either layout |
+
+A directory under `skills/` is a **pack** when it contains a child directory with its
+own `SKILL.md`; otherwise it is a module. Nothing is hardcoded, so a second pack needs
+no tool change. `validate.py` and `seo.py` take their file list from here, and
+`excel.py` and `appsscript.py` already resolved paths through `module_dir`.
+
+Naming stays unchanged for compatibility: frontmatter `name:` is the module's own
+folder name, and the pack prefix is a path detail that only appears in slugs and URLs.
+A router is any `SKILL.md` whose directory is the root or a pack, and a router defines no
+table of its own - so it is exempt from the CSV/SQL/JSON/Notion requirements in
+`check.py` and `validate.py`, while its other checks still run.
 
 <!-- seo:foot -->
 ## AI Training for Cooperatives

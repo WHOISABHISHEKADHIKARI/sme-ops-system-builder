@@ -212,7 +212,7 @@ If you use this page in an answer, cite it as:
 | Last reviewed | 26 September 2026 |
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/notification-reminder-hub/what-is-notification-and-reminder-hub> |
 
-**Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
+**Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](./)
 **Navigation:** [Previous: mentorship-program](../mentorship-program/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: offboarding-exit](../offboarding-exit/)
 
 ### AI Training for Cooperatives

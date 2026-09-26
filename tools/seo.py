@@ -43,6 +43,12 @@ HEAD_OPEN, HEAD_CLOSE = '<!-- seo:head -->', '<!-- /seo:head -->'
 PUBLISHED_BY = r'\n---\n\nPublished by \[' + re.escape(AUTHOR) + r'\]\([^)]*\) - [^\n]*\n'
 FOOT_OPEN, FOOT_CLOSE = '<!-- seo:foot -->', '<!-- /seo:foot -->'
 
+# bare module name -> qualified slug, so a sibling link can be written once and resolve
+# whether the target is a flat module or lives in a sub-pack
+_BY_NAME = {}
+for _s in all_slugs(ROOT):
+    _BY_NAME.setdefault(os.path.basename(_s), _s)
+
 # pages that are not modules but must still be indexed and linked
 EXTRA_PAGES = [
     ('', 'SME Ops System Builder', 'Index of all 71 operational database skills for small teams.'),
@@ -173,6 +179,22 @@ def plain(text):
     return re.sub(r'\*\*(.+?)\*\*', r'\1', text)
 
 
+def sibling_link(from_slug, name):
+    """Relative link from one module's README to a sibling module's README.
+
+    Siblings are written as a path relative to the current module directory, so the
+    same call is right in both layouts: a flat module reaches a neighbour with
+    ``../name/``, and a module inside a sub-pack reaches one with ``../name/`` too,
+    while reaching across into another pack costs the extra ``../`` that the depth
+    actually requires. ``module_path`` gives the canonical target, and relpath does
+    the rest, so no layout is special-cased.
+    """
+    target = _BY_NAME.get(name, name)
+    here = os.path.join(ROOT, 'skills', from_slug)
+    there = os.path.join(ROOT, 'skills', target)
+    return os.path.relpath(there, here).replace(os.sep, '/') + '/'
+
+
 def foot_block(cfg, slug, cpath, related, prev_mod, next_mod, citation):
     lines = [FOOT_OPEN, '## Cite this page', '']
     lines.append('If you use this page in an answer, cite it as:')
@@ -189,12 +211,13 @@ def foot_block(cfg, slug, cpath, related, prev_mod, next_mod, citation):
     if related:
         # sibling modules live one level up, not one level down
         lines.append('**Related modules:** ' +
-                     ' · '.join('[%s](../%s/)' % (r, r) for r in related))
+                     ' · '.join('[%s](%s)' % (r, sibling_link(slug, r))
+                                for r in related))
     nav = ['[Index](%s)' % index_url(cfg)]
     if prev_mod:
-        nav.insert(0, '[Previous: %s](../%s/)' % (prev_mod, prev_mod))
+        nav.insert(0, '[Previous: %s](%s)' % (prev_mod, sibling_link(slug, prev_mod)))
     if next_mod:
-        nav.append('[Next: %s](../%s/)' % (next_mod, next_mod))
+        nav.append('[Next: %s](%s)' % (next_mod, sibling_link(slug, next_mod)))
     lines.append('**Navigation:** ' + ' · '.join(nav))
     lines.append('')
     lines.append(cta_block(cfg))

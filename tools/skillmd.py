@@ -119,6 +119,11 @@ def read_skill(path):
 
 
 def module_dir(root, slug):
+    """Directory holding a module's files.
+
+    A slug may be qualified as ``pack/slug`` for a module inside a sub-pack, so one
+    path join serves both the flat layout and the nested one.
+    """
     return os.path.join(root, 'skills', slug)
 
 
@@ -126,11 +131,63 @@ def read_module(root, slug):
     return read_skill(os.path.join(module_dir(root, slug), 'SKILL.md'))
 
 
-def all_slugs(root):
-    """Every module slug in the repository, sorted."""
+def _is_pack(path):
+    """A sub-pack holds its own router plus module directories.
+
+    Distinguishing it from a module: a module has no child directory that contains
+    its own SKILL.md. A pack has at least one.
+    """
+    if not os.path.isdir(path):
+        return False
+    for child in os.listdir(path):
+        c = os.path.join(path, child)
+        if os.path.isdir(c) and os.path.isfile(os.path.join(c, 'SKILL.md')):
+            return True
+    return False
+
+
+def all_packs(root):
+    """Sub-pack names: directories under skills/ that hold module directories.
+
+    A sub-pack is a second router plus its own modules, kept in one folder so the
+    flat module surface stays flat. Its router is not a module and is not returned
+    by :func:`all_slugs`.
+    """
     base = os.path.join(root, 'skills')
-    return sorted(n for n in os.listdir(base)
-                  if os.path.isfile(os.path.join(base, n, 'SKILL.md')))
+    return sorted(n for n in os.listdir(base) if _is_pack(os.path.join(base, n)))
+
+
+def all_slugs(root):
+    """Every module slug in the repository, sorted.
+
+    Modules in a sub-pack come back qualified as ``pack/slug``; flat modules come
+    back bare. Callers that build a path with :func:`module_dir` need no change.
+    """
+    base = os.path.join(root, 'skills')
+    out = []
+    for n in sorted(os.listdir(base)):
+        d = os.path.join(base, n)
+        if not os.path.isdir(d):
+            continue
+        if _is_pack(d):
+            out.extend('%s/%s' % (n, m) for m in sorted(os.listdir(d))
+                       if os.path.isfile(os.path.join(d, m, 'SKILL.md')))
+        elif os.path.isfile(os.path.join(d, 'SKILL.md')):
+            out.append(n)
+    return out
+
+
+def all_routers(root):
+    """Every router SKILL.md path: the root router plus one per sub-pack."""
+    out = [os.path.join(root, 'SKILL.md')]
+    out.extend(os.path.join(root, 'skills', p, 'SKILL.md') for p in all_packs(root))
+    return out
+
+
+def all_skill_files(root):
+    """Every SKILL.md that :func:`all_slugs` and :func:`all_routers` cover."""
+    return ([os.path.join(module_dir(root, s), 'SKILL.md') for s in all_slugs(root)]
+            + all_routers(root))
 
 
 if __name__ == '__main__':

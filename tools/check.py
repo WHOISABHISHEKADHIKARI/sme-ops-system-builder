@@ -62,6 +62,29 @@ def v_conf(row, names, name):
     return row[names.index(name)] if name in names else ''
 
 
+def is_pack_dir(path):
+    """True when path is a sub-pack: it holds module directories, not just files.
+
+    A module directory has no child directory carrying its own SKILL.md. A sub-pack
+    has at least one, which is how the two layouts are told apart without a
+    hardcoded list.
+    """
+    if not os.path.isdir(path):
+        return False
+    for child in os.listdir(path):
+        c = os.path.join(path, child)
+        if os.path.isdir(c) and os.path.isfile(os.path.join(c, 'SKILL.md')):
+            return True
+    return False
+
+
+def is_router(path):
+    """A router routes between modules; it owns no table, so it has no artifacts."""
+    if os.path.dirname(path) == ROOT:
+        return True
+    return is_pack_dir(os.path.dirname(path))
+
+
 def check(path, verbose=False):
     slug = os.path.basename(os.path.dirname(path))
     t = open(path).read()
@@ -101,6 +124,12 @@ def check(path, verbose=False):
     for st in STEPS:
         if st not in body:
             bad('missing ' + st)
+
+    # A router routes between modules and defines no table of its own, so the
+    # artifact requirements below do not apply to it. Its frontmatter, section and
+    # step checks above still ran.
+    if is_router(path):
+        return slug, iss
 
     # ---------------------------------------------------------- blocks
     cb = re.search(r'```csv\n(.*?)\n```', body, re.S)
@@ -445,12 +474,22 @@ def check(path, verbose=False):
 if __name__ == '__main__':
     arg = sys.argv[1] if len(sys.argv) > 1 else 'all'
     verbose = '-v' in sys.argv
-    files = sorted(glob.glob(ROOT + '/skills/*/SKILL.md'))
+    files = sorted(glob.glob(ROOT + '/skills/*/SKILL.md')
+                   + glob.glob(ROOT + '/skills/*/*/SKILL.md'))
     if arg != 'all':
-        files = [f for f in files if os.path.basename(os.path.dirname(f)) == arg]
+        # Accept a bare slug, a pack/slug, or a suffix match, so a nested module can
+        # be named on the command line without repeating its pack.
+        files = [f for f in files
+                 if arg in (os.path.basename(os.path.dirname(f)),
+                            os.path.relpath(os.path.dirname(f),
+                                            os.path.join(ROOT, 'skills')))]
     freq = collections.Counter()
     nbad = 0
+    nmod = 0
     for f in files:
+        if is_router(f):
+            continue
+        nmod += 1
         slug, iss = check(f, verbose)
         if iss:
             nbad += 1
@@ -460,7 +499,7 @@ if __name__ == '__main__':
                 print('    %-52s %s' % (tag, d))
         elif verbose:
             print('=== %s  OK  (%d fields)' % (slug, len(open(f).read())))
-    print('\n%d/%d modules clean' % (len(files) - nbad, len(files)))
+    print('\n%d/%d modules clean' % (nmod - nbad, nmod))
     if freq:
         print('\nissue frequency:')
         for tag, n in freq.most_common(30):

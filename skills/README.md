@@ -30,6 +30,23 @@ skills/<slug>/README.md     the human-facing page: what it is, how to set it up
 same table from two directions: the skill is written to be executed, the page is
 written to be understood before you commit to it.
 
+## The accounting & audit sub-pack
+
+One directory is not a module but a pack:
+
+```
+skills/accounting-audit-system-builder/SKILL.md    second router: routes to one of 16
+skills/accounting-audit-system-builder/catalog.md   all 16, grouped by cycle stage
+skills/accounting-audit-system-builder/<slug>/      a module, same four files as above
+```
+
+A pack holds its own router and its own modules in one folder, so the 71 above stay
+flat and a second domain can be added later without nesting everything. Tools find
+both layouts on their own: a directory is a pack when it contains child directories
+that carry their own `SKILL.md`, and its modules are addressed as `pack/slug`. Where a
+topic exists in both places, the pack covers the entry, the reconciliation and the
+audit trail; the flat modules cover the ongoing process.
+
 Every module follows the same shape:
 
 | Section | What it holds |
