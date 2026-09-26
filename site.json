@@ -5,7 +5,6 @@
   "author_name": "Abhishek Adhikari",
   "author_url": "https://abhishekadhikari.com/",
   "date_reviewed": "2026-09-26",
-  "cta_line": "Looking for AI training for your cooperative? Practical, customised AI training built around your team's own workflows - visit https://abhishekadhikari.com/ to scope a package.",
   "_pages_comment": "Non-module pages. Each gets a canonical and Open Graph block but no citation footer, because each already closes with its own hand-written author backlink. 'path' is relative to site_url and must match the directory the README sits in.",
   "pages": [
     {
@@ -32,5 +31,8 @@
       "title": "Tools: Four Checkers That Keep the Artifacts in Agreement | SME Ops System Builder",
       "description": "Four dependency-free Python scripts: per-module artifact agreement, repository structure, SEO and citation blocks, and a shared SKILL.md parser."
     }
-  ]
+  ],
+  "cta_heading": "AI Training for Cooperatives",
+  "cta_markdown": "Looking for **AI training for your cooperative**? We offer practical, customized AI training packages designed around your team’s needs and workflows. For training packages, customization, and inquiries, please visit **[abhishekadhikari.com](https://abhishekadhikari.com/)** and get in touch.",
+  "_cta_comment": "Rendered as an H3 section at the foot of every page, above the closing author attribution. Markdown is kept verbatim here so the link is exact; the plain-text index in llms.txt strips the markup."
 }

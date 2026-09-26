@@ -134,17 +134,6 @@ Schemas, intake questions and field types were written for this repository. The
 10-layer taxonomy was informed by the CompanyOS SME Edition layout; no table, column
 or CSV was copied from it.
 
-## AI training for cooperatives
-
-Cooperatives and member organisations often need practical AI training that fits how
-they actually work, not generic courses.
-
-I build customised AI training for cooperatives, working groups and member
-organisations: sessions designed around your real workflows, your data and your team's
-day-to-day.
-
-If you are a cooperative or a member organisation looking for practical AI training,
-get in touch: <https://abhishekadhikari.com/?utm_source=chatgpt.com>
 
 ## All 71 modules
 
@@ -272,6 +261,14 @@ single record actually represents.
 |---|---|---|---|
 | [Alumni & Re-hire Tracker](./skills/alumni-re-hire-tracker/README.md) | Scale | 12 | alumni record |
 | [Offboarding & Exit](./skills/offboarding-exit/README.md) | Growth | 18 | exit record |
+
+<!-- seo:foot -->
+## AI Training for Cooperatives
+
+Looking for **AI training for your cooperative**? We offer practical, customized AI training packages designed around your team’s needs and workflows. For training packages, customization, and inquiries, please visit **[abhishekadhikari.com](https://abhishekadhikari.com/)** and get in touch.
+
+<!-- /seo:foot -->
+
 
 ---
 

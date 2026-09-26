@@ -34,6 +34,14 @@ The catalog is generated from the same field reference the modules use, so a mod
 that exists is a module that is listed, and a module that is listed has a passing
 `tools/check.py`.
 
+<!-- seo:foot -->
+## AI Training for Cooperatives
+
+Looking for **AI training for your cooperative**? We offer practical, customized AI training packages designed around your team’s needs and workflows. For training packages, customization, and inquiries, please visit **[abhishekadhikari.com](https://abhishekadhikari.com/)** and get in touch.
+
+<!-- /seo:foot -->
+
+
 ---
 
 Published by [Abhishek Adhikari](https://abhishekadhikari.com/) - practical database systems for small teams.

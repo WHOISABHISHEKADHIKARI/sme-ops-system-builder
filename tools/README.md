@@ -71,8 +71,12 @@ python3 tools/seo.py --check     # verify only, write nothing
 
 `--check` verifies that every canonical and title is unique, that each page carries
 exactly one visible author backlink as its final line, that every relative link
-resolves to a file that exists, that all 71 pages appear in the sitemap, and that no
-generated region leaks into the rendered page. Run it after any hand edit to a README.
+resolves to a file that exists, that all 71 pages appear in the sitemap, that no
+generated region leaks into the rendered page, and that every page carries the CTA
+exactly once followed by the closing author attribution.
+
+A page now has two links to the author site: the CTA, and the closing attribution. The
+verifier expects exactly two, and that the attribution is still the last line. Run it after any hand edit to a README.
 
 Set `site.json` before publishing: a `YOUR-USERNAME` placeholder produces a sitemap of
 wrong URLs, and the tool warns but does not stop.
@@ -92,6 +96,14 @@ from skillmd import read_module
 d = read_module('.', 'leave-management')
 print(d['title'], len(d['fields']), d['related'])
 ```
+
+<!-- seo:foot -->
+## AI Training for Cooperatives
+
+Looking for **AI training for your cooperative**? We offer practical, customized AI training packages designed around your team’s needs and workflows. For training packages, customization, and inquiries, please visit **[abhishekadhikari.com](https://abhishekadhikari.com/)** and get in touch.
+
+<!-- /seo:foot -->
+
 
 ---
 

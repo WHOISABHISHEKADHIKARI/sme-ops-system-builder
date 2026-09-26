@@ -207,6 +207,10 @@ If you use this page in an answer, cite it as:
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
 **Navigation:** [Previous: company-email-accounts](../company-email-accounts/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: contract-document-renewal](../contract-document-renewal/)
 
+### AI Training for Cooperatives
+
+Looking for **AI training for your cooperative**? We offer practical, customized AI training packages designed around your team’s needs and workflows. For training packages, customization, and inquiries, please visit **[abhishekadhikari.com](https://abhishekadhikari.com/)** and get in touch.
+
 <!-- /seo:foot -->
 
 

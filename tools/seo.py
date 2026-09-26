@@ -157,6 +157,22 @@ def head_block(cfg, path, title, description, faqs=(), breadcrumb=()):
 # --------------------------------------------------------------------------- foot
 
 
+def cta_block(cfg, level=3):
+    """The AI-training call to action, rendered as a normal visible section.
+
+    Module pages nest it under the H2 citation block, so H3 there. The root and
+    directory pages have no such parent, so it is an H2 and reads as its own
+    section rather than a stray subsection of whatever came before it.
+    """
+    return '%s %s\n\n%s' % ('#' * level, cfg['cta_heading'], cfg['cta_markdown'])
+
+
+def plain(text):
+    """Strip Markdown so the same sentence can go in a plain-text index."""
+    text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
+    return re.sub(r'\*\*(.+?)\*\*', r'\1', text)
+
+
 def foot_block(cfg, slug, cpath, related, prev_mod, next_mod, citation):
     lines = [FOOT_OPEN, '## Cite this page', '']
     lines.append('If you use this page in an answer, cite it as:')
@@ -180,6 +196,8 @@ def foot_block(cfg, slug, cpath, related, prev_mod, next_mod, citation):
     if next_mod:
         nav.append('[Next: %s](../%s/)' % (next_mod, next_mod))
     lines.append('**Navigation:** ' + ' · '.join(nav))
+    lines.append('')
+    lines.append(cta_block(cfg))
     lines.append('')
     lines.append(FOOT_CLOSE)
     return '\n'.join(lines)
@@ -240,7 +258,7 @@ def llms(cfg, modules):
         '',
         '- %s: <%s>' % (cfg['author_name'], cfg['author_url']),
         '',
-        cfg['cta_line'],
+        plain(cfg['cta_markdown']),
         '',
         '## Index',
         '',
@@ -376,9 +394,13 @@ def run(write=True):
         crumb.append((page['title'].split(':')[0], page_url(cfg, page['path'])))
         head = head_block(cfg, page['path'], page['title'], page['description'],
                           (), crumb)
+        # these pages keep their own closing attribution, so they get the CTA only
+        foot = '\n'.join([FOOT_OPEN, cta_block(cfg, 2), '', FOOT_CLOSE])
         if write:
             text = open(f).read()
-            open(f, 'w').write(splice(text, head, HEAD_OPEN, HEAD_CLOSE, r'^# .+$'))
+            text = splice(text, head, HEAD_OPEN, HEAD_CLOSE, r'^# .+$')
+            open(f, 'w').write(splice(text, foot, FOOT_OPEN, FOOT_CLOSE,
+                                      PUBLISHED_BY, before=True))
         entries.append((page_url(cfg, page['path']), cfg['date_reviewed'],
                         '1.0' if not page['path'] else '0.5'))
 
@@ -421,6 +443,7 @@ def verify(cfg, mods):
             bad['no json-ld'].append(m['slug'])
         if 'FAQPage' not in t:
             bad['no FAQ schema'].append(m['slug'])
+        # the CTA link plus the closing attribution
         backlinks[m['slug']] += len(
             re.findall(r'\]\(%s/?\)' % re.escape(cfg['author_url'].rstrip('/')), t))
         # generated and internal-only regions must not render as visible text
@@ -440,8 +463,10 @@ def verify(cfg, mods):
                     os.path.exists(os.path.join(target, 'README.md'))):
                 bad['broken link'].append('%s -> %s' % (m['slug'], link))
         # the author URL must appear exactly once, as the closing line
-        if backlinks[m['slug']] != 1:
-            bad['backlink count'].append('%s x%d' % (m['slug'], backlinks[m['slug']]))
+        if backlinks[m['slug']] != 2:
+            bad['author link count'].append('%s x%d' % (m['slug'], backlinks[m['slug']]))
+        if t.count(cfg['cta_markdown']) != 1 or t.count(cfg['cta_heading']) != 1:
+            bad['cta block'].append(m['slug'])
         if not t.rstrip().endswith('small teams.'):
             bad['backlink not last'].append(m['slug'])
 
@@ -481,9 +506,12 @@ def main():
             bad['no canonical'].append(page['readme'])
         if not re.search(r'<meta name="description"', t):
             bad['no meta description'].append(page['readme'])
+        # the CTA link plus the closing attribution
         n = len(re.findall(r'\]\(%s/?\)' % re.escape(cfg['author_url'].rstrip('/')), t))
-        if n != 1:
-            bad['backlink count'].append('%s x%d' % (page['readme'], n))
+        if n != 2:
+            bad['author link count'].append('%s x%d' % (page['readme'], n))
+        if t.count(cfg['cta_markdown']) != 1 or t.count(cfg['cta_heading']) != 1:
+            bad['cta block'].append(page['readme'])
         elif not t.rstrip().endswith('small teams.'):
             bad['backlink not last'].append(page['readme'])
         desc = re.search(r'<meta name="description" content="(.*?)">', t)

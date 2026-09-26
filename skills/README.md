@@ -54,7 +54,7 @@ Each `README.md` carries regions that belong to a tool, not a reader:
 ```markdown
 <!-- seo:head -->  canonical, Open Graph, Twitter cards, JSON-LD
 <!-- seo:meta -->  primary keyword, publish path, title tag, meta description
-<!-- seo:foot -->  citation block, related modules, prev/next
+<!-- seo:foot -->  citation block, related modules, prev/next, AI-training CTA
 ```
 
 All three are wrapped so they never render. GitHub does not strip `<script>`
@@ -62,7 +62,10 @@ content when it renders Markdown, so an unwrapped block would appear as a wall o
 markup at the top of the page.
 
 `seo:head` and `seo:foot` are rewritten by `python3 tools/seo.py`, which replaces them
-in place, so a second run never duplicates one. `seo:meta` is written once by the
+in place, so a second run never duplicates one. The foot block ends with the
+AI-training call to action, taken verbatim from `site.json`. Module pages render it as
+an H3 under the citation section; the root and directory pages use H2, because they
+have no citation parent and an H3 there would read as a stray subsection. `seo:meta` is written once by the
 module generator and then left alone; `tools/seo.py` still reads the meta description
 out of it to build the canonical block and `llms.txt`.
 
@@ -75,6 +78,14 @@ generated block.
 The full module index, grouped by layer, is in the
 [root README](../README.md#all-71-modules). A runtime-oriented list is in
 [references/catalog.md](../references/catalog.md).
+
+<!-- seo:foot -->
+## AI Training for Cooperatives
+
+Looking for **AI training for your cooperative**? We offer practical, customized AI training packages designed around your team’s needs and workflows. For training packages, customization, and inquiries, please visit **[abhishekadhikari.com](https://abhishekadhikari.com/)** and get in touch.
+
+<!-- /seo:foot -->
+
 
 ---
 
