@@ -48,16 +48,28 @@ Every module follows the same shape:
 
 ## Generated blocks
 
-Each `README.md` carries two regions owned by `tools/seo.py`:
+Each `README.md` carries regions that belong to a tool, not a reader:
 
 ```markdown
 <!-- seo:head -->  canonical, Open Graph, Twitter cards, JSON-LD
+<!-- seo:meta -->  primary keyword, publish path, title tag, meta description
 <!-- seo:foot -->  citation block, related modules, prev/next
 ```
 
-Edit the prose outside those markers and re-run `python3 tools/seo.py`. The tool
-replaces a block in place, so a second run never duplicates one. The author backlink
-after the closing `---` is hand-maintained and is not part of either block.
+All three are wrapped so they never render. GitHub does not strip `<script>`
+content when it renders Markdown, so an unwrapped block would appear as a wall of
+markup at the top of the page.
+
+`seo:head` and `seo:foot` are rewritten by `python3 tools/seo.py`, which replaces them
+in place, so a second run never duplicates one. `seo:meta` is written once by the
+module generator and then left alone; `tools/seo.py` still reads the meta description
+out of it to build the canonical block and `llms.txt`.
+
+`tools/seo.py --check` fails if any of this becomes visible, so the notes cannot
+regress into reader-facing text by accident.
+
+The author backlink after the closing `---` is hand-maintained and is not part of any
+generated block.
 
 The full module index, grouped by layer, is in the
 [root README](../README.md#all-71-modules). A runtime-oriented list is in

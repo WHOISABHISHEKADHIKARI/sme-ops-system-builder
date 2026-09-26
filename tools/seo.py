@@ -321,6 +321,9 @@ def canon_path(m):
     return 'skills/%s/what-is-%s' % (m['slug'], m['kw_slug'])
 
 
+# Markdown renderers drop HTML comments, so this is what a reader actually sees.
+COMMENT = re.compile(r'<!--.*?-->', re.S)
+
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
           'August', 'September', 'October', 'November', 'December']
 
@@ -420,6 +423,13 @@ def verify(cfg, mods):
             bad['no FAQ schema'].append(m['slug'])
         backlinks[m['slug']] += len(
             re.findall(r'\]\(%s/?\)' % re.escape(cfg['author_url'].rstrip('/')), t))
+        # generated and internal-only regions must not render as visible text
+        rendered = COMMENT.sub('', t)
+        for token in ('Primary keyword', 'Publish as', 'Title tag',
+                      'Meta description', 'ld+json', '<script'):
+            if token in rendered:
+                bad['markup leaks into page'].append('%s (%s)' % (m['slug'], token))
+
         # every relative link must resolve to a file that exists
         base = os.path.join(ROOT, 'skills', m['slug'])
         for link in re.findall(r'\]\(([^)]+)\)', t):

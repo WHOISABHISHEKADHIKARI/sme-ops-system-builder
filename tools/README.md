@@ -49,9 +49,14 @@ than defining a table; its other checks still run.
 
 ## seo.py
 
-Owns the generated `<!-- seo:head -->` and `<!-- seo:foot -->` regions in every module
-README, plus `sitemap.xml`, `robots.txt` and `llms.txt`. Reads `site.json` for the
-canonical origin, repository URL, author and review date.
+Owns the generated `<!-- seo:head -->` and `<!-- seo:foot -->` regions in every README,
+plus `sitemap.xml`, `robots.txt` and `llms.txt`. Reads `site.json` for the canonical
+origin, repository URL, author and review date. It also reads the meta description out
+of the `<!-- seo:meta -->` region, which it does not write.
+
+Every generated region is wrapped in an HTML comment. GitHub does not strip
+`<script>` content when rendering Markdown, so unwrapped JSON-LD would be shown to
+readers as page text.
 
 ```
 python3 tools/seo.py             # rewrite the generated blocks and discovery files
@@ -60,8 +65,8 @@ python3 tools/seo.py --check     # verify only, write nothing
 
 `--check` verifies that every canonical and title is unique, that each page carries
 exactly one visible author backlink as its final line, that every relative link
-resolves to a file that exists, and that all 71 pages appear in the sitemap. Run it
-after any hand edit to a README.
+resolves to a file that exists, that all 71 pages appear in the sitemap, and that no
+generated region leaks into the rendered page. Run it after any hand edit to a README.
 
 Set `site.json` before publishing: a `YOUR-USERNAME` placeholder produces a sitemap of
 wrong URLs, and the tool warns but does not stop.
