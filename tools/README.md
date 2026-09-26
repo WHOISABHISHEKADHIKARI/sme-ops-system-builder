@@ -35,6 +35,12 @@ CSV header, the SQL columns, the JSON Schema properties or the Notion mapping
 disagree with it, or with each other. Also checks reserved words, column naming,
 example-row realism and cross-table relations.
 
+It verifies four artifacts, all text. The Excel workbook output is the same field list
+as the CSV, so it is correct by construction rather than by a separate check: a workbook
+is that CSV with a byte order mark, plus a note of which columns need a number, date or
+currency format. Adding a binary `.xlsx` per module would put a zip where the checker
+cannot compare columns, which is the one thing this repository exists to prevent.
+
 ```
 python3 tools/check.py all        # every module
 python3 tools/check.py leave-management -v

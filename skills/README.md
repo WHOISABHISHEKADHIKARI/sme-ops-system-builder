@@ -39,6 +39,7 @@ Every module follows the same shape:
 | `## How It Works` | the five-step intake, then the build |
 | `## Field Reference` | the field list, which is the source of truth for all four artifacts |
 | `## Examples` | CSV, SQL, JSON Schema and the Notion mapping |
+| Excel output | the CSV with a UTF-8 byte order mark, plus the columns needing a number, date or currency format |
 | `## Best Practices` | what to do, and what it costs |
 | `## Limitations` | what the template will not do for you |
 | `## Security & Safety Notes` | the sensitive fields and who should see them |

@@ -88,7 +88,7 @@ Only then does it recommend the smallest workflow, and builds artifacts after yo
 1. **Identify intent** - is this a new build, a fix, a review or advice?
 2. **Ask what is missing** - one question per message, never re-asking anything you already said.
 3. **Recommend one approach** - benchmark the roles that are hardest to fill first, and store market range beside internal band so the gap is visible.
-4. **Build only on request** - CSV, SQL DDL, JSON Schema and a Notion mapping, data only.
+4. **Build only on request** - CSV, SQL DDL, JSON Schema, a Notion mapping or an Excel workbook, data only.
 
 The intended workflow is: Role list → Market data → Internal band → Gap analysis → Band decision
 
@@ -109,7 +109,7 @@ Paste this into Claude, ChatGPT, Gemini or Cursor to start the intake:
 I want to set up market intelligence for my company.
 Ask me one short question at a time, and only about what I have not already told you.
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
-When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
+When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
 ## Time and cost to implement
@@ -156,7 +156,7 @@ Salary Benchmarking touches decisions with legal, financial or employment conseq
 | Tier | Scale |
 | Layer | Acquire |
 | Setup time | under an hour |
-| Output formats | CSV, SQL DDL, JSON Schema, Notion mapping |
+| Output formats | CSV, SQL DDL, JSON Schema, Notion mapping, Excel workbook |
 | Artifacts built | Only after you ask |
 | Real data required | None - fictional example row included |
 

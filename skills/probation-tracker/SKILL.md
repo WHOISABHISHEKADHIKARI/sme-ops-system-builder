@@ -87,7 +87,7 @@ open_questions: []      # the unanswered ones, in the order worth asking
 
 ### Step 4 - Recommend the smallest workflow
 
-Give a short recommendation, then ask whether to build it. Do not build unprompted.
+Give a short recommendation, then ask whether to build it. Do not build unprompted. Ask: "Want me to build the CSV, SQL DDL, JSON Schema, Notion mapping, or an Excel workbook from these confirmed rules?"
 
 **Recommended approach:** One record per person with the start date, review dates and the confirmation decision. Keep the criteria attached to the record.
 
@@ -99,6 +99,10 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
+
+An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
+correct text and no import dialog. A CSV carries no types, so after it, name the columns
+that need a number, date or currency format applied.
 
 ```csv
 Probation Record,30-Day Review Date,30-Day Score,60-Day Review Date,60-Day Score,90-Day Review Date,90-Day Score,Confirmation Letter Issued,Department,Employee Name,End Date,Manager,Mentor / Buddy,Milestones Met,Notes,Overall Score,Probation ID,Start Date,Status
@@ -316,6 +320,6 @@ We have 6 people on probation and one review was missed entirely.
 I want to set up new hire evaluation for my company.
 Ask me one short question at a time, and only about what I have not already told you.
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
-When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
+When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 

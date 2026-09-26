@@ -87,7 +87,7 @@ open_questions: []      # the unanswered ones, in the order worth asking
 
 ### Step 4 - Recommend the smallest workflow
 
-Give a short recommendation, then ask whether to build it. Do not build unprompted.
+Give a short recommendation, then ask whether to build it. Do not build unprompted. Ask: "Want me to build the CSV, SQL DDL, JSON Schema, Notion mapping, or an Excel workbook from these confirmed rules?"
 
 **Recommended approach:** Use the project tool people already update for tasks, and keep this as the register of projects, owners, dates and health.
 
@@ -99,6 +99,10 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
+
+An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
+correct text and no import dialog. A CSV carries no types, so after it, name the columns
+that need a number, date or currency format applied.
 
 ```csv
 Project Name,Actual Cost,Budget,Currency,Invoices,Client / Stakeholder,Client Account,Client Satisfaction Score,Deliverables,Department,End Date,Milestones,Notes,Priority,Progress %,Project ID,Project Manager,Project Type,Sprint,Start Date,Status,Team Members
@@ -337,6 +341,6 @@ Project status is asked for in chat every week.
 I want to set up work delivery for my company.
 Ask me one short question at a time, and only about what I have not already told you.
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
-When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
+When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 

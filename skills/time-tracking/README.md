@@ -95,7 +95,7 @@ Only then does it recommend the smallest workflow, and builds artifacts after yo
 1. **Identify intent** - is this a new build, a fix, a review or advice?
 2. **Ask what is missing** - one question per message, never re-asking anything you already said.
 3. **Recommend one approach** - collect time by project, and connect billing to it only if you bill by the hour. Lock the period once it is invoiced.
-4. **Build only on request** - CSV, SQL DDL, JSON Schema and a Notion mapping, data only.
+4. **Build only on request** - CSV, SQL DDL, JSON Schema, a Notion mapping or an Excel workbook, data only.
 
 The intended workflow is: Entry → Approval → Lock period → Invoice or cost view
 
@@ -116,7 +116,7 @@ Paste this into Claude, ChatGPT, Gemini or Cursor to start the intake:
 I want to set up hour logging for my company.
 Ask me one short question at a time, and only about what I have not already told you.
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
-When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
+When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
 ## Time and cost to implement
@@ -159,7 +159,7 @@ It links rather than duplicates. Related modules: `sme-ops-system-builder`, `peo
 | Tier | Starter |
 | Layer | Manage |
 | Setup time | a couple of hours |
-| Output formats | CSV, SQL DDL, JSON Schema, Notion mapping |
+| Output formats | CSV, SQL DDL, JSON Schema, Notion mapping, Excel workbook |
 | Artifacts built | Only after you ask |
 | Real data required | None - fictional example row included |
 

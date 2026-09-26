@@ -40,7 +40,9 @@ need one table per process, agreed field names, and a review rhythm.
 1. Open the module page and read **What is this** and **What it tracks**.
 2. Copy the field list. Change nothing you cannot defend.
 3. Take the CSV into your tool of choice, or the SQL into Postgres, or the mapping
-   table into Notion.
+   table into Notion. If someone asks for an Excel template, ask for the Excel
+   workbook output: it is the CSV with a byte order mark, plus a note of which
+   columns need a number, date or currency format.
 4. Delete the example row once real data is in.
 5. Reuse the **Reusable Prompt** in the module's `SKILL.md` when you want the skill to
    build it for you instead.
@@ -55,7 +57,8 @@ deliberately similar, and the router exists to pick for you.
 3. **Stop early** once the remaining answers would not change the output.
 4. **Hold the answers internally** as a small YAML context; never invent a value.
 5. **Recommend the smallest workflow** that fits, then wait.
-6. **Build only on request**: CSV, SQL, JSON Schema, Notion mapping, data only.
+6. **Build only on request**: CSV, SQL, JSON Schema, Notion mapping, Excel workbook,
+   data only. Never build before the user asks.
 
 ## What each module ships
 
@@ -65,6 +68,7 @@ deliberately similar, and the router exists to pick for you.
 | SQL DDL | `CREATE TABLE`, primary key, timestamps, status index |
 | JSON Schema | draft 2020-12, same field list, `additionalProperties: false` |
 | Notion template | property-mapping table, one row per CSV column |
+| Excel workbook | the CSV with a UTF-8 byte order mark, so Excel opens it with correct text and no import dialog, plus the columns that need a number, date or currency format |
 | Reusable prompt | the intake questions, ready to paste |
 
 ## Field types
@@ -97,7 +101,7 @@ tools/                      the checkers that keep the four artifacts in agreeme
 ## Conventions
 
 - One question per message. Never batched.
-- Data only in the output: CSV, SQL, JSON, Notion mapping. No prose.
+- Data only in the output: CSV, SQL, JSON, Notion mapping, Excel workbook. No prose.
 - One example row, visibly fake. Never real names, salaries or client data.
 - Field names are identical across all four artifacts.
 - Cross-table links use `relation`, never `url` or free text.

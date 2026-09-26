@@ -40,6 +40,28 @@ def keyword_for(slug, title):
     return re.sub(r'\s+', ' ', t).strip().lower(), title
 
 
+def select_options(text):
+    """Map select field name -> its options, from the `## Select Options` section.
+
+    The section looks like:
+
+        **Leave Type**
+
+        ```
+        Annual | Sick | Casual
+        ```
+
+    A module with no select fields still has the section, just with no pairs in it.
+    """
+    m = re.search(r'## Select Options\n(.*?)(?=\n## )', text, re.S)
+    if not m:
+        return {}
+    out = {}
+    for field, block in re.findall(r'\*\*(.+?)\*\*\n+```\n(.*?)\n```', m.group(1), re.S):
+        out[field.strip()] = [o.strip() for o in block.split('|') if o.strip()]
+    return out
+
+
 def slugify(s):
     return re.sub(r'[^a-z0-9]+', '-', s.lower().replace('&', ' ')).strip('-')
 
@@ -63,6 +85,7 @@ def read_skill(path):
     d['safety'] = sec('Security & Safety Notes', 'Common Pitfalls')
     d['related'] = re.findall(r'^- `([a-z0-9-]+)` - (.+)$',
                               sec('Related Skills', 'Reusable Prompt'), re.M)
+    d['options'] = select_options(t)
     d['csv'] = re.search(r'```csv\n(.*?)\n```', t, re.S).group(1)
     d['sql'] = re.search(r'```sql\n(.*?)\n```', t, re.S).group(1)
     d['json'] = re.search(r'```json\n(.*?)\n```', t, re.S).group(1)
