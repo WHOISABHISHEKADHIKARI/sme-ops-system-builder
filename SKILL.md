@@ -165,6 +165,20 @@ onboarding-playbook -> skills/onboarding-playbook/SKILL.md  nothing in place, so
 - `clients-accounts` - the customer record invoicing and payments link to.
 - `notification-reminder-hub` - turns due dates across modules into reminders.
 
+### Sub-packs
+
+These are routers of their own, not modules. Route to them when the question is outside
+the operational process, and read the pack's own catalog rather than loading all of it.
+
+- `accounting-audit-system-builder` - 16 modules, one per stage of the accounting cycle.
+  Use for the entry, the reconciliation and the audit trail. Where a topic exists in both
+  places, this pack owns the cycle and the flat modules own the ongoing process.
+- `brand-growth-system-builder` - 13 modules covering how the business looks and how it is
+  found: design tokens, the mark and its rights, print collateral, the page register, the
+  Business Profile, citations, email, decks and social. It routes on three jobs -
+  consistent, findable, credible - and orders upstream first, because tokens and the mark
+  are inherited by everything downstream.
+
 ## Reusable Prompt
 
 ```

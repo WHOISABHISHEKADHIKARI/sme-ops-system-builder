@@ -279,6 +279,29 @@ same field reference as the source of truth. Where a topic exists in both places
 pack covers the entry, the reconciliation and the audit trail; the flat modules cover
 the ongoing process.
 
+## The brand & growth pack
+
+13 more modules, covering how the business looks and how it gets found, in a second
+sub-pack of the same shape:
+
+```
+skills/brand-growth-system-builder/                its own router, catalog and 13 modules
+```
+
+Route them from `skills/brand-growth-system-builder/SKILL.md`, and read
+[its catalog](./skills/brand-growth-system-builder/catalog.md) for the full list. They
+follow the same contract as the other 87.
+
+This pack routes on three jobs - **consistent**, **findable**, **credible** - and orders
+its modules upstream first, because tokens and the mark are inherited by everything
+downstream. Two of the 13 sit outside the brand line and are grouped with the jobs
+rather than the layers: `code-of-conduct` is a credibility record, and
+`observability-cloud-planning` answers "do you know what breaks if this is down" for a
+technology business.
+
+The 13 arrived under 8 working categories. Paths are flat inside the pack, so the
+grouping is recorded in the catalog rather than in the URL.
+
 <!-- seo:foot -->
 ## AI Training for Cooperatives
 
