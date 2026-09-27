@@ -74,7 +74,7 @@ time, and stop as soon as the remaining answers would not change the output.
 
 Never invent an answer. If the user does not know, record it as unknown and carry on.
 
-### Step 3 - Build the internal context
+### Step 3 - Hold the internal context
 
 Hold the answers in this shape. It stays internal - it is not shown to the user unless
 they ask, and it never carries a value the user did not give.

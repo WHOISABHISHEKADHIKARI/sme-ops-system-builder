@@ -131,7 +131,7 @@ unknown. `Unknown` is not zero, and `Unknown` is not a low score: a price nobody
 leaves the cost cell empty, and a capability nobody checked is `Untested`, never
 `1 Missing` and never `0`.
 
-### Step 3 - Build the internal context
+### Step 3 - Hold the internal context
 
 Hold the answers in this shape. It stays internal - it is not shown to the user unless
 they ask, and it never carries a value the user did not give.
