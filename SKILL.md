@@ -1,6 +1,6 @@
 ---
 name: sme-ops-system-builder
-description: "Routes an SME request to the right operational skill, asks only what is missing, then recommends two or three modules. Use for company systems, trackers or Notion setup."
+description: "Route SME operations, tracker, and Notion-system requests to two or three relevant modules. Use when a business needs help choosing what to track."
 category: business
 risk: safe
 source: self
@@ -8,14 +8,14 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business-operations, hr, finance, database, notion, csv, sql, router]
-tools: [claude, cursor, gemini, antigravity]
+tools: [claude-code, codex-cli, cursor, gemini-cli]
 ---
 
 # SME Ops System Builder
 
-Router for 71 operational skills: people, hiring, leave, finance, projects, governance,
-analytics, exit. It works out what the business actually needs, then hands off to the one
-module skill that matches. It never builds anything itself.
+Router for 71 operational skills covering people, hiring, leave, finance, projects,
+governance, analytics, and exit. It identifies the smallest useful shortlist and hands
+the selected workflow to its module skill. It never builds artifacts itself.
 
 ## Overview
 
@@ -29,10 +29,10 @@ artifacts only on request. This skill never emits a schema, a CSV or a Notion te
 
 ## When to Use This Skill
 
-- "Set up systems for my company"
-- "What should I track as a small business?"
-- "I need a leave tracker and an invoice tracker"
-- "Turn our hiring spreadsheet into a database"
+- Use when the user asks to set up systems for a company.
+- Use when the user asks what a small business should track.
+- Use when the user names two or more operational needs and needs the matching modules.
+- Use when the user wants to turn an operational spreadsheet into a maintained system.
 
 Do not use it when the user has already named one specific tracker and just wants the
 file - go straight to that module skill.
@@ -74,6 +74,10 @@ Read `skills/<slug>/SKILL.md` for the module the user picks and let that file ru
 intake from there. This skill stops at the shortlist: it does not answer the module's
 questions, build its fields, or run a second module in the same conversation. Never merge
 two modules into one questionnaire.
+
+If a listed path is missing, stop and report the missing module instead of guessing a
+replacement. If no catalog entry clearly matches, say so and ask one question that
+distinguishes the closest candidates.
 
 ### Step 4 - Output
 
@@ -161,9 +165,9 @@ onboarding-playbook -> skills/onboarding-playbook/SKILL.md  nothing in place, so
 
 ## Related Skills
 
-- `people-directory` - the employee master record most modules link to.
-- `clients-accounts` - the customer record invoicing and payments link to.
-- `notification-reminder-hub` - turns due dates across modules into reminders.
+- `@people-directory` - the employee master record most modules link to.
+- `@clients-accounts` - the customer record invoicing and payments link to.
+- `@notification-reminder-hub` - turns due dates across modules into reminders.
 
 ## Reusable Prompt
 
@@ -172,4 +176,3 @@ I run a [size] [industry] business. Help me set up operational trackers.
 Ask me up to 4 short questions, one at a time, and only about what I have not said.
 Then recommend the 2 or 3 modules that fit, and wait for me to pick before building.
 ```
-
