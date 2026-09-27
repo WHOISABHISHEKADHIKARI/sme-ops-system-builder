@@ -41,11 +41,30 @@ skills/accounting-audit-system-builder/<slug>/      a module, same four files as
 ```
 
 A pack holds its own router and its own modules in one folder, so the 71 above stay
-flat and a second domain can be added later without nesting everything. Tools find
+flat and a second domain can be added without nesting everything. Tools find
 both layouts on their own: a directory is a pack when it contains child directories
 that carry their own `SKILL.md`, and its modules are addressed as `pack/slug`. Where a
 topic exists in both places, the pack covers the entry, the reconciliation and the
 audit trail; the flat modules cover the ongoing process.
+
+## The brand & growth sub-pack
+
+The second pack, same shape:
+
+```
+skills/brand-growth-system-builder/SKILL.md    third router: routes to one of 13
+skills/brand-growth-system-builder/catalog.md   all 13, grouped by layer
+skills/brand-growth-system-builder/<slug>/      a module, same two files as above
+```
+
+Brand, visibility and credibility: design tokens, the mark and its rights, print
+collateral, the page register, the Business Profile, citations, email, decks and social.
+It follows the same contract as the other 87, and orders its modules upstream first -
+tokens and the mark are inherited by everything downstream.
+
+Paths are flat inside the pack. The 13 modules arrived under 8 working categories, and
+that grouping is recorded in the catalog rather than in the URL, because the tools
+address modules as `pack/slug` and a third level would not be discovered.
 
 Every module follows the same shape:
 
