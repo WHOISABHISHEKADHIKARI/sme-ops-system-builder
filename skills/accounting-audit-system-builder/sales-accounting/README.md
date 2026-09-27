@@ -57,22 +57,26 @@ Opens with one question, then asks only what is still missing - one per message.
 
 **Recommended approach:** One sales record per invoice, holding the order, challan and source document as relations, the full tax breakdown, and - where the sale is on credit - the due date, the debtor ledger and the outstanding balance - five steps: prepare documents, issue the invoice, update the Sales VAT Register, record in software, confirm the debtor ledger.
 
-**Workflow:** Order and challan prepared → Invoice issued → VAT register updated → Recorded → Debtor ledger confirmed
+**Workflow:** Documents prepared (where used) → Invoice issued → VAT register updated (where VAT applies) → Recorded → Receivable confirmed against the debtor ledger
 
 Artifacts are built only after the user asks for them.
 
-## Fields (32)
+## Fields (33)
 
 ```
-Sales Number, Customer, Customer PAN/VAT, Sales Order, Delivery Challan, Invoice Number, Invoice Date, Item Description, Quantity, UOM, Rate, Gross Amount, Discount, Taxable Value, VAT Rate %, VAT Amount, TDS Rate %, TDS Amount, Invoice Total, Net Receivable, Credit Terms (Days), Due Date, Receivable Status, Amount Received, Balance, Ledger Account, Source Document, VAT Register Updated, Entry Verified, Prepared By, Notes, Sales ID
+Sales Number, Customer, Customer PAN/VAT, Sales Order, Delivery Challan, Invoice Number, Invoice Date, Item Description, Quantity, UOM, Rate, Gross Amount, Discount, Taxable Value, VAT Rate %, VAT Amount, TDS Rate %, TDS Amount, Invoice Total, Net Receivable, Credit Terms (Days), Due Date, Payment Status, Aging Status, Amount Received, Balance, Ledger Account, Source Document, VAT Register Updated, Entry Verified, Prepared By, Notes, Sales ID
 ```
+
+One row is one invoice with a single line item. `VAT Rate %`, `VAT Amount`, `TDS Rate %`,
+`TDS Amount`, `Credit Terms (Days)` and `Due Date` are optional - set them only from a
+confirmed answer. `Payment Status` and `Aging Status` are separate on purpose.
 
 | Type | Count |
 |---|---:|
 | `id` | 1 |
 | `text` | 7 |
 | `long_text` | 1 |
-| `select` | 4 |
+| `select` | 5 |
 | `relation` | 3 |
 | `number` | 4 |
 | `currency` | 10 |
@@ -88,12 +92,13 @@ Sales Number, Customer, Customer PAN/VAT, Sales Order, Delivery Challan, Invoice
 ## SQL setup
 
 ```sql
+-- PostgreSQL-flavoured DDL. created_at/updated_at are database-maintained.
 CREATE TABLE sales_accounting (
   sales_number VARCHAR(255),
   customer VARCHAR(255),
   customer_pan_vat VARCHAR(255),
-  sales_order VARCHAR(255),  -- relation -> target record
-  delivery_challan VARCHAR(255),  -- relation -> target record
+  sales_order VARCHAR(255),  -- relation -> sales order database
+  delivery_challan VARCHAR(255),  -- relation -> delivery challan database
   invoice_number VARCHAR(255),
   invoice_date DATE NOT NULL,
   item_description VARCHAR(255),
@@ -103,19 +108,20 @@ CREATE TABLE sales_accounting (
   gross_amount NUMERIC(14,2) NOT NULL,
   discount NUMERIC(14,2) NOT NULL,
   taxable_value NUMERIC(14,2) NOT NULL,
-  vat_rate NUMERIC NOT NULL,
-  vat_amount NUMERIC(14,2) NOT NULL,
-  tds_rate NUMERIC NOT NULL,
-  tds_amount NUMERIC(14,2) NOT NULL,
+  vat_rate NUMERIC,
+  vat_amount NUMERIC(14,2),
+  tds_rate NUMERIC,
+  tds_amount NUMERIC(14,2),
   invoice_total NUMERIC(14,2) NOT NULL,
   net_receivable NUMERIC(14,2) NOT NULL,
-  credit_terms_days NUMERIC NOT NULL,
-  due_date DATE NOT NULL,
-  receivable_status VARCHAR(100) NOT NULL,
+  credit_terms_days NUMERIC,
+  due_date DATE,
+  payment_status VARCHAR(100) NOT NULL,
+  aging_status VARCHAR(100) NOT NULL,
   amount_received NUMERIC(14,2) NOT NULL,
   balance NUMERIC(14,2) NOT NULL,
   ledger_account VARCHAR(255),
-  source_document VARCHAR(255),  -- relation -> target record
+  source_document VARCHAR(255),  -- relation -> source document register
   vat_register_updated VARCHAR(100) NOT NULL,
   entry_verified VARCHAR(100) NOT NULL,
   prepared_by VARCHAR(255),
@@ -134,9 +140,9 @@ CREATE TABLE sales_accounting (
 
 ## Relations
 
-- `Sales Order` -> the sales order the invoice was raised against.
-- `Delivery Challan` -> the delivery challan that evidences despatch.
-- `Source Document` -> the filed document register row for the invoice and its support.
+- `Sales Order` -> the sales order database. Optional: many invoices have no order.
+- `Delivery Challan` -> the delivery challan database. Optional: many businesses issue none.
+- `Source Document` -> the `source-document-filing` register. Optional.
 
 ## Frequently asked questions
 
@@ -171,7 +177,7 @@ It links rather than duplicates. Related modules: `source-document-filing` files
 
 If you use this page in an answer, cite it as:
 
-> Sales Accounting is a starter-tier operational database skill with 32 fields, published by Abhishek Adhikari on the SME Ops System Builder and last reviewed on 26 September 2026.
+> Sales Accounting is a starter-tier operational database skill with 33 fields, published by Abhishek Adhikari on the SME Ops System Builder and last reviewed on 26 September 2026.
 
 | | |
 |---|---|

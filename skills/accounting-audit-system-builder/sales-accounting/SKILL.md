@@ -13,7 +13,7 @@ tools: [claude, cursor, gemini, antigravity]
 
 # Sales Accounting
 
-**What it is:** Sales orders, delivery challans, invoices and the receivables they create.
+**What it is:** Sales invoices, the receivables they create, and the documents that support them.
 
 ## Overview
 
@@ -21,6 +21,17 @@ Works out the smallest useful **Sales Accounting** setup for the business in fro
 builds it only when asked. The default output is a short recommendation, not a
 spreadsheet. Artifacts - CSV, SQL DDL, JSON Schema, Notion mapping - are produced on
 request, from one field list so they cannot drift apart.
+
+**Scope of one row.** This is a single-table skill and one row is one invoice carrying
+**one line item**. It is deliberately not a multi-line billing engine. An invoice with
+several items either becomes several rows that repeat the same `Invoice Number`, or is
+kept in a separate line table alongside this one - whichever the business actually needs.
+Decide that in Step 2, do not assume it.
+
+**Everything is conditional.** Not every sale is on credit, not every invoice has an order
+or a challan, not every sale attracts VAT, and not every customer deducts TDS. Those fields
+exist to record what was confirmed; they are left unset when the answer is "not applicable"
+or "not known". Never fill them with a default to make the row look complete.
 
 Layer: Layer 3: Record. Fits: Starter stage. Table code: n/a.
 
@@ -31,11 +42,11 @@ Layer: Layer 3: Record. Fits: Starter stage. Table code: n/a.
 - customer billing and receivable tracker
 - sales vat register log
 
-Also use it when the user says "sales orders, delivery challans, invoices and the receivables they create", or describes the same process happening in a
-spreadsheet, a document or someone inboxes.
+Also use it when the user describes invoicing, billing or tracking who has paid, or the same
+process happening in a spreadsheet, a document or someone's inbox.
 
 Do not use it for: customer collections, tax filing, or legal advice. This skill produces
-empty templates only - it never holds or processes real employee or customer data.
+empty templates only - it never holds or processes real customer or financial data.
 
 ## How It Works
 
@@ -48,18 +59,22 @@ Read the request and pick the intent before asking anything.
 - "is this right" or "review" or "audit" -> the user wants a check, not a build; answer from what they share.
 - "how do I ..." -> advice question; answer directly and offer the build only if it helps.
 
-One message, one question, no batching. Open with:
+Then read everything the user has already said and work out which single missing answer
+would actually change the recommendation. If the request already contains enough to
+recommend, do not ask anything yet - go to Step 4. If the user is describing a problem
+rather than requesting a build, answer it first; a question is not owed.
 
-> **Q:** How are sales invoices raised today?
+Never open with a fixed question such as "How are sales invoices raised today?" when the
+request has already answered it.
 
 ### Step 2 - Ask only what is missing
 
 Skip anything the user already answered, in any earlier message. Ask the rest one at a
 time, and stop as soon as the remaining answers would not change the output.
 
-- **Volume** - How many invoices a month? / How many customers?
-- **Documents** - Sales order and challan every time? / Or invoice only?
-- **Taxes and credit** - VAT charged? / TDS deducted by customers? / Discounts given? / How many sales are on credit? / Standard credit period? / Who follows up?
+- **Volume** - How many invoices a month? / Roughly how many lines per invoice?
+- **Documents** - Is there a sales order every time, or only for some customers? / Is a delivery challan used at all?
+- **Taxes and credit** - Is VAT charged, and at what rate? / Do any customers deduct TDS, and at what rate? / How many sales are on credit? / Standard credit period? / Who follows up?
 - **Current process** - Tracked now? / Software or sheet? / What gets missed?
 - **Outcome** - What do you need? / A sales register, an aging view or both?
 
@@ -87,31 +102,45 @@ open_questions: []      # the unanswered ones, in the order worth asking
 
 ### Step 4 - Recommend the smallest workflow
 
-Give a short recommendation, then ask whether to build it. Do not build unprompted.
+Give a short recommendation, then ask whether to build it. Do not build unprompted. Use
+conditional language and name what is conditional.
 
-**Recommended approach:** One sales record per invoice, holding the order, challan and source document as relations, the full tax breakdown, and - where the sale is on credit - the due date, the debtor ledger and the outstanding balance - five steps: prepare documents, issue the invoice, update the Sales VAT Register, record in software, confirm the debtor ledger.
+**Recommended approach:** One invoice register, one row per invoice with a single line item.
+Link the sales order, delivery challan and source document only where the business actually
+raises them. Record VAT and TDS rates only where they were confirmed. For credit sales, add
+the credit terms, due date, amount received, balance, a payment status and an aging status;
+leave those unset for cash sales.
 
-**Why this one:** A sales register that stops at the invoice total loses the receivable. Keeping credit terms, due date and balance on the same row is what turns billing into a collections list.
+**Why this one:** A sales register that stops at the invoice total loses the receivable.
+Splitting payment state from aging state is what turns billing into a collections list -
+"paid" and "overdue" are different questions and one field cannot answer both.
 
-**Workflow:** Order and challan prepared → Invoice issued → VAT register updated → Recorded → Debtor ledger confirmed
+**Workflow:** Documents prepared (where used) → Invoice issued → VAT register updated (where VAT applies) → Recorded → Receivable confirmed against the debtor ledger
 
 ### Step 5 - Build only on request
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+The SQL below is written in PostgreSQL-flavoured DDL. `SERIAL PRIMARY KEY` and
+`TIMESTAMP DEFAULT NOW()` are PostgreSQL-specific; on another engine use that engine's
+identity column and default-timestamp syntax. `created_at` and `updated_at` are maintained
+by the database and are not business fields - leave them out of the CSV, JSON Schema and
+Notion mapping.
+
 ```csv
-Sales Number,Customer,Customer PAN/VAT,Sales Order,Delivery Challan,Invoice Number,Invoice Date,Item Description,Quantity,UOM,Rate,Gross Amount,Discount,Taxable Value,VAT Rate %,VAT Amount,TDS Rate %,TDS Amount,Invoice Total,Net Receivable,Credit Terms (Days),Due Date,Receivable Status,Amount Received,Balance,Ledger Account,Source Document,VAT Register Updated,Entry Verified,Prepared By,Notes,Sales ID
-SAL-2026-0033,Greyson Foods,33CDEFG9012H1Z9,SO-2026-0094,DC-2026-0911,INV-2026-0733,2026-08-16,Corrugated carton packs printed,800,Nos,142.50,114000.00,2280.00,111720.00,18,20109.60,1,1117.20,131829.60,130712.40,30,2026-09-15,Part Paid,50000.00,80712.40,Sales - Cartons,DOC-2026-0455,Done,In progress,Ananya Rao,Invoice issued with the challan; credit sale net 30.,
+Sales Number,Customer,Customer PAN/VAT,Sales Order,Delivery Challan,Invoice Number,Invoice Date,Item Description,Quantity,UOM,Rate,Gross Amount,Discount,Taxable Value,VAT Rate %,VAT Amount,TDS Rate %,TDS Amount,Invoice Total,Net Receivable,Credit Terms (Days),Due Date,Payment Status,Aging Status,Amount Received,Balance,Ledger Account,Source Document,VAT Register Updated,Entry Verified,Prepared By,Notes,Sales ID
+SAL-2026-0033,Example Customer Ltd,ZZZZZ0000Z,SO-2026-0094,DC-2026-0911,INV-2026-0733,2026-08-16,Corrugated carton packs printed,800,Nos,142.50,114000.00,2280.00,111720.00,18,20109.60,2,2234.40,131829.60,129595.20,30,2026-09-15,Part Paid,Overdue,50000.00,79595.20,Sales - Cartons,DOC-2026-0455,Done,In progress,Example Preparer,Credit sale net 30; order raised for this customer only.,
 ```
 
 ```sql
+-- PostgreSQL-flavoured DDL. See the note above for other engines.
 CREATE TABLE sales_accounting (
   sales_number VARCHAR(255),
   customer VARCHAR(255),
   customer_pan_vat VARCHAR(255),
-  sales_order VARCHAR(255),  -- relation -> target record
-  delivery_challan VARCHAR(255),  -- relation -> target record
+  sales_order VARCHAR(255),  -- relation -> sales order database
+  delivery_challan VARCHAR(255),  -- relation -> delivery challan database
   invoice_number VARCHAR(255),
   invoice_date DATE NOT NULL,
   item_description VARCHAR(255),
@@ -121,19 +150,20 @@ CREATE TABLE sales_accounting (
   gross_amount NUMERIC(14,2) NOT NULL,
   discount NUMERIC(14,2) NOT NULL,
   taxable_value NUMERIC(14,2) NOT NULL,
-  vat_rate NUMERIC NOT NULL,
-  vat_amount NUMERIC(14,2) NOT NULL,
-  tds_rate NUMERIC NOT NULL,
-  tds_amount NUMERIC(14,2) NOT NULL,
+  vat_rate NUMERIC,
+  vat_amount NUMERIC(14,2),
+  tds_rate NUMERIC,
+  tds_amount NUMERIC(14,2),
   invoice_total NUMERIC(14,2) NOT NULL,
   net_receivable NUMERIC(14,2) NOT NULL,
-  credit_terms_days NUMERIC NOT NULL,
-  due_date DATE NOT NULL,
-  receivable_status VARCHAR(100) NOT NULL,
+  credit_terms_days NUMERIC,
+  due_date DATE,
+  payment_status VARCHAR(100) NOT NULL,
+  aging_status VARCHAR(100) NOT NULL,
   amount_received NUMERIC(14,2) NOT NULL,
   balance NUMERIC(14,2) NOT NULL,
   ledger_account VARCHAR(255),
-  source_document VARCHAR(255),  -- relation -> target record
+  source_document VARCHAR(255),  -- relation -> source document register
   vat_register_updated VARCHAR(100) NOT NULL,
   entry_verified VARCHAR(100) NOT NULL,
   prepared_by VARCHAR(255),
@@ -173,7 +203,8 @@ CREATE TABLE sales_accounting (
       "Net Receivable": { "type": "number" },
       "Credit Terms (Days)": { "type": "number" },
       "Due Date": { "type": "string", "format": "date" },
-      "Receivable Status": { "type": "string" },
+      "Payment Status": { "type": "string" },
+      "Aging Status": { "type": "string" },
       "Amount Received": { "type": "number" },
       "Balance": { "type": "number" },
       "Ledger Account": { "type": "string" },
@@ -192,15 +223,10 @@ CREATE TABLE sales_accounting (
       "Gross Amount",
       "Discount",
       "Taxable Value",
-      "VAT Rate %",
-      "VAT Amount",
-      "TDS Rate %",
-      "TDS Amount",
       "Invoice Total",
       "Net Receivable",
-      "Credit Terms (Days)",
-      "Due Date",
-      "Receivable Status",
+      "Payment Status",
+      "Aging Status",
       "Amount Received",
       "Balance",
       "VAT Register Updated",
@@ -215,8 +241,8 @@ CREATE TABLE sales_accounting (
 | Sales Number | Text | Leave as Text |
 | Customer | Text | Leave as Text |
 | Customer PAN/VAT | Text | Leave as Text |
-| Sales Order | Relation (link to the target database) | Convert to Relation, link to the target database |
-| Delivery Challan | Relation (link to the target database) | Convert to Relation, link to the target database |
+| Sales Order | Relation (link to the sales order database) | Convert to Relation, link to the sales order database |
+| Delivery Challan | Relation (link to the delivery challan database) | Convert to Relation, link to the delivery challan database |
 | Invoice Number | Text | Leave as Text |
 | Invoice Date | Date | Convert to Date |
 | Item Description | Text | Leave as Text |
@@ -234,11 +260,12 @@ CREATE TABLE sales_accounting (
 | Net Receivable | Number (format: currency) | Convert to Number, set format to Currency |
 | Credit Terms (Days) | Number | Convert to Number |
 | Due Date | Date | Convert to Date |
-| Receivable Status | Select (add options after import) | Convert to Select, add options: "Outstanding", "Part Paid", "Settled", "Written Off", "Overdue" |
+| Payment Status | Select (add options after import) | Convert to Select, add options: "Unpaid", "Part Paid", "Paid", "Written Off" |
+| Aging Status | Select (add options after import) | Convert to Select, add options: "Current", "Due Soon", "Overdue" |
 | Amount Received | Number (format: currency) | Convert to Number, set format to Currency |
 | Balance | Number (format: currency) | Convert to Number, set format to Currency |
 | Ledger Account | Text | Leave as Text |
-| Source Document | Relation (link to the target database) | Convert to Relation, link to the target database |
+| Source Document | Relation (link to the source document register) | Convert to Relation, link to the source document register |
 | VAT Register Updated | Select (add options after import) | Convert to Select, add options: "Not started", "In progress", "Blocked", "Done", "Cancelled" |
 | Entry Verified | Select (add options after import) | Convert to Select, add options: "Not started", "In progress", "Blocked", "Done", "Cancelled" |
 | Prepared By | Text | Leave as Text |
@@ -254,10 +281,10 @@ and anything pointing at another table stays `relation`.
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
 | 1 | Sales Number | `text` | `VARCHAR(255)` | `string` | Text | `SAL-2026-0033` |
-| 2 | Customer | `text` | `VARCHAR(255)` | `string` | Text | `Greyson Foods` |
-| 3 | Customer PAN/VAT | `text` | `VARCHAR(255)` | `string` | Text | `33CDEFG9012H1Z9` |
-| 4 | Sales Order | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `SO-2026-0094` |
-| 5 | Delivery Challan | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `DC-2026-0911` |
+| 2 | Customer | `text` | `VARCHAR(255)` | `string` | Text | `Example Customer Ltd` |
+| 3 | Customer PAN/VAT | `text` | `VARCHAR(255)` | `string` | Text | `ZZZZZ0000Z` |
+| 4 | Sales Order | `relation` | `VARCHAR(255)` | `string` | Relation (link to the sales order database) | `SO-2026-0094` |
+| 5 | Delivery Challan | `relation` | `VARCHAR(255)` | `string` | Relation (link to the delivery challan database) | `DC-2026-0911` |
 | 6 | Invoice Number | `text` | `VARCHAR(255)` | `string` | Text | `INV-2026-0733` |
 | 7 | Invoice Date | `date` | `DATE` | `string, format: date` | Date | `2026-08-16` |
 | 8 | Item Description | `text` | `VARCHAR(255)` | `string` | Text | `Corrugated carton packs printed` |
@@ -269,22 +296,52 @@ and anything pointing at another table stays `relation`.
 | 14 | Taxable Value | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `111720.00` |
 | 15 | VAT Rate % | `number` | `NUMERIC` | `number` | Number | `18` |
 | 16 | VAT Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `20109.60` |
-| 17 | TDS Rate % | `number` | `NUMERIC` | `number` | Number | `1` |
-| 18 | TDS Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1117.20` |
+| 17 | TDS Rate % | `number` | `NUMERIC` | `number` | Number | `2` |
+| 18 | TDS Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `2234.40` |
 | 19 | Invoice Total | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `131829.60` |
-| 20 | Net Receivable | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `130712.40` |
+| 20 | Net Receivable | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `129595.20` |
 | 21 | Credit Terms (Days) | `number` | `NUMERIC` | `number` | Number | `30` |
 | 22 | Due Date | `date` | `DATE` | `string, format: date` | Date | `2026-09-15` |
-| 23 | Receivable Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Part Paid` |
-| 24 | Amount Received | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `50000.00` |
-| 25 | Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `80712.40` |
-| 26 | Ledger Account | `text` | `VARCHAR(255)` | `string` | Text | `Sales - Cartons` |
-| 27 | Source Document | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `DOC-2026-0455` |
-| 28 | VAT Register Updated | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Done` |
-| 29 | Entry Verified | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In progress` |
-| 30 | Prepared By | `text` | `VARCHAR(255)` | `string` | Text | `Ananya Rao` |
-| 31 | Notes | `long_text` | `TEXT` | `string` | Text | `Invoice issued with the challan; credit sale net 30.` |
-| 32 | Sales ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
+| 23 | Payment Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Part Paid` |
+| 24 | Aging Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Overdue` |
+| 25 | Amount Received | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `50000.00` |
+| 26 | Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `79595.20` |
+| 27 | Ledger Account | `text` | `VARCHAR(255)` | `string` | Text | `Sales - Cartons` |
+| 28 | Source Document | `relation` | `VARCHAR(255)` | `string` | Relation (link to the source document register) | `DOC-2026-0455` |
+| 29 | VAT Register Updated | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Done` |
+| 30 | Entry Verified | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In progress` |
+| 31 | Prepared By | `text` | `VARCHAR(255)` | `string` | Text | `Example Preparer` |
+| 32 | Notes | `long_text` | `TEXT` | `string` | Text | `Credit sale net 30; order raised for this customer only.` |
+| 33 | Sales ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
+
+The table above is the single source of truth. The CSV, SQL, JSON Schema and Notion mapping
+are all derived from it - never edit one without the others.
+
+How the amounts relate, so a reviewer can check any row:
+
+- `Gross Amount` = `Quantity` x `Rate`
+- `Taxable Value` = `Gross Amount` - `Discount`
+- `Invoice Total` = `Taxable Value` + `VAT Amount` (equals `Taxable Value` when no VAT applies)
+- `Net Receivable` = `Invoice Total` - `TDS Amount` (equals `Invoice Total` when no TDS applies)
+- `Balance` = `Net Receivable` - `Amount Received`
+- `Due Date` = `Invoice Date` + `Credit Terms (Days)`; both stay unset on a cash sale
+
+`VAT Rate %`, `VAT Amount`, `TDS Rate %`, `TDS Amount`, `Credit Terms (Days)` and
+`Due Date` are optional. Set them only from a confirmed answer, and never carry a rate as a
+universal default - a TDS rate belongs to a specific customer, contract and jurisdiction,
+and VAT applicability is a fact about the business and the supply.
+
+`Payment Status` is what has been received: `Unpaid`, `Part Paid`, `Paid`, `Written Off`.
+`Aging Status` is how late it is against `Due Date`: `Current`, `Due Soon`, `Overdue`,
+assessed as at the reporting date. They are separate because an invoice can be fully paid
+and no longer aging, or unpaid and long overdue.
+
+`Sales Number` is the internal reference used inside the business; `Invoice Number` is the
+number the customer is given. They are different things and both are useful, so both are
+kept - but if the business only has one, drop `Sales Number` and keep the invoice number.
+`Sales ID` is an internal database identifier only. It exists so the target database can
+address a row, it is left blank in the example, and it is not a business reference - do not
+print it on an invoice or quote it to a customer.
 
 ## Select Options
 
@@ -293,10 +350,15 @@ and anything pointing at another table stays `relation`.
 ```
 Nos | Kg | Litre | Metre | Set | Hour | Box | Packet
 ```
-**Receivable Status**
+**Payment Status**
 
 ```
-Outstanding | Part Paid | Settled | Written Off | Overdue
+Unpaid | Part Paid | Paid | Written Off
+```
+**Aging Status**
+
+```
+Current | Due Soon | Overdue
 ```
 **VAT Register Updated**
 
@@ -313,9 +375,19 @@ Not started | In progress | Blocked | Done | Cancelled
 
 Link fields: `Sales Order`, `Delivery Challan`, `Source Document`
 
-- `Sales Order` -> the sales order the invoice was raised against.
-- `Delivery Challan` -> the delivery challan that evidences despatch.
-- `Source Document` -> the filed document register row for the invoice and its support.
+All three are optional. Many invoices carry none of them, and a cash sale usually carries
+none. Leave the cell unset rather than inventing a reference.
+
+- `Sales Order` -> the sales order database. Links to the order this invoice was raised
+  against, where the business raises orders at all.
+- `Delivery Challan` -> the delivery challan database. Links to the challan evidencing
+  despatch, where the business issues them at all.
+- `Source Document` -> the source document filing register (`source-document-filing`).
+  Links to the filed invoice and its supporting papers.
+
+Each is a genuine link to a named database, not a typed reference. If the business does not
+run that register, keep the field as `text` and say so, rather than labelling plain text a
+relation.
 
 ## Examples
 
@@ -327,76 +399,116 @@ We issue credit invoices and nobody can tell which customers have actually paid.
 
 **Context first** - one question per message, nothing already answered:
 
-> **Q:** How many invoices a month?
-> **A:** About thirty.
+> **Q:** Roughly how many lines does one invoice usually carry?
+> **A:** Usually one, sometimes two.
 >
 > **Q:** Do you always raise an order and a challan?
-> **A:** Order only for bigger customers.
+> **A:** Order only for bigger customers. No challan at all.
 >
-> **Q:** Standard credit period?
-> **A:** Net 30.
+> **Q:** Is VAT charged, and do any customers deduct TDS?
+> **A:** VAT yes. TDS only two customers, different rates.
 
 **Recommended next step** - offered, not built:
 
-> One sales record per invoice, holding the order, challan and source document as relations, the full tax breakdown, and - where the sale is on credit - the due date, the debtor ledger and the outstanding balance - five steps: prepare documents, issue the invoice, update the Sales VAT Register, record in software, confirm the debtor ledger.
+> Based on what you have confirmed: one invoice register, one row per invoice. Because most
+> of your invoices carry a single line, this stays a single table; for the two-item invoices,
+> either add a second row repeating the invoice number or keep a separate line table - tell me
+> which, and the build follows that choice.
 >
-> Workflow: Order and challan prepared → Invoice issued → VAT register updated → Recorded → Debtor ledger confirmed
+> Sales order links only where you raise one, so that field is optional. No challan field is
+> worth carrying since you do not issue them - say the word and it comes out.
 >
-> Want the CSV, SQL, JSON Schema and Notion mapping for this?
+> VAT applies, so the rate and amount are recorded. TDS stays optional, recorded per customer
+> at whatever rate that customer actually deducts, rather than a fixed rate.
+>
+> For your credit sales, credit terms, due date, amount received and balance, plus a payment
+> status and a separate aging status - paid and overdue are different questions.
+>
+> Workflow: Order raised where needed → Invoice issued → VAT register updated → Recorded → Receivable confirmed against the debtor ledger
+>
+> Want the CSV, SQL DDL, JSON Schema and Notion mapping for this?
 
 ## Best Practices
 
 - Recommend before building. The recommendation is the product; the files are the follow-up.
 - One question per message. A batched intake reads as a form and gets guessed at.
+- Skip any question the request has already answered. Asking it anyway costs trust.
+- Keep payment state and aging state in separate fields. Collapsing them loses the
+  collections view.
+- Leave conditional fields unset when the answer is "not applicable" or "not known". A
+  plausible default is worse than an empty cell, because nobody can tell it apart from fact.
+- Record a tax rate only when it was confirmed for that customer or supply, never as a
+  standing default.
 - Keep every field name identical across CSV, SQL and JSON Schema.
-- Use `relation` for anything that points at another table, `text` only for free text.
+- Use `relation` for anything that genuinely points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
 - Keep the example row obviously fake so nobody imports it as real data.
 
 ## Limitations
 
-- Empty template only. It does not compute payroll, tax, leave balances or KPIs.
+- One row is one invoice with a single line item. Multi-line invoices need repeated invoice
+  numbers or a separate line table; this skill does not model line-level tax or discounts.
+- Empty template only. It does not compute tax, file returns or keep ledgers.
+- Does not raise or send invoices, collect money, execute accounting entries, or call any
+  external API. The surrounding platform decides whether such tools exist.
+- Not legal or tax advice, and not a substitute for it. Confirm applicability with a
+  qualified adviser for the jurisdiction in question.
 - Notion relations need both databases imported before the link column resolves.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
-- Does not raise or send invoices, collect money, or file the VAT return.
-- Legal, tax and HR review is still required before this drives real decisions.
+- `Sales ID` is a database identifier, not a business reference.
 
 ## Security & Safety Notes
 
-- Never fill in real names, salaries, medical or banking data. Placeholders only.
-- Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
-- If the user pastes real employee data, generate the template and tell them to delete
-  the pasted data from the conversation.
-- Privacy, legal and disciplinary cases need a qualified human reviewer before anything
-  is acted on.
+- Never fill in real customer names, tax identifiers, bank details or any real financial
+  data. Placeholders only.
+- This is a sales and receivables skill: it has no employee, payroll, leave or medical data
+  and should not be asked to hold any.
+- Keep bank details masked and never mark an example row `Confidential`.
+- This skill writes nothing outside the chat. It runs no commands and calls no APIs unless
+  the surrounding platform explicitly provides them.
+- If the user pastes real customer or financial data, generate the template and tell them to
+  delete the pasted data from the conversation.
+- Anything that becomes a tax or legal filing needs a qualified human reviewer.
 
 ## Common Pitfalls
 
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
+- **Problem:** opened with "how are sales invoices raised today?" when the user had already
+  described the process.
+  **Solution:** read the request first; ask only what would change the recommendation.
+- **Problem:** one status field carrying both "paid" and "overdue".
+  **Solution:** split them - `Payment Status` for what was received, `Aging Status` for
+  how late it is.
+- **Problem:** every row shows a TDS rate, so nobody can tell which invoices actually had it.
+  **Solution:** leave it unset unless it was confirmed for that customer.
+- **Problem:** credit terms and due date filled in on a cash sale.
+  **Solution:** those fields are optional; a cash sale leaves them empty.
+- **Problem:** a single table silently truncating a two-item invoice.
+  **Solution:** settle the line question in Step 2 - repeated rows or a line table.
 - **Problem:** built a full system when one table was asked for.
   **Solution:** build what was requested; mention the parent skill separately.
 - **Problem:** all four artifacts drift apart.
-  **Solution:** derive all four from the field list in this file, never by hand.
+  **Solution:** derive all four from the Field Reference, never by hand.
 - **Problem:** Notion import shows every column as Text.
   **Solution:** that is expected. Apply the property mapping table once, after import.
 
 ## Related Skills
 
 - `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `source-document-filing` - files the invoice with its order, challan and other support.
-- `receipt-accounting` - clears the receivable carried in Net Receivable and Balance.
+- `source-document-filing` - files the invoice with its supporting documents.
+- `receipt-accounting` - clears the receivable carried in `Net Receivable` and `Balance`.
+- `payment-accounting` - records the receipt against `Payment Status` and reduces `Balance`.
 - `credit-cycle-analysis` - ages the outstanding balances this module produces.
 - `party-ledger-reconciliation` - reconciles the debtor ledger against this register.
-- `tds-booking-payment` - handles the TDS customers deduct at 1 per cent.
+- `tds-booking-payment` - handles TDS customers deduct, at the rate confirmed for that customer.
 - `day-book` - the daily entry log this register feeds.
 
 ## Reusable Prompt
 
 ```
-I want to set up sales orders, delivery challans, invoices and the receivables they create for my company.
+I want to set up sales invoices and the receivables they create for my company.
 Ask me one short question at a time, and only about what I have not already told you.
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.

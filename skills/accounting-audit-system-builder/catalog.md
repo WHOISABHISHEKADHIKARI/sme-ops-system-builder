@@ -47,7 +47,7 @@ Day-to-day cash position, counted and reconciled.
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
 | Petty Cash Management | - | Starter | 24 | `skills/petty-cash-management/SKILL.md` |
-| Day Book | - | Starter | 25 | `skills/day-book/SKILL.md` |
+| Day Book | - | Starter | 30 | `skills/day-book/SKILL.md` |
 
 ## Layer 5: Expense & Payroll
 
@@ -85,7 +85,7 @@ Day-to-day cash position, counted and reconciled.
 ## Totals
 
 - Modules: 16
-- Fields: 413
+- Fields: 418
 - Starter: 7
 - Growth: 9
 

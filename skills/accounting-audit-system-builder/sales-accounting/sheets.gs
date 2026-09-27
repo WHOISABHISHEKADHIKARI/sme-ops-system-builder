@@ -31,14 +31,14 @@ var CONFIG = {
         "name": "Customer",
         "type": "text",
         "options": [],
-        "example": "Greyson Foods",
+        "example": "Example Customer Ltd",
         "description": ""
       },
       {
         "name": "Customer PAN/VAT",
         "type": "text",
         "options": [],
-        "example": "33CDEFG9012H1Z9",
+        "example": "ZZZZZ0000Z",
         "description": ""
       },
       {
@@ -145,14 +145,14 @@ var CONFIG = {
         "name": "TDS Rate %",
         "type": "number",
         "options": [],
-        "example": "1",
+        "example": "2",
         "description": ""
       },
       {
         "name": "TDS Amount",
         "type": "currency",
         "options": [],
-        "example": "1117.20",
+        "example": "2234.40",
         "description": ""
       },
       {
@@ -166,7 +166,7 @@ var CONFIG = {
         "name": "Net Receivable",
         "type": "currency",
         "options": [],
-        "example": "130712.40",
+        "example": "129595.20",
         "description": ""
       },
       {
@@ -184,16 +184,26 @@ var CONFIG = {
         "description": ""
       },
       {
-        "name": "Receivable Status",
+        "name": "Payment Status",
         "type": "select",
         "options": [
-          "Outstanding",
+          "Unpaid",
           "Part Paid",
-          "Settled",
-          "Written Off",
-          "Overdue"
+          "Paid",
+          "Written Off"
         ],
         "example": "Part Paid",
+        "description": ""
+      },
+      {
+        "name": "Aging Status",
+        "type": "select",
+        "options": [
+          "Current",
+          "Due Soon",
+          "Overdue"
+        ],
+        "example": "Overdue",
         "description": ""
       },
       {
@@ -207,7 +217,7 @@ var CONFIG = {
         "name": "Balance",
         "type": "currency",
         "options": [],
-        "example": "80712.40",
+        "example": "79595.20",
         "description": ""
       },
       {
@@ -254,14 +264,14 @@ var CONFIG = {
         "name": "Prepared By",
         "type": "text",
         "options": [],
-        "example": "Ananya Rao",
+        "example": "Example Preparer",
         "description": ""
       },
       {
         "name": "Notes",
         "type": "long_text",
         "options": [],
-        "example": "Invoice issued with the challan; credit sale net 30.",
+        "example": "Credit sale net 30; order raised for this customer only.",
         "description": ""
       },
       {
@@ -274,8 +284,8 @@ var CONFIG = {
     ],
     "example": [
       "SAL-2026-0033",
-      "Greyson Foods",
-      "33CDEFG9012H1Z9",
+      "Example Customer Ltd",
+      "ZZZZZ0000Z",
       "SO-2026-0094",
       "DC-2026-0911",
       "INV-2026-0733",
@@ -289,21 +299,22 @@ var CONFIG = {
       "111720.00",
       "18",
       "20109.60",
-      "1",
-      "1117.20",
+      "2",
+      "2234.40",
       "131829.60",
-      "130712.40",
+      "129595.20",
       "30",
       "2026-09-15",
       "Part Paid",
+      "Overdue",
       "50000.00",
-      "80712.40",
+      "79595.20",
       "Sales - Cartons",
       "DOC-2026-0455",
       "Done",
       "In progress",
-      "Ananya Rao",
-      "Invoice issued with the challan; credit sale net 30.",
+      "Example Preparer",
+      "Credit sale net 30; order raised for this customer only.",
       ""
     ],
     "optionsSheet": "Options",
@@ -321,12 +332,12 @@ var CONFIG = {
     "lastReviewed": "2026-09-26",
     "source": "SME Ops System Builder",
     "limitations": [
-      "Empty template only. It does not compute payroll, tax, leave balances or KPIs.",
-      "Notion relations need both databases imported before the link column resolves.",
-      "Select options are a starting set. Rename them to match how the business talks.",
-      "No automation, reminders or sync. Those need the integration layer.",
-      "Does not raise or send invoices, collect money, or file the VAT return.",
-      "Legal, tax and HR review is still required before this drives real decisions."
+      "One row is one invoice with a single line item. Multi-line invoices need repeated invoice",
+      "numbers or a separate line table; this skill does not model line-level tax or discounts.",
+      "Empty template only. It does not compute tax, file returns or keep ledgers.",
+      "Does not raise or send invoices, collect money, execute accounting entries, or call any",
+      "external API. The surrounding platform decides whether such tools exist.",
+      "Not legal or tax advice, and not a substitute for it. Confirm applicability with a"
     ]
   };
 

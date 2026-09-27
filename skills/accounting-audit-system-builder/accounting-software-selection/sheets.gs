@@ -21,24 +21,38 @@ var CONFIG = {
     "layer": "Layer 1: Foundation",
     "fields": [
       {
+        "name": "Evaluation ID",
+        "type": "text",
+        "options": [],
+        "example": "EVAL-2026-01",
+        "description": ""
+      },
+      {
         "name": "Software",
         "type": "text",
         "options": [],
-        "example": "TallyPrime",
+        "example": "Example Product",
         "description": ""
       },
       {
         "name": "Vendor",
         "type": "text",
         "options": [],
-        "example": "Business Standard",
+        "example": "Example Vendor",
+        "description": ""
+      },
+      {
+        "name": "Business Activities",
+        "type": "long_text",
+        "options": [],
+        "example": "Trading and manufacturing with a small services arm",
         "description": ""
       },
       {
         "name": "Modules Needed",
         "type": "long_text",
         "options": [],
-        "example": "Accounting, Inventory, VAT, TDS, Payroll, Reporting",
+        "example": "Accounting; inventory; manufacturing; VAT; TDS; payroll",
         "description": ""
       },
       {
@@ -56,99 +70,450 @@ var CONFIG = {
         "name": "Accounting Coverage",
         "type": "select",
         "options": [
-          "Full",
-          "Partial",
-          "Missing"
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
         ],
-        "example": "Full",
+        "example": "5 Comprehensive",
+        "description": ""
+      },
+      {
+        "name": "Sales Support",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "4 Strong",
+        "description": ""
+      },
+      {
+        "name": "Purchase Support",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "4 Strong",
         "description": ""
       },
       {
         "name": "Inventory Support",
         "type": "select",
         "options": [
-          "Full",
-          "Partial",
-          "Missing"
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
         ],
-        "example": "Full",
+        "example": "5 Comprehensive",
+        "description": ""
+      },
+      {
+        "name": "Manufacturing Support",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "4 Strong",
+        "description": ""
+      },
+      {
+        "name": "BOM Support",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "4 Strong",
+        "description": ""
+      },
+      {
+        "name": "Production/Work Order Support",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "3 Adequate",
+        "description": ""
+      },
+      {
+        "name": "Production Costing",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "3 Adequate",
+        "description": ""
+      },
+      {
+        "name": "Wastage/Scrap Tracking",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "2 Major limitations",
+        "description": ""
+      },
+      {
+        "name": "Batch/Lot Tracking",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "2 Major limitations",
+        "description": ""
+      },
+      {
+        "name": "Service Management",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "Untested",
         "description": ""
       },
       {
         "name": "VAT Support",
         "type": "select",
         "options": [
-          "Full",
-          "Partial",
-          "Missing"
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
         ],
-        "example": "Full",
+        "example": "4 Strong",
         "description": ""
       },
       {
         "name": "TDS Support",
         "type": "select",
         "options": [
-          "Full",
-          "Partial",
-          "Missing"
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
         ],
-        "example": "Partial",
+        "example": "3 Adequate",
         "description": ""
       },
       {
-        "name": "Payroll Support",
+        "name": "Payroll/SSF Support",
         "type": "select",
         "options": [
-          "Full",
-          "Partial",
-          "Missing"
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
         ],
-        "example": "Missing",
+        "example": "3 Adequate",
         "description": ""
       },
       {
-        "name": "Reporting Capability",
+        "name": "IRD/Statutory Reporting",
         "type": "select",
         "options": [
-          "Full",
-          "Partial",
-          "Missing"
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
         ],
-        "example": "Full",
+        "example": "3 Adequate",
         "description": ""
       },
       {
-        "name": "Data Backup & Security",
+        "name": "E-Billing/CBMS Support",
         "type": "select",
         "options": [
-          "Full",
-          "Partial",
-          "Missing"
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
         ],
-        "example": "Full",
+        "example": "Untested",
+        "description": ""
+      },
+      {
+        "name": "Financial Reporting",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "4 Strong",
+        "description": ""
+      },
+      {
+        "name": "Multi-Company Support",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "Not Required",
+        "description": ""
+      },
+      {
+        "name": "Branch Support",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "Not Required",
+        "description": ""
+      },
+      {
+        "name": "Warehouse Support",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "4 Strong",
         "description": ""
       },
       {
         "name": "User Access Control",
         "type": "select",
         "options": [
-          "Full",
-          "Partial",
-          "Missing"
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
         ],
-        "example": "Full",
+        "example": "4 Strong",
+        "description": ""
+      },
+      {
+        "name": "Approval Workflow",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "3 Adequate",
+        "description": ""
+      },
+      {
+        "name": "Data Backup & Security",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "4 Strong",
+        "description": ""
+      },
+      {
+        "name": "Migration Support",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "4 Strong",
+        "description": ""
+      },
+      {
+        "name": "Integration/API",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "2 Major limitations",
+        "description": ""
+      },
+      {
+        "name": "Data Export",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "4 Strong",
         "description": ""
       },
       {
         "name": "After-Sales Support",
         "type": "select",
         "options": [
-          "Full",
-          "Partial",
-          "Missing"
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
         ],
-        "example": "Partial",
+        "example": "2 Major limitations",
+        "description": ""
+      },
+      {
+        "name": "Implementation Support",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "3 Adequate",
+        "description": ""
+      },
+      {
+        "name": "Training",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "3 Adequate",
+        "description": ""
+      },
+      {
+        "name": "Customization",
+        "type": "select",
+        "options": [
+          "1 Missing",
+          "2 Major limitations",
+          "3 Adequate",
+          "4 Strong",
+          "5 Comprehensive",
+          "Not Required",
+          "Untested"
+        ],
+        "example": "2 Major limitations",
         "description": ""
       },
       {
@@ -162,14 +527,14 @@ var CONFIG = {
         "name": "Ease of Use Rating",
         "type": "number",
         "options": [],
-        "example": "5",
+        "example": "4",
         "description": ""
       },
       {
         "name": "Support Quality Rating",
         "type": "number",
         "options": [],
-        "example": "4",
+        "example": "2",
         "description": ""
       },
       {
@@ -180,6 +545,18 @@ var CONFIG = {
         "description": ""
       },
       {
+        "name": "Demo Test Result",
+        "type": "select",
+        "options": [
+          "Not Tested",
+          "Partially Passed",
+          "Passed",
+          "Failed"
+        ],
+        "example": "Partially Passed",
+        "description": ""
+      },
+      {
         "name": "Test Transactions Run",
         "type": "number",
         "options": [],
@@ -187,58 +564,124 @@ var CONFIG = {
         "description": ""
       },
       {
-        "name": "Quotation Amount",
+        "name": "Licence Cost",
         "type": "currency",
         "options": [],
-        "example": "48000.00",
+        "example": "480000.00",
         "description": ""
       },
       {
-        "name": "Implementation Fee",
+        "name": "Implementation Cost",
         "type": "currency",
         "options": [],
-        "example": "15000.00",
+        "example": "120000.00",
         "description": ""
       },
       {
-        "name": "Annual Cost",
+        "name": "Customization Cost",
         "type": "currency",
         "options": [],
-        "example": "36000.00",
+        "example": "65000.00",
         "description": ""
       },
       {
-        "name": "Total Cost",
+        "name": "Training Cost",
         "type": "currency",
         "options": [],
-        "example": "99000.00",
+        "example": "45000.00",
         "description": ""
       },
       {
-        "name": "Recommendation",
+        "name": "Annual Renewal",
+        "type": "currency",
+        "options": [],
+        "example": "240000.00",
+        "description": ""
+      },
+      {
+        "name": "First-Year Cost",
+        "type": "currency",
+        "options": [],
+        "example": "950000.00",
+        "description": ""
+      },
+      {
+        "name": "Three-Year TCO",
+        "type": "currency",
+        "options": [],
+        "example": "1430000.00",
+        "description": ""
+      },
+      {
+        "name": "Evaluation Status",
+        "type": "select",
+        "options": [
+          "Not Evaluated",
+          "Demo Scheduled",
+          "Demo Completed",
+          "Testing",
+          "Evaluated"
+        ],
+        "example": "Evaluated",
+        "description": ""
+      },
+      {
+        "name": "Deal-breaker",
+        "type": "select",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "example": "No",
+        "description": ""
+      },
+      {
+        "name": "Selection Decision",
         "type": "select",
         "options": [
           "Selected",
           "Shortlisted",
-          "Rejected",
-          "Rejected - Cost",
-          "Rejected - Capability"
+          "Not Selected",
+          "Rejected"
         ],
-        "example": "Shortlisted",
+        "example": "Not Selected",
+        "description": ""
+      },
+      {
+        "name": "Rejection Reason",
+        "type": "select",
+        "options": [
+          "Cost",
+          "Missing Capability",
+          "Poor Fit",
+          "Poor Support",
+          "Implementation Risk",
+          "Security Risk",
+          "User Experience",
+          "Other"
+        ],
+        "example": "Poor Support",
         "description": ""
       },
       {
         "name": "Evaluated By",
         "type": "text",
         "options": [],
-        "example": "Ananya Rao",
+        "example": "Example Evaluator",
+        "description": ""
+      },
+      {
+        "name": "Evidence/Source",
+        "type": "text",
+        "options": [],
+        "example": "Vendor demo 2026-07-18; 25 test transactions; written quotation",
         "description": ""
       },
       {
         "name": "Notes",
         "type": "long_text",
         "options": [],
-        "example": "Payroll is a dealbreaker for us; asked the vendor for a module quote.",
+        "example": "Not selected on local support response time; revisit if the reseller adds a local office. Service and e-billing modules still untested.",
         "description": ""
       },
       {
@@ -250,31 +693,62 @@ var CONFIG = {
       }
     ],
     "example": [
-      "TallyPrime",
-      "Business Standard",
-      "Accounting, Inventory, VAT, TDS, Payroll, Reporting",
+      "EVAL-2026-01",
+      "Example Product",
+      "Example Vendor",
+      "Trading and manufacturing with a small services arm",
+      "Accounting; inventory; manufacturing; VAT; TDS; payroll",
       "Cloud",
-      "Full",
-      "Full",
-      "Full",
-      "Partial",
-      "Missing",
-      "Full",
-      "Full",
-      "Full",
-      "Partial",
+      "5 Comprehensive",
+      "4 Strong",
+      "4 Strong",
+      "5 Comprehensive",
+      "4 Strong",
+      "4 Strong",
+      "3 Adequate",
+      "3 Adequate",
+      "2 Major limitations",
+      "2 Major limitations",
+      "Untested",
+      "4 Strong",
+      "3 Adequate",
+      "3 Adequate",
+      "3 Adequate",
+      "Untested",
+      "4 Strong",
+      "Not Required",
+      "Not Required",
+      "4 Strong",
+      "4 Strong",
+      "3 Adequate",
+      "4 Strong",
+      "4 Strong",
+      "2 Major limitations",
+      "4 Strong",
+      "2 Major limitations",
+      "3 Adequate",
+      "3 Adequate",
+      "2 Major limitations",
       "4",
-      "5",
       "4",
+      "2",
       "2026-07-18",
+      "Partially Passed",
       "25",
-      "48000.00",
-      "15000.00",
-      "36000.00",
-      "99000.00",
-      "Shortlisted",
-      "Ananya Rao",
-      "Payroll is a dealbreaker for us; asked the vendor for a module quote.",
+      "480000.00",
+      "120000.00",
+      "65000.00",
+      "45000.00",
+      "240000.00",
+      "950000.00",
+      "1430000.00",
+      "Evaluated",
+      "No",
+      "Not Selected",
+      "Poor Support",
+      "Example Evaluator",
+      "Vendor demo 2026-07-18; 25 test transactions; written quotation",
+      "Not selected on local support response time; revisit if the reseller adds a local office. Service and e-billing modules still untested.",
       ""
     ],
     "optionsSheet": "Options",
@@ -292,12 +766,12 @@ var CONFIG = {
     "lastReviewed": "2026-09-26",
     "source": "SME Ops System Builder",
     "limitations": [
-      "Empty template only. It does not score for you, test the software or compute TCO.",
-      "Does not choose the software and does not configure a live system. Go-live settings - chart of",
-      "accounts, tax configuration, users, inventory, opening balances, test entry - are a checklist",
-      "the business carries out with the vendor, not something this skill does.",
-      "Notion relations need both databases imported before the link column resolves.",
-      "Select options are a starting set. Rename them to match how the business talks."
+      "Empty template only. It does not score for you, run the demos, verify a vendor's claims or turn a quotation into a TCO.",
+      "It never selects the package. It records the decision the business makes in Selection Decision, with the reason and the deal-breaker flag beside it; it does not make the decision.",
+      "Not a bookkeeping, tax-filing, legal or procurement system. Quotations, contracts and purchase orders stay in the vendor's own process.",
+      "It cannot verify Nepal IRD, VAT, TDS, e-billing, CBMS or SSF handling for you. Those stay Untested until the business holds current evidence from the vendor or the authority.",
+      "A go-live checklist is a list the business carries out with the vendor. Chart of accounts, tax configuration, users, inventory, opening balances and the test entry are not done by this skill.",
+      "Notion relations need both databases imported before the link column resolves."
     ]
   };
 

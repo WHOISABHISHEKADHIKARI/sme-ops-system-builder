@@ -35,29 +35,39 @@ var CONFIG = {
         "description": ""
       },
       {
-        "name": "Book Section",
+        "name": "Row Type",
         "type": "select",
         "options": [
-          "Cash Book",
-          "Bank Book",
-          "Digital Payments Book",
+          "Movement",
           "Day Summary"
         ],
         "example": "Day Summary",
         "description": ""
       },
       {
+        "name": "Book Section",
+        "type": "select",
+        "options": [
+          "Cash Book",
+          "Bank Book",
+          "Digital Payments Book",
+          "All Books"
+        ],
+        "example": "All Books",
+        "description": ""
+      },
+      {
         "name": "Transaction Reference",
         "type": "text",
         "options": [],
-        "example": "RCP-2026-0312",
+        "example": "DAY-2026-08-21",
         "description": ""
       },
       {
         "name": "Voucher Number",
         "type": "text",
         "options": [],
-        "example": "VCH-2026-1027",
+        "example": "VCH-2026-1027 to 1041",
         "description": ""
       },
       {
@@ -103,10 +113,17 @@ var CONFIG = {
         "description": ""
       },
       {
-        "name": "Cash Balance",
+        "name": "Opening Cash Balance",
         "type": "currency",
         "options": [],
-        "example": "38200.00",
+        "example": "25000.00",
+        "description": ""
+      },
+      {
+        "name": "Cash Closing Balance",
+        "type": "currency",
+        "options": [],
+        "example": "28200.00",
         "description": ""
       },
       {
@@ -124,10 +141,17 @@ var CONFIG = {
         "description": ""
       },
       {
-        "name": "Bank Balance",
+        "name": "Opening Bank Balance",
         "type": "currency",
         "options": [],
-        "example": "1284500.00",
+        "example": "1250000.00",
+        "description": ""
+      },
+      {
+        "name": "Bank Closing Balance",
+        "type": "currency",
+        "options": [],
+        "example": "1294515.00",
         "description": ""
       },
       {
@@ -142,6 +166,20 @@ var CONFIG = {
         "type": "currency",
         "options": [],
         "example": "4300.00",
+        "description": ""
+      },
+      {
+        "name": "Opening Digital Balance",
+        "type": "currency",
+        "options": [],
+        "example": "5000.00",
+        "description": ""
+      },
+      {
+        "name": "Digital Closing Balance",
+        "type": "currency",
+        "options": [],
+        "example": "25300.00",
         "description": ""
       },
       {
@@ -184,14 +222,14 @@ var CONFIG = {
         "name": "Prepared By",
         "type": "text",
         "options": [],
-        "example": "Rohit Menon",
+        "example": "Example Preparer",
         "description": ""
       },
       {
         "name": "Reviewed By",
         "type": "text",
         "options": [],
-        "example": "Sneha Iyer",
+        "example": "Example Reviewer",
         "description": ""
       },
       {
@@ -226,25 +264,30 @@ var CONFIG = {
       "DB-2026-08-0141",
       "2026-08-21",
       "Day Summary",
-      "RCP-2026-0312",
-      "VCH-2026-1027",
+      "All Books",
+      "DAY-2026-08-21",
+      "VCH-2026-1027 to 1041",
       "Several parties",
       "Day total across the three books; each detail line carries its own reference",
       "Mixed",
       "15000.00",
       "11800.00",
-      "38200.00",
+      "25000.00",
+      "28200.00",
       "140000.00",
       "95485.00",
-      "1284500.00",
+      "1250000.00",
+      "1294515.00",
       "24600.00",
       "4300.00",
+      "5000.00",
+      "25300.00",
       "As per software day-book format",
       "DOC-2026-0461",
       "Checked - Clear",
       "Yes",
-      "Rohit Menon",
-      "Sneha Iyer",
+      "Example Preparer",
+      "Example Reviewer",
       "Done",
       "Cash counted at day end; bank balance agreed to the statement.",
       ""
