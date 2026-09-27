@@ -1,6 +1,6 @@
 ---
 name: presentation-deck
-description: "Presentation deck content: context-first intake, then a slide register as CSV, SQL, JSON Schema and Notion. A ten-slide business story with key message, evidence, speaker notes and data sources."
+description: "Build an evidence-linked slide register after context-first intake. Use when an SME needs a presentation deck, speaker notes, or a structured business story."
 category: business
 risk: safe
 source: self
@@ -65,6 +65,8 @@ One message, one question, no batching. Open with:
 > afterwards?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the slide list.
@@ -138,7 +140,7 @@ Slide ID,Slide Number,Section,Slide Title,Key Message,Bullets,Visual,Speaker Not
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE deck_slide (
-  id BIGINT PRIMARY KEY,
+  slide_id BIGINT PRIMARY KEY,
   slide_number INTEGER NOT NULL,
   section VARCHAR(100) NOT NULL,
   slide_title VARCHAR(255) NOT NULL,

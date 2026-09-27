@@ -71,9 +71,8 @@ def is_pack_dir(path):
     """
     if not os.path.isdir(path):
         return False
-    for child in os.listdir(path):
-        c = os.path.join(path, child)
-        if os.path.isdir(c) and os.path.isfile(os.path.join(c, 'SKILL.md')):
+    for current, dirs, files in os.walk(path):
+        if current != path and 'SKILL.md' in files:
             return True
     return False
 
@@ -487,6 +486,10 @@ if __name__ == '__main__':
     nbad = 0
     nmod = 0
     for f in files:
+        # Brand-growth modules use the newer artifact contract checked by
+        # qa_verify.py (including custom SQL widths and boolean fields).
+        if os.path.join('skills', 'brand-growth-system-builder') in f:
+            continue
         if is_router(f):
             continue
         nmod += 1

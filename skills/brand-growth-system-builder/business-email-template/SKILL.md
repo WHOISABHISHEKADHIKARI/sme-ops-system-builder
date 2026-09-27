@@ -1,6 +1,6 @@
 ---
 name: business-email-template
-description: "Business email templates: context-first intake, then a template register as CSV, SQL, JSON Schema and Notion. Envelope, sendable-copy, SPF/DKIM/DMARC, accessibility and spam-risk checks per template."
+description: "Build a checked business-email template register after context-first intake. Use when an SME needs reusable sendable copy and delivery requirements."
 category: business
 risk: safe
 source: self
@@ -61,6 +61,8 @@ One message, one question, no batching. Open with:
 > **Q:** What is the business called, and what does one line of it actually do?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the template list.
@@ -132,7 +134,7 @@ Template ID,Template Name,Template Type,Trigger,Sender Role,Recipient Type,Subje
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE email_template (
-  id BIGINT PRIMARY KEY,
+  template_id BIGINT PRIMARY KEY,
   template_name VARCHAR(255) NOT NULL,
   template_type VARCHAR(100) NOT NULL,
   trigger TEXT NOT NULL,
@@ -261,11 +263,11 @@ are booleans - no `Yes`/`No` strings in a boolean cell.
 | 12 | Required Fields | `long_text` | `TEXT` | `string` | Text | *(blank)* |
 | 13 | Personalisation Tokens | `long_text` | `TEXT` | `string` | Text | *(blank)* |
 | 14 | Signature Block | `select` | `VARCHAR(100)` | `string` | Select | `Yes - signature block only` |
-| 15 | Unsubscribe Required | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
+| 15 | Unsubscribe Required | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `true` |
 | 16 | Spam Risk Notes | `long_text` | `TEXT` | `string` | Text | *(blank)* |
 | 17 | Test Status | `select` | `VARCHAR(100)` | `string` | Select | `Not tested` |
-| 18 | Mobile Checked | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
-| 19 | Accessibility Checked | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
+| 18 | Mobile Checked | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `false` |
+| 19 | Accessibility Checked | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `false` |
 | 20 | Version | `text` | `VARCHAR(50)` | `string` | Text | `1.0` |
 | 21 | Status | `select` | `VARCHAR(50)` | `string` | Select | `Draft` |
 | 22 | Notes | `long_text` | `TEXT` | `string` | Text | *(blank)* |

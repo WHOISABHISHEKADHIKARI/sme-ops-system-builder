@@ -1,6 +1,6 @@
 ---
 name: social-media-setup
-description: "Social media setup: context-first intake, then a channel and content register as CSV, SQL, JSON Schema and Notion. Facebook, LinkedIn, TikTok and Facebook Page - profile, posting cadence, formats and approval."
+description: "Build a social-channel and content register after context-first intake. Use when an SME needs profiles, cadence, formats, ownership, and approval tracking."
 category: business
 risk: safe
 source: self
@@ -67,6 +67,8 @@ One message, one question, no batching. Open with:
 > **Q:** What is the business called, and what does one line of it actually do?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the channel set.
@@ -141,7 +143,7 @@ Row ID,Row Type,Platform,Account Handle,Account Type,Audience,Posting Cadence,Po
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE social_record (
-  id BIGINT PRIMARY KEY,
+  row_id BIGINT PRIMARY KEY,
   row_type VARCHAR(50) NOT NULL,
   platform VARCHAR(100) NOT NULL,
   account_handle VARCHAR(255),
@@ -274,7 +276,7 @@ up with a stranger's draft caption in its bio field.
 | 16 | Approval Status | `select` | `VARCHAR(100)` | `string` | Select | `Not required` |
 | 17 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Unknown` |
 | 18 | Brand Voice | `select` | `VARCHAR(100)` | `string` | Select | `Plain and direct` |
-| 19 | Profile Checklist Complete | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
+| 19 | Profile Checklist Complete | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `false` |
 | 20 | Review Date | `date` | `DATE` | `string, format: date` | Date | *(blank)* |
 | 21 | Status | `select` | `VARCHAR(50)` | `string` | Select | `Draft` |
 | 22 | Notes | `long_text` | `TEXT` | `string` | Text | *(blank)* |

@@ -1,6 +1,6 @@
 ---
 name: linktree-link-hub
-description: "Link-in-bio hub: context-first intake, then a link map as CSV, SQL, JSON Schema and Notion. One destination for every bio link, with tracking, priority and per-channel enablement."
+description: "Build a tracked link-in-bio register after context-first intake. Use when an SME needs one prioritized destination for links across social channels."
 category: business
 risk: safe
 source: self
@@ -60,6 +60,8 @@ One message, one question, no batching. Open with:
 > they land on the page?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the link list.
@@ -129,7 +131,7 @@ Link ID,Link Label,Destination URL,Link Type,Priority Order,Audience,Track Click
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE link_hub_link (
-  id BIGINT PRIMARY KEY,
+  link_id BIGINT PRIMARY KEY,
   link_label VARCHAR(255) NOT NULL,
   destination_url TEXT NOT NULL,
   link_type VARCHAR(100) NOT NULL,
@@ -229,7 +231,7 @@ the field reference - a click count is a measurement, never an estimate.
 | 4 | Link Type | `select` | `VARCHAR(100)` | `string` | Select | `Conversion action` |
 | 5 | Priority Order | `number` | `INTEGER` | `integer` | Number | `1` |
 | 6 | Audience | `select` | `VARCHAR(100)` | `string` | Select | `Prospective customer` |
-| 7 | Track Clicks | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
+| 7 | Track Clicks | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `true` |
 | 8 | UTM Source | `text` | `VARCHAR(255)` | `string` | Text | *(blank)* |
 | 9 | Enabled On | `long_text` | `TEXT` | `string` | Text | *(blank)* |
 | 10 | Thumbnail | `text` | `VARCHAR(255)` | `string` | Text | *(blank)* |

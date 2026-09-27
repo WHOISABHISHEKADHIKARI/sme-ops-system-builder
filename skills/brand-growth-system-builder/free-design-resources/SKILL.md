@@ -1,6 +1,6 @@
 ---
 name: free-design-resources
-description: "Free design resource register: context-first intake, then a resource clearance and adoption table as CSV, SQL, JSON Schema and Notion. What a free tool or licence actually permits, who it suits, and when to pay instead."
+description: "Build a design-resource clearance register after context-first intake. Use when an SME needs free tools, assets, licence checks, and adoption decisions."
 category: design
 risk: safe
 source: self
@@ -27,7 +27,7 @@ Layer: Layer 1: Foundation. Fits: Starter stage. Table code: n/a.
 
 **The rule this table exists to enforce:** "free" is not a licence term, so `Licence Type`
 and `Commercial Use Allowed` are the fields that matter, and the full map in
-`references/free-design-resource-map.md` is the evidence base for them. A free tool is safe
+`../references/free-design-resource-map.md` is the evidence base for them. A free tool is safe
 to use and unsafe to depend on when it cannot export, when it holds the only copy of the
 work, or when its terms forbid the one thing the business needs - commercial use, logo
 use, print, or client work. `Export Format` and `Vendor Lock-In Risk` exist to catch
@@ -67,6 +67,8 @@ One message, one question, no batching. Open with:
 > **Q:** What are you trying to make, and is it for the business itself or for a client?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the shortlist.
@@ -143,7 +145,7 @@ Resource ID,Resource Name,Category,Provider,Venue,Licence Type,Commercial Use Al
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE design_resource (
-  id BIGINT PRIMARY KEY,
+  resource_id BIGINT PRIMARY KEY,
   resource_name VARCHAR(100) NOT NULL,
   category VARCHAR(50) NOT NULL,
   provider VARCHAR(100) NOT NULL,
@@ -499,7 +501,7 @@ posts, and we keep paying for tools we barely use.
 ## Related Skills
 
 - `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `references/free-design-resource-map.md` - the evidence base behind every entry in this
+- `../references/free-design-resource-map.md` - the evidence base behind every entry in this
   register, with the source and the caveat for each category.
 - `design-theme-guide` - where the chosen type, colour and spacing tools are actually
   applied, and where contrast is verified.

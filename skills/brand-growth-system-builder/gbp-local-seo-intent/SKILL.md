@@ -1,6 +1,6 @@
 ---
 name: gbp-local-seo-intent
-description: "Google Business Profile and local SEO intent: context-first intake, then a GBP register as CSV, SQL, JSON Schema and Notion. Categories, services, posts, reviews, photos, attributes and the intent map behind them."
+description: "Build a Google Business Profile and local-intent register after intake. Use when an SME needs categories, services, posts, reviews, photos, or local SEO."
 category: business
 risk: safe
 source: self
@@ -66,6 +66,8 @@ One message, one question, no batching. Open with:
 > **Q:** What is the business called, and what does one line of it actually do?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the profile spec.
@@ -139,7 +141,7 @@ Row ID,Row Type,GBP Element,Value,Primary Keyword,Supporting Keywords,Search Int
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE gbp_record (
-  id BIGINT PRIMARY KEY,
+  row_id BIGINT PRIMARY KEY,
   row_type VARCHAR(100) NOT NULL,
   gbp_element VARCHAR(255) NOT NULL,
   value TEXT,
@@ -290,7 +292,7 @@ always a measurement the business supplied.
 | 19 | Visibility | `select` | `VARCHAR(50)` | `string` | Select | `Public` |
 | 20 | Action Type | `select` | `VARCHAR(100)` | `string` | Select | `Set up` |
 | 21 | Data Quality Status | `select` | `VARCHAR(100)` | `string` | Select | `Incomplete` |
-| 22 | Verified | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
+| 22 | Verified | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `false` |
 | 23 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Unknown` |
 | 24 | Review Date Check | `date` | `DATE` | `string, format: date` | Date | *(blank)* |
 | 25 | Status | `select` | `VARCHAR(50)` | `string` | Select | `Draft` |

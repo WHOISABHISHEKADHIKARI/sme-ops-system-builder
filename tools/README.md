@@ -27,6 +27,7 @@ Four scripts. No dependencies beyond the Python 3 standard library.
 | [validate.py](validate.py) | repository structure, sections, frontmatter, prompt blocks | `python3 tools/validate.py` |
 | [seo.py](seo.py) | canonicals, citations, backlinks, discovery files | `python3 tools/seo.py [--check]` |
 | [skillmd.py](skillmd.py) | reading a `SKILL.md` from your own code | `python3 tools/skillmd.py` |
+| [qa_verify.py](qa_verify.py) | category-nested pack artifact agreement | `python3 tools/qa_verify.py --pack skills/<pack>` |
 
 ## check.py
 

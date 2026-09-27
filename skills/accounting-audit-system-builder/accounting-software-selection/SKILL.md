@@ -963,7 +963,7 @@ We are replacing our accounting package and cannot tell which one actually cover
 > Payroll is still unranked, and the deal-breaker rule needs that ranking before anything
 > is scored - so it is the next question, and it changes which of the two candidates can
 > survive. The second product has no quotation, so its cost cells stay empty and its
-> `Deal-breaker` reads `Unknown` until the renewal is quoted; I will not fill either from
+> `Deal-breaker` reads `Unknown` until the renewal is quoted; do not fill either from
 > a price we do not hold.
 >
 > Workflow: Requirements → Candidate Shortlist → Vendor Demo → Standardized Tests → Stakeholder Evaluation → Cost/TCO Review → Business Decision → Configuration → Migration → Training → Go-live

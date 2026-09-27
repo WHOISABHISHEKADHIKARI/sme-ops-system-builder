@@ -1,268 +1,244 @@
 ---
 name: brand-growth-system-builder
-description: "Routes a brand or visibility request to the right module skill, from design tokens through local search and channels. Asks only what is missing. Use for a logo, brand guidelines, print collateral, a business profile, citations or social accounts."
+description: "Route requests across 13 brand and growth modules. Use when an SME needs help choosing branding, website, local SEO, content, or cloud-planning workflows."
 category: business
 risk: safe
 source: self
 source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
-tags: [sme, brand, design, logo, print, seo, local, citations, social, email, database, csv, sql, router]
-tools: [claude, cursor, gemini, antigravity]
+tags: [sme, brand, design-system, logo, print, website, gbp, local-seo, backlinks, citations, email, deck, social-media, code-of-conduct, observability, cloud, wcag, seo]
+tools: [claude-code, codex-cli, cursor, gemini-cli]
 ---
 
 # Brand & Growth System Builder
 
-Router for 13 brand, visibility and credibility skills. It works out whether the request is
-about how the business looks, how it gets found, or whether it can be believed, then hands
-off to the one or two modules that do that job. It never builds an asset itself.
+Router for 13 brand and growth modules: the design theme, the logo and image library, the
+print brand kit, the business website, the Google Business Profile, the backlink and
+citation directories, the email templates, the presentation deck, the social channels, the
+professional code of conduct, the observability and cloud plan, and the free design
+resource map.
+
+It works out what the business actually needs, then hands off to the one module skill that
+matches. It never builds anything itself.
 
 ## Overview
 
-A small business does not need 13 brand systems. It needs the two or three that are
-currently inconsistent, and a record of the decisions so the next person inherits them
-rather than reinvents them. This skill identifies the job, asks only what is still missing
-one question at a time, stops as soon as the remaining answers stop changing the route,
-then recommends two or three modules and waits for the user to pick.
+A small business does not need 13 brand systems. It needs the two or three that make
+someone pick it: a theme it can build against, a profile Google can rank, and one asset
+set it does not re-make every month. This skill identifies the intent, asks only what is
+still missing one question at a time, stops as soon as the answers stop changing the
+route, then recommends two or three modules and waits for the user to pick.
 
-The three jobs:
-
-```
-Consistent   - the same colour, type, mark and voice everywhere
-Findable     - the profile, the site and the citations that agree with each other
-Credible     - a deck, a policy and a monitor that survive being questioned
-```
-
-Most requests are really one of these with a different word on it. "Our logo looks wrong on
-a invoice" is consistency. "Nobody can find us" is findability. "The investor asked for
-something we cannot evidence" is credibility.
+Each module skill then runs the same contract: context first, a recommendation, and
+artifacts only on request. This skill never emits a schema, a CSV, a token file or a
+Notion template.
 
 ## When to Use This Skill
 
-- "we need a logo and brand guidelines"
-- "the cards, the letterhead and the invoice all look different"
-- "nobody can find us when they search for us"
-- "should we be on LinkedIn, and what should we post"
-- "can we use this image or this font we found"
-- "we have a pitch in three weeks and nothing to show"
-- "an employee says they never signed the code of conduct"
+- "Set up our branding and website"
+- "I need a Google Business Profile that ranks"
+- "Where do I list my business for backlinks?"
+- "Design a logo, letterhead and visiting card"
+- "Set up our Facebook, LinkedIn and TikTok"
+- "I need a code of conduct and email templates"
+- "Plan our cloud spend and monitoring"
 
-Do not use it for the operational records themselves - invoices, attendance, recruitment.
-Those are in the companion pack at `../../`. Use this pack when the question is about
-appearance, discovery or evidence.
+Do not use it when the user has already named one specific asset and just wants it - go
+straight to that module skill.
 
 ## How It Works
 
-### Step 1 - Identify the job, not the tool
+### Step 1 - Identify intent
 
-The user usually arrives naming a tool or a deliverable. The route depends on the job
-behind it, and the same deliverable can sit in two different jobs.
+Read the request and pick the intent before asking anything.
 
-Ask which of the three it is before anything else. If the answer is ambiguous, it is
-usually consistency: when two assets disagree, the disagreement is upstream.
-
-- **Consistent** - two or more assets use different colours, type, a different mark, or
-  different contact details. Route to the tokens or the mark, not to the asset that looks
-  wrong.
-- **Findable** - the business exists but does not appear for the searches its customers
-  make. Route to the profile, the page register or the citations.
-- **Credible** - someone external needs to be convinced, or an internal rule has to be
-  evidenced. Route to the deck, the policy record or the criticality plan.
+- "set up" / "build" / "create" -> artifacts wanted; go to Step 2.
+- "review" / "is this right" / "audit" -> a check, not a build; answer from what they share.
+- "how do I ..." -> advice question; answer directly, offer the build only if it helps.
+- "fix" -> something already exists and is wrong; capture the current state, then Step 2.
 
 ### Step 2 - Ask only what is missing
 
-One question per message. Stop as soon as the remaining answers would not change the
-route. Do not ask for a brand budget, a colour preference or a posting calendar unless the
-route depends on it.
+One question per message. Skip anything already answered in any earlier message. The five
+groups below are the only intake; take only the ones that change the answer.
 
-- **Identity** - Exact spelling of the name, and any tagline? / What the business does, in
-  one line? / Any name or trading-name change coming?
-- **Current state** - Is there a mark today, and who made it? / Where is the brand used -
-  sign, vehicle, invoice, app, uniform? / Does the editable file still exist?
-- **Rights** - Does the business own the marks and names it uses? / Any prior designer
-  whose rights were not transferred in writing? / Which fonts and images are licensed for
-  what?
-- **Visibility** - Should customers find the business by place, by service, or both? / Is
-  a Business Profile claimed? / Which citations already exist?
-- **Channels** - Which accounts are live, and what is each for? / Who approves a post
-  before it goes out?
-- **Constraints** - Anything that must not be published? / A deadline that fixes the order?
+- **Business** - What does the business do, in one line? / Who is the customer? / Physical
+  address customers can visit, or service-area only? / City, country.
+- **Brand** - Name as it must appear everywhere, spelling included? / One primary colour
+  already decided? / Any logo, colours or documents in use today?
+- **Digital** - Is there a website today, on which platform? / Who writes the copy? / Any
+  social accounts already open?
+- **Reach** - How many people, and how many locations or staff? / One office or several?
+  / B2B, retail, service or mixed?
+- **Outcome** - What has to exist in 30 days? / Who signs off on brand decisions?
+
+Never invent a business fact. Names, addresses, phone numbers, colours, domains and
+follower counts that the user has not supplied are `Unknown` and stay that way.
 
 ### Step 3 - Hold the internal context
 
-State what is already known and what it implies, without producing anything yet. The user
-has usually supplied more than they think, and the recommendation should show that the
-earlier answers were used rather than repeated.
-
-Cover, briefly:
-
-- **What already exists** - the assets, tokens, listings and accounts that are in place
-  today, and which of them are recorded versus merely existing.
-- **What is inconsistent** - the specific pairs that disagree, and which one is upstream.
-- **What is missing that blocks the route** - a licence you cannot verify, a mark nobody
-  owns, a profile that is unclaimed.
-- **What the route excludes** - the jobs in this pack that are not being asked for, and why
-  they are not needed yet.
-
-Keep this to the decisions, not the deliverables. It exists so the user can correct the
-premise before three modules get built on it.
-
-### Step 4 - Recommend the smallest workflow
-
-Two or three modules, in dependency order, with the reason each one is in the list. Then
-wait for the user to pick. Do not build artifacts here.
-
-The ordering rule is upstream first. Tokens and the mark come before collateral, the
-profile and the citations come before the channels, and the deck comes last because it
-reuses everything above it.
-
-For each recommendation give:
-
-- the module and the single job it does
-- why it is in the list, tied to something the user said
-- what it will not cover
-- the order, and which module becomes unnecessary if an earlier one is skipped
-
-If one module answers the whole request, say so and recommend only that one. A pack of
-thirteen is not a default.
-
-### Step 5 - Output
-
-Artifacts are built only when the user asks, and only for the modules they picked. Each
-module emits CSV + SQL DDL + JSON Schema + Notion template on request, never all four
-unprompted. State which module each artifact came from, and what the user still has to
-decide.
-
-## The order this pack encodes
-
-```
-Free design resources      - the licensed inputs, consulted before an asset is made
-  -> Design theme guide    - colour, type, spacing, contrast tokens
-    -> Logo & image design - the mark, its lockups, and the rights behind every asset
-      -> Brand kit & print collateral
-        -> Business website setup
-          -> Google Business Profile intent
-            -> SEO directory & backlinks
-              -> Link hub
-                -> Business email template
-                  -> Presentation deck
-                    -> Social media setup
+```yaml
+module: brand-growth-system-builder
+intent: null            # set up | fix | review | report | import
+scale: null             # Starter | Growth | Scale, only if it changes the answer
+areas:
+  "Business": null
+  "Brand": null
+  "Digital": null
+  "Reach": null
+  "Outcome": null
+requested_outputs: []
+confirmed_facts: []
+open_questions: []
 ```
 
-Two modules sit outside that line. `Professional Code of Conduct` is independent - it is needed when a
-rule has to be evidenced, which is a credibility question with no brand dependency. And
-`Cloud and Observability Planning` is the credibility module for a technology business,
-where "can you evidence this" usually means "do you know what breaks when it is down".
+### Step 4 - Recommend two or three modules
 
-## Rules the modules hold to
+Pick the smallest set that gets to a live profile and a usable asset set. Rank them by
+what unblocks the rest. Then stop and wait for the user to choose. Examples of the shape
+of a route:
 
-- A token is recorded once. If two assets disagree, the token is wrong, not the assets.
-- Clear space and minimum size are usage rules, not preferences.
-- Every asset carries its source, rights owner and licence. "We found it online" is not a
-  source.
-- Name, address and phone are identical across the profile, the site and every citation.
-- A trademark search precedes the mark being used in public.
-- Free does not mean unrestricted. Commercial use and attribution are separate answers.
-- A deck slide carries its sensitivity marking and data source, not only the number.
-- One approved source of truth per fact. Links rather than copies.
+- Nothing exists: `design-theme-guide` -> `gbp-local-seo-intent` -> `business-website-setup`
+- Profile live, no assets: `logo-image-design` -> `brand-kit-print-collateral` -> `linktree-link-hub`
+- Website live, not ranking: `gbp-local-seo-intent` -> `seo-directory-backlinks` -> `presentation-deck`
+- Team growing: `code-of-conduct` -> `business-email-template` -> `observability-cloud-planning`
+
+### Step 5 - Never build here
+
+This router produces no files. When the user picks a module, say so and stop. Each module
+skill owns its own artifacts and its own field list.
 
 ## Examples
 
-**"We need a logo."**
+**Prompt**
 
-Job: consistent. There is no mark, so the route starts at the trademark search and the
-tokens, not at the drawing. Ask what the business does in one line and whether the name is
-final. Hold: nothing exists yet, so the risk is a name that cannot be registered, not an
-inconsistency. Recommend `logo-image-design` first with `design-theme-guide` behind it,
-and note that `brand-kit-print-collateral` is not needed until there is a mark to print.
-Do not produce artwork.
+```
+We are launching a local service business. We need a consistent identity, a website,
+and a Google Business Profile, but nothing exists yet.
+```
 
-**"Nobody can find us."**
+**Route**
 
-Job: findable. Ask whether customers search by place or by service - that single answer
-decides the route, because a service-area business with no premises should not be building
-a Business Profile. Hold: check whether a profile already exists unclaimed, and whether
-the site and any existing citations agree on the address. Recommend
-`gbp-local-seo-intent` and `business-website-setup`; mention `seo-directory-backlinks` as
-the third only if there are already listings to correct.
+```
+design-theme-guide -> logo-image-design -> gbp-local-seo-intent
+```
 
-**"Our investor meeting is on the 14th."**
+## The Dependency Order
 
-Job: credible. The deadline fixes the order. Ask what evidence exists today and whether
-any figure is sensitive. Hold: a deck reusing assets nobody has rights to is the risk, not
-the slide count. Recommend `presentation-deck`, and check `logo-image-design` for
-`Trademark Status` before the mark goes on a slide shown outside the business.
+Brand decisions travel one way. Nothing later can be built before the token set exists,
+and nothing visual can be finalised before the logo does.
 
-**"Can we use this photo from a search result?"**
+```
+free-design-resources          (read-only research, safe to start at any time)
+        |
+design-theme-guide             (tokens: colour, type, space, contrast)
+        |
+logo-image-design              (mark, lockups, image library)
+        |
+brand-kit-print-collateral     (letterhead, visiting card, employee card, signature)
+business-email-template        (templates + SPF/DKIM/DMARC)
+linktree-link-hub              (single destination for every bio link)
+        |
+business-website-setup         (site structure, schema, NAP on every page)
+gbp-local-seo-intent           (profile, categories, services, posts, reviews)
+seo-directory-backlinks        (citations, directories, link profile)
+social-media-setup            (Facebook, LinkedIn, TikTok, Facebook Page)
+presentation-deck              (the 10-slide story built from all of the above)
+        |
+code-of-conduct                (independent, but needs the real role names)
+observability-cloud-planning   (independent, needs real cost ceilings)
+```
 
-Job: consistent, narrowly. This is a rights question, not a design one. Hold: "found on a
-search result" is not a source and there is no licence record. Recommend
-`free-design-resources` for what is actually licensed, and `logo-image-design` to record
-whichever asset is chosen. Do not answer the licensing question from memory.
+**Category map** - modules are published as
+`skills/brand-growth-system-builder/<slug>/`. Their categories describe the workflow
+stage rather than adding another directory level. Counts are modules in this pack:
+
+Layer 1 Foundation: Reference Tooling (1)
+Layer 2 Brand & Design: Brand Design (3)
+Layer 3 Acquire: Listings Citations (3)
+Layer 5 Fulfil: Delivery Projects (1)
+Layer 6 Engage: Communications (1), Culture Channels (2)
+Layer 7 Protect: Data Tax Conduct (1)
+Layer 8 Operate: Vendors Platform (1)
+
+Full index: `references/catalog.md`. Three read-only reference files sit behind it -
+`references/free-design-resource-map.md`, `references/print-brand-kit-specs.md` and
+`references/backlink-directory-master-list.md`. Load one only when the module that needs it
+is the module being run.
+
+## Rules Every Module Holds To
+
+- One name, one spelling, one phone number, one address, everywhere - the NAP rule. A
+  variation is a defect, not a local preference.
+- A design system is tokens first, components second, and never a one-off. If it is not
+  written as a value, it is not part of the system.
+- Contrast is a test, not an opinion. Body text 4.5:1, large text and UI components 3:1,
+  per WCAG 2.2 AA - and the ratio gets recorded in the token file.
+- A Google Business Profile is a completeness and accuracy problem before it is a keyword
+  problem. Nobody can buy a better local rank.
+- Never keyword-stuff the business name. Use the real name, and put the keywords in the
+  description, the services and the posts.
+- A directory link is worth nothing without a real listing. A fake listing is a liability.
+- Never invent a business fact, a NAP value, a metric, a benchmark or a score.
+- Selection, sign-off and legal conclusions stay with a human.
+
+## Owner and Cadence
+
+- Owner: whoever owns the brand and the website. Small businesses usually fold this into
+  the founder or an operations lead.
+- Cadence: the router runs per request. Each module reviews itself when the business
+  changes - new location, new service, rebrand, headcount growth - not on a fixed date.
 
 ## Best Practices
 
-- Fix the token before the asset. Rebuilding one printed item costs more than recording one
-  decision.
-- Check rights before the asset exists, not when someone asks who owns it.
-- Record NAP once and copy it everywhere; never retype it per channel.
-- Start the profile and the site before paying for citations. Unaligned listings are worse
-  than none.
-- Keep the deck's data sources live. A number that cannot be traced is the first thing an
-  investor finds.
-- Ask for two or three modules. Recommending all thirteen is a failure to choose.
+- Start with the dependency that unlocks the requested downstream assets.
+- Keep every recommendation tied to a confirmed business need.
+- Run one module intake at a time and let that module own its artifacts.
+- Keep unknown business facts unknown rather than filling them with plausible values.
 
 ## Limitations
 
-- This pack does not design, draw, write, publish, post, submit or send. It records the
-  specification and the decision; the work happens in the user's own tools.
-- It does not clear a trademark or give legal advice. `Trademark Status` records the
-  result of a search someone else ran.
-- It does not do keyword research, rank tracking or competitor analysis. It records the
-  intent you decided on.
-- It cannot verify a licence. Licence terms change without notice and the register is a
-  record of what you checked, not a guarantee.
-- It does not manage social accounts, hosting or DNS.
-- One module here is not a brand module at all: `observability-cloud-planning` is included
-  because credibility questions for a technology business land there.
+- It routes work but does not create brand assets or operational records itself.
+- It cannot guarantee rankings, directory approval, legal compliance, or platform availability.
+- Local advertising, privacy, accessibility, and employment requirements need human review.
+- The catalog is intentionally SME-focused and is not a full enterprise brand platform.
 
 ## Security & Safety Notes
 
-- Never put unpublished pricing, salaries, runway or customer names into a deck that will
-  leave the business. `Sensitivity` exists for this.
-- Treat an address, a phone number and a personal name as personal data. Publish only what
-  the business has decided is public.
-- Do not scrape, crawl or bulk-submit to directories. Submissions are manual and
-  `Listing Status` records the outcome.
-- A trademark search is not a clearance. Never tell the user a name is available; say the
-  search came back clear on the date checked, and that `Trademark Status` is
-  `Searched - clear`, not `Registered`.
-- Do not connect to social platforms or DNS. This pack records intent; it holds no
-  credentials.
+- Do not request credentials, unpublished customer data, or unnecessary personal information.
+- Treat domains, social accounts, DNS, analytics, and cloud resources as external systems that
+  require explicit authorization before mutation.
+- Never publish invented contact details, addresses, testimonials, metrics, or legal claims.
+- Human approval is required before publishing, purchasing, changing DNS, or enabling services.
 
 ## Common Pitfalls
 
-- **Starting at the asset.** "The invoice header looks wrong" is a token or mark problem.
-  Fixing the header alone guarantees the next one drifts.
-- **Treating free as unrestricted.** Commercial use and attribution are different
-  questions, and a free font is frequently not usable on a client invoice.
-- **Paying for citations before the profile is right.** A NAP mismatch across listings
-  costs more than the listings earn.
-- **Being on a platform you cannot maintain.** An abandoned account is worse than none,
-  because it is a live wrong answer.
-- **Reusing a slide without its data source.** The number travels; the citation does not.
-- **Building all thirteen.** Two or three, in upstream order, and wait.
+- Two modules look equally right - pick the one the others depend on, and say why.
+- The user asks for everything at once - propose the first three, in the order above, and
+  build those before the rest.
+- The user has no logo yet but wants print collateral - route to `logo-image-design` first;
+  letterhead without a mark is a rewrite later.
+- GBP needs an address the business does not physically occupy - that is a service-area
+  business, and the module records it as such. Never advise a virtual address for ranking.
+- Social is requested before the website exists - acceptable for a launch page, but the
+  module says the website is still the ranking asset.
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - the entry, the reconciliation and the audit trail
-- `../` - the 71 operational modules this pack sits beside
-- `website-builder` and `seo-audit` for deeper site and search work
-- `legal-compliance-vault` for the policy documents behind `code-of-conduct`
+- `@sme-ops-system-builder` - the 71-module operational router this pack sits beside.
+- `@accounting-audit-system-builder` - the 16-module accounting cycle this pack feeds.
+- `@company-email-accounts` (operational pack) - the account register behind the email
+  templates in `business-email-template`.
+- `@asset-it-management` (operational pack) - holds the issued laptops, cards and devices
+  that carry the brand kit.
 
 ## Reusable Prompt
 
-> I help small businesses look consistent, get found locally, and evidence what they
-> claim. Ask me one question at a time, and only for what is still missing. Then tell me
-> which two or three of my brand modules to use, in dependency order, and what each one
-> will not cover. Do not build anything until I pick.
+```
+I want to set up the brand and online presence for my small business. Ask me one short
+question at a time, only about what I have not already told you, and never invent
+anything about my business. Then recommend the two or three modules that matter first, in
+the order they depend on each other, and wait for me to pick before you build anything.
+When I pick a module, output only the artifacts I asked for.
+```

@@ -1,6 +1,6 @@
 ---
 name: logo-image-design
-description: "Logo and image design: context-first intake, then a brand asset register as CSV, SQL, JSON Schema and Notion. Rights, licence and trademark status tracked per asset. Use for a mark, lockups, photography and imagery."
+description: "Build a rights-aware brand-asset register after context-first intake. Use when an SME needs a logo, lockups, photography, or an image library."
 category: business
 risk: safe
 source: self
@@ -62,6 +62,8 @@ One message, one question, no batching. Open with:
 > **Q:** What is the business called, and what does one line of it actually do?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the asset set.
@@ -131,7 +133,7 @@ Asset ID,Asset Name,Asset Type,Format,Dimensions,Aspect Ratio,Colour Mode,Backgr
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE brand_asset (
-  id BIGINT PRIMARY KEY,
+  asset_id BIGINT PRIMARY KEY,
   asset_name VARCHAR(255) NOT NULL,
   asset_type VARCHAR(100) NOT NULL,
   format VARCHAR(100) NOT NULL,

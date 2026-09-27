@@ -1,6 +1,6 @@
 ---
 name: design-theme-guide
-description: "Design theme guide: context-first intake, then a design token register as CSV, SQL, JSON Schema and Notion. Contrast ratios measured, not guessed. Use for brand colours, type scale, spacing and a documented theme."
+description: "Build a measured design-token register after context-first intake. Use when an SME needs documented colours, typography, spacing, and contrast rules."
 category: business
 risk: safe
 source: self
@@ -59,6 +59,8 @@ One message, one question, no batching. Open with:
 > **Q:** What is the business called, and what does one line of it actually do?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything the user already answered, in any earlier message. Ask the rest one at a
 time, and stop as soon as the remaining answers would not change the token set.
@@ -128,7 +130,7 @@ TOK-EXAMPLE-001,color.brand.primary,Brand,Color,#1F4FD8,hex,#1F4FD8,#8FB4FF,7.02
 -- Engine assumption: PostgreSQL. For another engine use `id BIGINT PRIMARY KEY`
 -- or the engine's auto-increment equivalent and keep the rest portable.
 CREATE TABLE design_token (
-  id BIGINT PRIMARY KEY,
+  token_id BIGINT PRIMARY KEY,
   token_name VARCHAR(255) NOT NULL,
   token_group VARCHAR(100) NOT NULL,
   token_type VARCHAR(100) NOT NULL,

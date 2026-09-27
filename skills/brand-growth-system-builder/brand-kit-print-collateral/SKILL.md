@@ -1,6 +1,6 @@
 ---
 name: brand-kit-print-collateral
-description: "Brand kit and print collateral: letterhead, visiting card, employee ID card, folder, invoice, email signature. Context-first intake, then a collateral spec register as CSV, SQL, JSON Schema and Notion, with trim, bleed, stock and finish."
+description: "Build a print-collateral specification register after context-first intake. Use when an SME needs letterhead, cards, folders, invoices, or email signatures."
 category: business
 risk: safe
 source: self
@@ -64,6 +64,8 @@ One message, one question, no batching. Open with:
 > **Q:** What is the business called, and what does one line of it actually do?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the item list or the specification.
@@ -133,7 +135,7 @@ Item ID,Item Name,Item Type,Finished Size,Trim Size,Bleed,Colour Mode,Stock,Pape
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE print_collateral (
-  id BIGINT PRIMARY KEY,
+  item_id BIGINT PRIMARY KEY,
   item_name VARCHAR(255) NOT NULL,
   item_type VARCHAR(100) NOT NULL,
   finished_size VARCHAR(50) NOT NULL,

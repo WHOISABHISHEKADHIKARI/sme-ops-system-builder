@@ -1,6 +1,6 @@
 ---
 name: business-website-setup
-description: "Business website setup: context-first intake, then a page and SEO register as CSV, SQL, JSON Schema and Notion. Page map, NAP, schema, Core Web Vitals targets and per-page search intent."
+description: "Build a website page and SEO register after context-first intake. Use when an SME needs a site map, NAP consistency, schema, performance, and search intent."
 category: business
 risk: safe
 source: self
@@ -66,6 +66,8 @@ One message, one question, no batching. Open with:
 
 ### Step 2 - Ask only what is missing
 
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
+
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the page list.
 
@@ -128,14 +130,14 @@ artifacts as data only. No preamble, no summary, no closing line.
 
 ```csv
 Page ID,Page URL,Page Title,Meta Description,Primary Keyword,Secondary Keywords,Search Intent,H1,NAP Block Present,Schema Type,Canonical URL,Indexable,Sitemap Included,Image Alt Text Rule,Target Device,Core Web Vitals Target,Build Platform,HTTPS,Mobile First,Structured Data Valid,Owner,Review Date,Status,Notes
-,https://example.com/services/example-service,Example Service in Example City | Example Retail,"Book Example Service in Example City. Same-week appointments, fixed prices and a 12-month workmanship guarantee.",example service example city,example service near me,example service cost,Transactional,Example Service in Example City,Yes,Service,Yes,Yes,"Describe what the image shows, not the filename",Mobile first,"LCP under 2.5s, INP under 200ms, CLS under 0.1",Unknown,Yes,Yes,Not tested,Unknown,2026-10-27,Draft,Example row - replace every value before use.
+,https://example.com/services/example-service,Example Service in Example City | Example Retail,"Book Example Service in Example City. Same-week appointments, fixed prices and a 12-month workmanship guarantee.",example service example city,example service near me,example service cost,Transactional,Example Service in Example City,Yes,Service,Yes,Yes,"Example image alt text",Mobile first,"LCP under 2.5s, INP under 200ms, CLS under 0.1",Unknown,Yes,Yes,Not tested,Unknown,2026-10-27,Draft,Example row - replace every value before use.
 ```
 
 ```sql
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE website_page (
-  id BIGINT PRIMARY KEY,
+  page_id BIGINT PRIMARY KEY,
   page_url TEXT NOT NULL,
   page_title VARCHAR(255) NOT NULL,
   meta_description VARCHAR(500) NOT NULL,
@@ -268,18 +270,18 @@ validator has actually run - it is never optimistic.
 | 6 | Secondary Keywords | `long_text` | `TEXT` | `string` | Text | *(blank)* |
 | 7 | Search Intent | `select` | `VARCHAR(100)` | `string` | Select | `Transactional` |
 | 8 | H1 | `text` | `VARCHAR(255)` | `string` | Text | *(blank)* |
-| 9 | NAP Block Present | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
+| 9 | NAP Block Present | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `true` |
 | 10 | Schema Type | `select` | `VARCHAR(100)` | `string` | Select | `Service` |
 | 11 | Canonical URL | `url` | `TEXT` | `string, format: uri` | URL | *(blank)* |
-| 12 | Indexable | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
-| 13 | Sitemap Included | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
+| 12 | Indexable | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `true` |
+| 13 | Sitemap Included | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `true` |
 | 14 | Image Alt Text Rule | `text` | `VARCHAR(255)` | `string` | Text | *(blank)* |
 | 15 | Target Device | `select` | `VARCHAR(50)` | `string` | Select | `Mobile first` |
 | 16 | Core Web Vitals Target | `text` | `VARCHAR(100)` | `string` | Text | *(blank)* |
 | 17 | Build Platform | `text` | `VARCHAR(100)` | `string` | Text | `Unknown` |
-| 18 | HTTPS | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
-| 19 | Mobile First | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
-| 20 | Structured Data Valid | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
+| 18 | HTTPS | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `true` |
+| 19 | Mobile First | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `true` |
+| 20 | Structured Data Valid | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `false` |
 | 21 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Unknown` |
 | 22 | Review Date | `date` | `DATE` | `string, format: date` | Date | *(blank)* |
 | 23 | Status | `select` | `VARCHAR(50)` | `string` | Select | `Draft` |

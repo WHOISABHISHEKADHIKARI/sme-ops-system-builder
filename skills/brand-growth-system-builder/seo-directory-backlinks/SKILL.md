@@ -1,6 +1,6 @@
 ---
 name: seo-directory-backlinks
-description: "SEO directories and backlinks: context-first intake, then a citation tracker as CSV, SQL, JSON Schema and Notion. Tiered directory list, NAP matching, link type, approval tracking and link-profile hygiene."
+description: "Build a citation and backlink register after context-first intake. Use when an SME needs directory tiers, NAP matching, approval tracking, or link hygiene."
 category: business
 risk: safe
 source: self
@@ -69,6 +69,8 @@ One message, one question, no batching. Open with:
 > **Q:** What is the business called, and what does one line of it actually do?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the directory list.
@@ -142,7 +144,7 @@ Citation ID,Platform Name,Domain,Tier,Category,Directory Type,Target URL,Link Ty
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE seo_citation (
-  id BIGINT PRIMARY KEY,
+  citation_id BIGINT PRIMARY KEY,
   platform_name VARCHAR(255) NOT NULL,
   domain VARCHAR(255),
   tier VARCHAR(50) NOT NULL,
@@ -284,7 +286,7 @@ this skill cannot measure it and must never estimate it.
 
 **Tier** - the value that decides where the effort goes. `Refused` is a first-class tier,
 because recording a platform the business deliberately rejected is how it stays rejected.
-Full tier contents: `references/backlink-directory-master-list.md`.
+Full tier contents: `../references/backlink-directory-master-list.md`.
 
 ```
 Tier 0 | Tier 1 | Tier 2 | Tier 3 | Tier 4 | Tier 5 | Tier 6 | Tier 7 | Refused

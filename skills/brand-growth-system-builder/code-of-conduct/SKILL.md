@@ -1,6 +1,6 @@
 ---
 name: code-of-conduct
-description: "Professional code of conduct: context-first intake, then an acknowledgement and breach register as CSV, SQL, JSON Schema and Notion. Policy version, training, complaints, investigation and follow-up, with human sign-off preserved."
+description: "Build a human-reviewed conduct register after context-first intake. Use when an SME needs policy acknowledgements, complaint handling, and breach follow-up."
 category: business
 risk: safe
 source: self
@@ -68,6 +68,8 @@ One message, one question, no batching. Open with:
 > **Q:** How many people work in the business, and does it have any employees at all yet?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the policy.
@@ -143,7 +145,7 @@ Record ID,Person Reference,Role,Policy Version,Policy Type,Issued Date,Acknowled
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE conduct_record (
-  id BIGINT PRIMARY KEY,
+  record_id BIGINT PRIMARY KEY,
   person_reference VARCHAR(100) NOT NULL,
   role VARCHAR(100) NOT NULL,
   policy_version VARCHAR(50) NOT NULL,
@@ -249,7 +251,7 @@ anyone.
 | 5 | Policy Type | `select` | `VARCHAR(100)` | `string` | Select | `Code of conduct` |
 | 6 | Issued Date | `date` | `DATE` | `string, format: date` | Date | *(blank)* |
 | 7 | Acknowledged Date | `date` | `DATE` | `string, format: date` | Date | *(blank)* |
-| 8 | Understood | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
+| 8 | Understood | `boolean` | `BOOLEAN` | `boolean` | Checkbox | `true` |
 | 9 | Questions Raised | `long_text` | `TEXT` | `string` | Text | `None recorded` |
 | 10 | Training Completed Date | `date` | `DATE` | `string, format: date` | Date | *(blank)* |
 | 11 | Breach Category | `select` | `VARCHAR(100)` | `string` | Select | `Not applicable` |

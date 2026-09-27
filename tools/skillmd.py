@@ -149,9 +149,8 @@ def _is_pack(path):
     """
     if not os.path.isdir(path):
         return False
-    for child in os.listdir(path):
-        c = os.path.join(path, child)
-        if os.path.isdir(c) and os.path.isfile(os.path.join(c, 'SKILL.md')):
+    for current, dirs, files in os.walk(path):
+        if current != path and 'SKILL.md' in files:
             return True
     return False
 

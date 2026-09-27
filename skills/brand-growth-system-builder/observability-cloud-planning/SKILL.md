@@ -1,6 +1,6 @@
 ---
 name: observability-cloud-planning
-description: "Cloud and observability plan: context-first intake, then a service, SLO and incident-readiness register as CSV, SQL, JSON Schema and Notion. What to monitor, what it costs, what it alerts on, and what is deliberately not built."
+description: "Build a cloud, SLO, and incident-readiness register after intake. Use when an SME needs monitoring scope, alert ownership, cost limits, or service planning."
 category: engineering
 risk: safe
 source: https://grafana.com/docs/grafana-cloud/observe-and-act/monitor-applications/ai-observability/
@@ -70,6 +70,8 @@ One message, one question, no batching. Open with:
 > would notice first - a customer, a member of staff, or an automated system?
 
 ### Step 2 - Ask only what is missing
+
+Treat ambiguous replies as unanswered and ask which explicit option the user means. Record unknown values as `Unknown`; `Unknown` is not zero. A record must not be `Done` when a required check fails.
 
 Skip anything already answered. Ask the rest one at a time, and stop as soon as the
 remaining answers would not change the plan.
@@ -151,7 +153,7 @@ Service ID,Service Name,Purpose,Criticality,Owner,Environment,Monitored From,SLI
 -- Engine assumption: PostgreSQL. For another engine use the engine's auto-increment
 -- equivalent and keep the rest portable.
 CREATE TABLE obs_service (
-  id BIGINT PRIMARY KEY,
+  service_id BIGINT PRIMARY KEY,
   service_name VARCHAR(100) NOT NULL,
   purpose TEXT NOT NULL,
   criticality VARCHAR(50) NOT NULL,
