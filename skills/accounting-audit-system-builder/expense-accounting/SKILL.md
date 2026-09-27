@@ -119,7 +119,7 @@ Never invent an answer. If the user does not know, record it as `Unknown` and ca
 Never turn Unknown into 0, and never treat a blank as a confirmed zero. A rate the user
 has not supplied stays blank until they supply it.
 
-### Step 3 - Build the internal context
+### Step 3 - Hold the internal context
 
 Keep the answers in this shape. It stays internal - it is not shown to the user unless
 they ask, and it never carries a value the user did not give.

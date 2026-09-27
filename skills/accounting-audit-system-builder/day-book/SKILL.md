@@ -186,7 +186,7 @@ Where the count or the statement has not been seen, the day's `Balance Differenc
 `Reconciliation Status` is `Unknown`. It is not zero, because a zero difference is a claim that
 the money was counted and agreed.
 
-### Step 3 - Build the internal context
+### Step 3 - Hold the internal context
 
 Hold the answers in this shape. It stays internal - it is not shown to the user unless they ask,
 and it never carries a value the user did not give.

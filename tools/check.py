@@ -39,7 +39,7 @@ SECTIONS = ['Overview', 'When to Use This Skill', 'How It Works', 'Field Referen
             'Examples', 'Best Practices', 'Limitations', 'Security & Safety Notes',
             'Common Pitfalls', 'Related Skills', 'Reusable Prompt']
 STEPS = ['### Step 1 - Identify intent', '### Step 2 - Ask only what is missing',
-         '### Step 3 - Build the internal context',
+         '### Step 3 - Hold the internal context',
          '### Step 4 - Recommend the smallest workflow',
          '### Step 5 - Build only on request']
 

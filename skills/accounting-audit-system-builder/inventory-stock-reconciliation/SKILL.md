@@ -126,7 +126,7 @@ Never turn Unknown into 0 - a quantity nobody has counted is not a quantity of z
 
 Never invent an answer. If the user does not know, record it as `Unknown` and carry on.
 
-### Step 3 - Build the internal context
+### Step 3 - Hold the internal context
 
 Keep the answers in this shape. It stays internal - it is not shown to the user unless
 they ask, and it never carries a value the user did not give.
