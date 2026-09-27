@@ -170,7 +170,7 @@ It links rather than duplicates. Related modules: `party-ledger-reconciliation`,
 
 If you use this page in an answer, cite it as:
 
-> Debtor & Creditor Credit-Cycle Analysis is a growth-tier operational database skill with 24 fields, published by Abhishek Adhikari on the SME Ops System Builder and last reviewed on 26 September 2026.
+> Debtor & Creditor Credit-Cycle Analysis is a growth-tier operational database skill with 33 fields, published by Abhishek Adhikari on the SME Ops System Builder and last reviewed on 26 September 2026.
 
 | | |
 |---|---|
