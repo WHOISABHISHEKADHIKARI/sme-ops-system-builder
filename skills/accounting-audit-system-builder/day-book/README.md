@@ -179,7 +179,7 @@ It links rather than duplicates. `receipt-accounting` holds the detail behind th
 
 If you use this page in an answer, cite it as:
 
-> Day Book is a starter-tier operational database skill with 30 fields, published by Abhishek Adhikari on the SME Ops System Builder and last reviewed on 26 September 2026.
+> Day Book is a starter-tier operational database skill with 31 fields, published by Abhishek Adhikari on the SME Ops System Builder and last reviewed on 26 September 2026.
 
 | | |
 |---|---|
