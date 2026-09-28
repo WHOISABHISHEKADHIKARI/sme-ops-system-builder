@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, brand, design-system, logo, print, website, gbp, local-seo, backlinks, citations, email, deck, social-media, code-of-conduct, observability, cloud, wcag, seo]
-tools: [claude-code, codex-cli, cursor, gemini-cli]
+tools: []
 ---
 
 # Brand & Growth System Builder
@@ -48,6 +48,8 @@ Do not use it when the user has already named one specific asset and just wants 
 straight to that module skill.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 

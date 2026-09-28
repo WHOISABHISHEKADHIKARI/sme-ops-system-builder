@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, website, seo, page-map, nap, schema, structured-data, core-web-vitals, performance, local-seo, sitemap, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Business Website Setup
@@ -48,6 +48,8 @@ Do not use it for: the ranking asset that is not the website - that is
 (`seo-directory-backlinks`); or a one-page campaign, which is `linktree-link-hub`.
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -255,7 +257,7 @@ CREATE INDEX idx_website_page_intent ON website_page (search_intent);
 | Notes | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. `Structured Data Valid` is false until a
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. `Structured Data Valid` is false until a
 validator has actually run - it is never optimistic.
 
 ## Field Reference
@@ -398,7 +400,7 @@ years.
   with `Review` schema are a citation Google can use.
 - Do not build a blog you will not write. A dead blog is an abandoned-site signal.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real page.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real page.
 
 ## Limitations
 
@@ -441,7 +443,9 @@ years.
   table or into shared notes.
 - If the review widget is third-party, its own cookie and consent behaviour applies. That
   is the business's decision to make, and it should be a deliberate one.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 
 ## Common Pitfalls
 

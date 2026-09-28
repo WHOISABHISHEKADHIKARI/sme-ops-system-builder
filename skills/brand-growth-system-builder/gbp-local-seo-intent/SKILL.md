@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, gbp, google-business-profile, local-seo, local-pack, map-pack, intent, categories, services, reviews, posts, photos, attributes, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # GBP & Local SEO Intent
@@ -50,6 +50,8 @@ directory citations (`seo-directory-backlinks`), or paid advertising - which buy
 not rank.
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -263,7 +265,7 @@ CREATE INDEX idx_gbp_record_reply ON gbp_record (review_reply_status);
 | Notes | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. `Verified` is false until verification completes
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. `Verified` is false until verification completes
 and `Review Rating` is 0 only because a review row was never entered - a real rating is
 always a measurement the business supplied.
 
@@ -459,7 +461,7 @@ video of the shopfront.
 - Never buy reviews, and never buy a better rank. Neither is possible, both are policy
   violations, and both are detected.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real profile.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real profile.
 
 ## Limitations
 
@@ -508,7 +510,9 @@ video of the shopfront.
   them. Move it to a private channel.
 - Verification documents - a video of the shopfront, a utility bill, a lease - are
   sensitive. They should go to Google directly and never into this table or a chat.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 
 ## Common Pitfalls
 

@@ -8,7 +8,7 @@ source_type: vendor
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, observability, monitoring, slo, sli, alerting, cloud-cost, uptime, incident, reliability, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Cloud and Observability Planning
@@ -53,6 +53,8 @@ architecture review (`security-and-privacy`); or a real incident, which is a liv
 situation, not a plan.
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -273,7 +275,7 @@ CREATE INDEX idx_obs_service_review ON obs_service (review_date);
 | Notes | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. `Dashboard URL` and `Runbook URL` read `Not yet
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. `Dashboard URL` and `Runbook URL` read `Not yet
 created` rather than a plausible-looking link, because a dead or wrong link in a runbook
 column is worse than an obvious gap.
 
@@ -439,7 +441,7 @@ what we should be paying for all this.
 - Keep phase 1 small enough to maintain. An unmaintained 40-service plan is worse than a
   maintained three-service one.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real service.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real service.
 
 ## Limitations
 
@@ -492,8 +494,9 @@ what we should be paying for all this.
 - If a monitoring tool is given production access, scope it to read-only and to the minimum
   needed. An observability agent with write access to the thing it observes is a real
   privilege.
-- This skill writes nothing outside the chat. It runs no commands, calls no APIs, and
-  provisions no infrastructure.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 
 ## Common Pitfalls
 

@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, social-media, facebook, linkedin, tiktok, facebook-page, content-calendar, profile, cadence, brand-voice, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Social Media Setup
@@ -51,6 +51,8 @@ presentation (`presentation-deck`), a paid advertising campaign, or a content ma
 guest-posting plan (`seo-directory-backlinks` for the citation side).
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -250,7 +252,7 @@ CREATE INDEX idx_social_record_status ON social_record (status);
 | Notes | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. A `Channel` row has no caption, no media and no
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. A `Channel` row has no caption, no media and no
 publish date - those belong on a `Post` row, and putting them on both is how a profile ends
 up with a stranger's draft caption in its bio field.
 
@@ -429,7 +431,7 @@ want to be on TikTok because our competitor is. Nobody here has ever posted on i
 - Review at 30 days against the stated purpose - calls, enquiries, recruitment - and cut
   the channel that produced nothing rather than posting to it out of habit.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real post.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real post.
 
 ## Limitations
 
@@ -479,7 +481,9 @@ want to be on TikTok because our competitor is. Nobody here has ever posted on i
   most often causes real damage.
 - If a post is a security or safety incident - a break-in, a fraud warning - the
   communication is an operational decision, not a marketing one. Escalate it.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 
 ## Common Pitfalls
 

@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, seo, backlinks, citations, directories, local-seo, nap-consistency, link-building, spam, digital-pr, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # SEO Directories & Backlinks
@@ -53,6 +53,8 @@ Do not use it for: the website's own structure (`business-website-setup`), the m
 are editorial decisions rather than directory submissions.
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -252,7 +254,7 @@ CREATE INDEX idx_seo_citation_nap ON seo_citation (nap_match);
 | Notes | Text | Leave as Text. The vetting note - what the directory is, and why it is or is not worth it |
 ```
 
-One example row per artifact, visibly fake. Every third-party metric is `Unknown` because
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Every third-party metric is `Unknown` because
 this skill cannot measure it and must never estimate it.
 
 ## Field Reference
@@ -416,7 +418,7 @@ and ask for a reciprocal link. Should we do them all?
 - Re-check the top ten listings quarterly. Directories decay, get re-categorised and get
   deleted silently.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real citation.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real citation.
 
 ## Limitations
 
@@ -461,7 +463,9 @@ and ask for a reciprocal link. Should we do them all?
 - Business directories processing personal data are subject to data-protection law. The
   business is the controller for the data it publishes, and it should know which platforms
   it has published an address and phone number to.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 
 ## Common Pitfalls
 

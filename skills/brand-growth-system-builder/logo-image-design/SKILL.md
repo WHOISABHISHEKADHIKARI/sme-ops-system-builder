@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, brand, logo, mark, imagery, photography, stock, icon, trademark, licence, rights, brand-guidelines, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Logo & Image Design
@@ -46,6 +46,8 @@ the printed items the mark goes on (`brand-kit-print-collateral`), or stock-foot
 for ads.
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -229,7 +231,7 @@ CREATE INDEX idx_brand_asset_type ON brand_asset (asset_type);
 | Notes | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. Rights fields the user has not confirmed are
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Rights fields the user has not confirmed are
 `Unknown` or `Not searched` - never assumed clear.
 
 ## Field Reference
@@ -363,7 +365,7 @@ is on the shopfront, and we are now printing visiting cards.
 - Keep a one-page "logo misuse" sheet next to the files. Most of what looks like a bad
   logo is a stretched, rotated or recoloured one.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real asset.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real asset.
 
 ## Limitations
 
@@ -386,7 +388,9 @@ is on the shopfront, and we are now printing visiting cards.
 - Never invent a designer credit, a licence name, a trademark number or a registration
   status. `Unknown` and `Not searched` are correct answers.
 - Never assert that a name is available to trademark. Say that a search has not been run.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes an existing brand guideline or an unreleased product, note that it
   stays in the conversation and should be deleted if it is confidential.
 - Personal data on a photograph - faces, name badges, plates, screens - is a data

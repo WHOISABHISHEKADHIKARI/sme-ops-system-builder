@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, email, templates, spf, dkim, dmarc, deliverability, spam, accessibility, plain-text, mjml, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Business Email Templates
@@ -46,6 +46,8 @@ Do not use it for: the printed signature block on letterhead and cards
 (`company-email-accounts` in the operational pack), or marketing campaign automation.
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -242,7 +244,7 @@ CREATE INDEX idx_email_template_type ON email_template (template_type);
 | Notes | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. `Unsubscribe Required` and the two checkboxes
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. `Unsubscribe Required` and the two checkboxes
 are booleans - no `Yes`/`No` strings in a boolean cell.
 
 ## Field Reference
@@ -394,7 +396,7 @@ last month our invoice emails started going to spam.
 - Put the full postal address in the signature or the footer, and keep it readable in
   plain text. Unsubscribe, where it applies, must be a working link and not a tiny grey one.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real template.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real template.
 
 ## Limitations
 
@@ -430,7 +432,9 @@ last month our invoice emails started going to spam.
   with placeholder tokens.
 - Marketing consent and unsubscribe are legal obligations, not preferences. Flag them, and
   refer the lawful basis to the business's data-protection position.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - Phishing awareness: if the business reports suspicious email, that is a security
   incident, not a template question. Route it to the security owner.
 

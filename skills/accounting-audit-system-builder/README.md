@@ -50,15 +50,15 @@ Software selected
 
 | Layer | Module | Fits | Fields |
 |---|---|---|---:|
-| Foundation | Accounting Software Selection | Growth | 26 |
+| Foundation | Accounting Software Selection | Growth | 57 |
 | Document | Source Document & Filing | Growth | 22 |
 | Record | Purchase Accounting | Growth | 29 |
-| Record | Sales Accounting | Starter | 32 |
+| Record | Sales Accounting | Starter | 33 |
 | Record | Receipt Accounting | Starter | 23 |
 | Record | Payment Accounting | Starter | 24 |
 | Cash | Petty Cash Management | Starter | 24 |
-| Cash | Day Book | Starter | 25 |
-| Expense & Payroll | Expense Accounting | Starter | 26 |
+| Cash | Day Book | Starter | 30 |
+| Expense & Payroll | Expense Accounting | Starter | 22 |
 | Expense & Payroll | Salary & Wage Accounting | Growth | 27 |
 | Statutory | TDS Booking & Payment | Starter | 25 |
 | Reconcile | Party / Ledger Reconciliation | Growth | 27 |

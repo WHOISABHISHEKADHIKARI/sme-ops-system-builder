@@ -18,7 +18,7 @@ Choosing and setting up the system the entries will live in.
 
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
-| Accounting Software Selection | - | Growth | 26 | `skills/accounting-software-selection/SKILL.md` |
+| Accounting Software Selection | - | Growth | 57 | `skills/accounting-software-selection/SKILL.md` |
 
 ## Layer 2: Document
 
@@ -36,7 +36,7 @@ distinction and the mode-of-payment distinction explicitly.
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
 | Purchase Accounting | - | Growth | 29 | `skills/purchase-accounting/SKILL.md` |
-| Sales Accounting | - | Starter | 32 | `skills/sales-accounting/SKILL.md` |
+| Sales Accounting | - | Starter | 33 | `skills/sales-accounting/SKILL.md` |
 | Receipt Accounting | - | Starter | 23 | `skills/receipt-accounting/SKILL.md` |
 | Payment Accounting | - | Starter | 24 | `skills/payment-accounting/SKILL.md` |
 
@@ -53,7 +53,7 @@ Day-to-day cash position, counted and reconciled.
 
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
-| Expense Accounting | - | Starter | 26 | `skills/expense-accounting/SKILL.md` |
+| Expense Accounting | - | Starter | 22 | `skills/expense-accounting/SKILL.md` |
 | Salary & Wage Accounting | - | Growth | 27 | `skills/salary-wage-accounting/SKILL.md` |
 
 ## Layer 6: Statutory
@@ -85,7 +85,7 @@ Day-to-day cash position, counted and reconciled.
 ## Totals
 
 - Modules: 16
-- Fields: 418
+- Fields: 446
 - Starter: 7
 - Growth: 9
 

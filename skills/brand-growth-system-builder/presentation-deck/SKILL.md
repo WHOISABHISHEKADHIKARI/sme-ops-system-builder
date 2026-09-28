@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, presentation, deck, pitch, slides, storytelling, speaker-notes, data-source, brand-kit, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Presentation Deck
@@ -49,6 +49,8 @@ proposal document, a website page, or the brand identity itself
 (`design-theme-guide`, `logo-image-design`).
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -235,7 +237,7 @@ CREATE UNIQUE INDEX idx_deck_slide_number_version ON deck_slide (slide_number, v
 | Notes | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. `Data Source` reads `Not applicable` only on a
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. `Data Source` reads `Not applicable` only on a
 slide that genuinely carries no figure; on any slide with a number it must name where that
 number came from.
 
@@ -391,7 +393,7 @@ template that has been used for other loans. We have no idea what to put in it.
   meeting, not the record.
 - After the meeting, write down what was asked. The next deck is usually a third of the work.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real slide.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real slide.
 
 ## Limitations
 
@@ -436,7 +438,9 @@ template that has been used for other loans. We have no idea what to put in it.
   never in a pitch deck.
 - If a slide touches a claim about a competitor, it must be factual and sourced. Defamation
   exposure is real and it is not worth a slide.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 
 ## Common Pitfalls
 

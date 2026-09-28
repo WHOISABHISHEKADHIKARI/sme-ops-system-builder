@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, brand-kit, letterhead, visiting-card, business-card, employee-card, id-card, print, bleed, cmyk, stationery, folder, invoice, email-signature, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Brand Kit & Print Collateral
@@ -48,6 +48,8 @@ Do not use it before an approved mark exists. Collateral built with no approved 
 rewrite later; route to `logo-image-design` first and note the dependency.
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -244,7 +246,7 @@ CREATE INDEX idx_print_collateral_type ON print_collateral (item_type);
 | Notes | Text | Leave as Text. Print the printer's own instructions here |
 ```
 
-One example row per artifact, visibly fake. Money is `currency` with no symbol. Stock,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money is `currency` with no symbol. Stock,
 finish and quantity stay `Unknown` or blank until the business supplies them - never a
 plausible guess.
 
@@ -393,7 +395,7 @@ with a white edge around the logo and the letterhead was a different blue to the
 - Treat the email signature as collateral, not as an afterthought. It is the one item that
   appears in every message forever.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real item.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real item.
 
 ## Limitations
 
@@ -426,7 +428,9 @@ with a white edge around the logo and the letterhead was a different blue to the
   pack.
 - Lost cards are a security event, not an admin task. A card register should be able to
   record a revoke-and-replace.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - Barcode and QR payloads must never contain a national identifier or anything that should
   not be publicly readable from the card.
 

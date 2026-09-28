@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, code-of-conduct, policy, ethics, workplace, grievance, disciplinary, acknowledgement, training, compliance, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Professional Code of Conduct
@@ -52,6 +52,8 @@ Do not use it for: the disciplinary process itself, which belongs to
 investigation, adjudication or any decision about a person.
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -236,7 +238,7 @@ CREATE INDEX idx_conduct_record_follow_up ON conduct_record (follow_up_date);
 | Notes | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. A person is referenced by employee number, never
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. A person is referenced by employee number, never
 by name, so the register can be shared with a reviewer or an auditor without exposing
 anyone.
 
@@ -387,7 +389,7 @@ nothing was recorded anywhere.
 - Never use this table to decide anything about a person. It records process, and process
   is the part that is auditable.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real person.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real person.
 
 ## Limitations
 
@@ -437,7 +439,9 @@ nothing was recorded anywhere.
   this register is not the route, and delay is its own harm.
 - Never paste a disciplinary investigation file, a witness statement or a legal
   correspondence into a chat.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 
 ## Common Pitfalls
 

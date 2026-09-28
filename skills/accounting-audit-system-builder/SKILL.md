@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, accounting, audit, bookkeeping, finance, database, csv, sql, router]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Accounting & Audit System Builder
@@ -54,6 +54,8 @@ the file - go straight to that module skill.
 
 ## How It Works
 
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+
 ### Step 1 - Identify the stage, not the tool
 
 Read the request and place it on the cycle before asking anything. The stage is the
@@ -81,6 +83,10 @@ route.
 One message, one question, no batching. Open with:
 
 > **Q:** Where in the accounting cycle is the business right now?
+
+If the user asks this router to build an artifact, refuse the out-of-scope build. When a
+required check has failed, also refuse `Done`. Stop after that complete boundary response
+unless the user separately asks to be routed; do not append an unrelated stage question.
 
 ### Step 2 - Ask only what is missing
 
@@ -248,8 +254,8 @@ monthly-closing-statements   -> skills/monthly-closing-statements/SKILL.md    th
 - Ask for transaction counts, tax registrations and software names only. Never ask for
   bank account numbers, PAN copies, salary figures or customer contact details.
 - This skill runs no commands, calls no APIs, and writes no files.
-- Generated modules carry fictional example rows, never real records. Real data is the
-  user to enter.
+- Documentation examples use fictional rows, never real records. Emitted templates
+  stay empty unless the user requests examples; real data is the user to enter.
 - Audit files, tax filings and statutory records are sensitive. Modules touching them
   carry an explicit human-review requirement in their own skill file.
 - Anything reaching a tax authority or an auditor needs a qualified human sign-off before

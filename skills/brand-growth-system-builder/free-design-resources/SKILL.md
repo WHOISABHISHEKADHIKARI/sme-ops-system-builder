@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, design-tools, free-licences, fonts, icons, images, templates, accessibility, cost, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Free Design Resources
@@ -51,6 +51,8 @@ Do not use it for: building the design system itself (`design-theme-guide`), the
 (`logo-image-design`), or a legal opinion on a licence agreement.
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -244,7 +246,7 @@ CREATE INDEX idx_design_resource_verified ON design_resource (verified_on);
 | Notes | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. `Verification Source` and `Verified On` are
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. `Verification Source` and `Verified On` are
 required, not optional: a licence that has not been read from the provider's own terms is
 `Unverified`, and `Unverified` is a state this register is designed to surface rather than
 hide.
@@ -403,7 +405,7 @@ posts, and we keep paying for tools we barely use.
 - Re-verify on renewal and when the business changes scale, because a free plan's terms and
   a provider's AI-training clause both change underneath you.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real resource.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real resource.
 
 ## Limitations
 
@@ -457,7 +459,9 @@ posts, and we keep paying for tools we barely use.
 - Never publish generated or unlicensed output into a live brand without a recorded
   verification. That is the one habit that keeps a free-tools policy from becoming a
   liability.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 
 ## Common Pitfalls
 

@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-27"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, brand, linktree, link-in-bio, social, tracking, utm, call-to-action, qr, csv, sql, notion]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Link-in-Bio Hub
@@ -44,6 +44,8 @@ page structure (`business-website-setup`), or a full campaign landing page with 
 form and tracking - that is a website page.
 
 ## How It Works
+
+Follow the [shared execution contract](../../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -218,7 +220,7 @@ CREATE INDEX idx_link_hub_priority ON link_hub_link (priority_order);
 | Notes | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. `Click Count` is `0` in the example and blank in
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. `Click Count` is `0` in the example and blank in
 the field reference - a click count is a measurement, never an estimate.
 
 ## Field Reference
@@ -350,7 +352,7 @@ bio points to it and our visiting cards point to the website homepage.
 - Review the click counts monthly and reorder by what actually gets clicked, not by what
   was assumed.
 - Derive all four artifacts from the field list in this file, never by hand.
-- Keep the example row obviously fake so nobody imports it as a real link.
+- If the user requests an example row, keep it obviously fake so nobody imports it as a real link.
 
 ## Limitations
 
@@ -383,7 +385,9 @@ bio points to it and our visiting cards point to the website homepage.
   and it will be crawled.
 - If the hub collects an email address, a lawful basis, a privacy notice and a retention
   rule apply. Flag it; refer it to `data-privacy-controls`.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 
 ## Common Pitfalls
 
