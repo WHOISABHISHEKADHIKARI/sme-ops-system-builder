@@ -386,11 +386,11 @@ We deduct TDS on a few vendor payments and only find out at filing that the depo
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `expense-accounting` - the expense and payment rows that carry the deduction.
-- `salary-wage-accounting` - the source of salary TDS for the period.
-- `payment-accounting` - the net payment actually released after the deduction.
-- `monthly-closing-statements` - closes the payable account the deposit clears.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Expense Accounting](../expense-accounting/SKILL.md) - the expense and payment rows that carry the deduction.
+- [Salary & Wage Accounting](../salary-wage-accounting/SKILL.md) - the source of salary TDS for the period.
+- [Payment Accounting](../payment-accounting/SKILL.md) - the net payment actually released after the deduction.
+- [Monthly Closing & Statements](../monthly-closing-statements/SKILL.md) - closes the payable account the deposit clears.
 
 ## Reusable Prompt
 

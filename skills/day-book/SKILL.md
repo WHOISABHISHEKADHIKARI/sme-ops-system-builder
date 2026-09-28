@@ -692,19 +692,19 @@ same payment entered twice.
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other 15 modules.
-- `receipt-accounting` - the detail behind the receipt lines in this book.
-- `payment-accounting` - the detail behind the payment lines in this book.
-- `petty-cash-management` - the float that the cash book section is counting.
-- `source-document-filing` - holds the `Source Documents` target.
-- `party-ledger-reconciliation` - takes the balances this book produces and proves them.
-- `expense-accounting` - the expense detail behind the payments booked here.
-- `inventory-stock-reconciliation` - the same count discipline applied to stock.
-- `monthly-closing-statements` - takes the closed day book into the trial balance.
-- `audit-preparation` - a daily book with verified balances is an audit-trail item.
-- `accounting-software-selection` - decides the day-book format this table must capture.
-- `credit-cycle-analysis` - reads the debtor movement out of the receipts booked here.
-- `salary-wage-accounting` - the salary run lands in the bank book here.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other 15 modules.
+- [Receipt Accounting](../receipt-accounting/SKILL.md) - the detail behind the receipt lines in this book.
+- [Payment Accounting](../payment-accounting/SKILL.md) - the detail behind the payment lines in this book.
+- [Petty Cash Management](../petty-cash-management/SKILL.md) - the float that the cash book section is counting.
+- [Source Document & Filing](../source-document-filing/SKILL.md) - holds the `Source Documents` target.
+- [Party / Ledger Reconciliation](../party-ledger-reconciliation/SKILL.md) - takes the balances this book produces and proves them.
+- [Expense Accounting](../expense-accounting/SKILL.md) - the expense detail behind the payments booked here.
+- [Inventory / Stock Reconciliation](../inventory-stock-reconciliation/SKILL.md) - the same count discipline applied to stock.
+- [Monthly Closing & Statements](../monthly-closing-statements/SKILL.md) - takes the closed day book into the trial balance.
+- [Audit Preparation](../audit-preparation/SKILL.md) - a daily book with verified balances is an audit-trail item.
+- [Accounting Software Selection](../accounting-software-selection/SKILL.md) - decides the day-book format this table must capture.
+- [Debtor & Creditor Credit-Cycle Analysis](../credit-cycle-analysis/SKILL.md) - reads the debtor movement out of the receipts booked here.
+- [Salary & Wage Accounting](../salary-wage-accounting/SKILL.md) - the salary run lands in the bank book here.
 
 ## Reusable Prompt
 

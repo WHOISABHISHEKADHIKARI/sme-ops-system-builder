@@ -479,16 +479,16 @@ last month our invoice emails started going to spam.
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `brand-kit-print-collateral` - the printed signature block on letterhead and cards; the
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
+- [Brand Kit & Print Collateral](../brand-kit-print-collateral/SKILL.md) - the printed signature block on letterhead and cards; the
   email signature must match it.
-- `design-theme-guide` - the colour and type tokens; email needs its own type scale because
+- [Design Theme Guide](../design-theme-guide/SKILL.md) - the colour and type tokens; email needs its own type scale because
   web tokens do not survive every mail client.
-- `social-media-setup` - message discipline is shared; the platforms are not.
+- [Social Media Setup](../social-media-setup/SKILL.md) - message discipline is shared; the platforms are not.
 - `invoices-billing` (operational pack) - the invoice data this template sends.
 - `company-email-accounts` (operational pack) - the mailbox register behind the senders.
 - `data-privacy-controls` (operational pack) - the lawful basis for any recipient list.
-- `free-design-resources` - Litmus, Mail Tester, MXToolbox, MJML and the rest.
+- [Free Design Resources](../free-design-resources/SKILL.md) - Litmus, Mail Tester, MXToolbox, MJML and the rest.
 
 ## Reusable Prompt
 

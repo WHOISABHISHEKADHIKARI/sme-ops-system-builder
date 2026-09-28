@@ -427,14 +427,14 @@ bio points to it and our visiting cards point to the website homepage.
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `business-website-setup` - where most of the destinations actually live, and the page map
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
+- [Business Website Setup](../business-website-setup/SKILL.md) - where most of the destinations actually live, and the page map
   they must match.
-- `social-media-setup` - the bios that point here, and the channel-specific link limits.
-- `brand-kit-print-collateral` - the card, leaflet and folder that carry the QR code.
-- `business-email-template` - the email signature that carries the same URL.
-- `gbp-local-seo-intent` - the booking and call actions, which are the highest-value links.
-- `seo-directory-backlinks` - link hubs are also low-authority citation sites; that list
+- [Social Media Setup](../social-media-setup/SKILL.md) - the bios that point here, and the channel-specific link limits.
+- [Brand Kit & Print Collateral](../brand-kit-print-collateral/SKILL.md) - the card, leaflet and folder that carry the QR code.
+- [Business Email Templates](../business-email-template/SKILL.md) - the email signature that carries the same URL.
+- [GBP & Local SEO Intent](../gbp-local-seo-intent/SKILL.md) - the booking and call actions, which are the highest-value links.
+- [SEO Directories & Backlinks](../seo-directory-backlinks/SKILL.md) - link hubs are also low-authority citation sites; that list
   names them.
 - `data-privacy-controls` (operational pack) - lawful basis if the hub ever collects data.
 

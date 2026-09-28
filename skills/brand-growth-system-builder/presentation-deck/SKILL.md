@@ -485,19 +485,19 @@ template that has been used for other loans. We have no idea what to put in it.
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `design-theme-guide` - the type scale and colour roles every slide is built from.
-- `logo-image-design` - the mark, the clear-space rule and the misuse rules that apply to
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
+- [Design Theme Guide](../design-theme-guide/SKILL.md) - the type scale and colour roles every slide is built from.
+- [Logo & Image Design](../logo-image-design/SKILL.md) - the mark, the clear-space rule and the misuse rules that apply to
   slides like every other surface.
-- `gbp-local-seo-intent` - reviews, ratings and photographs, the most reusable evidence a
+- [GBP & Local SEO Intent](../gbp-local-seo-intent/SKILL.md) - reviews, ratings and photographs, the most reusable evidence a
   local business has.
-- `business-website-setup` - the offer, the pricing and the proof the deck links to.
+- [Business Website Setup](../business-website-setup/SKILL.md) - the offer, the pricing and the proof the deck links to.
 - `presentation-deck` consumers: `social-media-setup` - most good business content is a
   slide repurposed into a post.
-- `seo-directory-backlinks` - the guest contribution and the local press angle both begin
+- [SEO Directories & Backlinks](../seo-directory-backlinks/SKILL.md) - the guest contribution and the local press angle both begin
   as a deck and an article.
-- `code-of-conduct` - the conduct and privacy rules that decide what may be shown.
-- `free-design-resources` - Google Slides, Canva, Marp, Slidev, reveal.js and the free
+- [Professional Code of Conduct](../code-of-conduct/SKILL.md) - the conduct and privacy rules that decide what may be shown.
+- [Free Design Resources](../free-design-resources/SKILL.md) - Google Slides, Canva, Marp, Slidev, reveal.js and the free
   template and image sources.
 
 ## Reusable Prompt

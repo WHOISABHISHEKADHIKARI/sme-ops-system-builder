@@ -18,6 +18,7 @@ Usage:
 """
 import os
 import re
+from pathlib import Path
 
 BT = chr(96)
 
@@ -121,8 +122,29 @@ def read_skill(path):
                      if l.strip().startswith('- ')][:4]
     d['limits'] = sec('Limitations', 'Security & Safety Notes')
     d['safety'] = sec('Security & Safety Notes', 'Common Pitfalls')
-    d['related'] = re.findall(r'^- `([a-z0-9-]+)` - (.+)$',
-                              sec('Related Skills', 'Reusable Prompt'), re.M)
+    # A related entry is a link, so the slug is read back out of the path rather than
+    # assumed: `- [People Directory](../people-directory/SKILL.md) - ...` and the older
+    # backticked form both parse, and a link to the root router resolves to the repo root.
+    # Both character classes exclude a newline. `[^)]` and `[^\]]` do not, and since a
+    # section holds one link per line, a match then runs from the first `[` to the last
+    # `)` in the section and returns a slug cut out of the middle of a description.
+    related = []
+    for label, target, desc in re.findall(
+            r'^- \[([^\]\n]+)\]\(([^)\n]+)\) - (.+)$',
+            sec('Related Skills', 'Reusable Prompt'), re.M):
+        # The path, not the text: dirname() of a file's contents is the directory it
+        # happens to sit in, so every relative link resolved against the wrong base.
+        here = os.path.normpath(os.path.join(os.path.dirname(path), target))
+        # A link to the root router climbs out of skills/ entirely, and the checkout
+        # directory is named after nothing in particular, so the test is the shape of
+        # the path rather than a comparison against a name.
+        inside = here.split(os.sep)
+        related.append((inside[-2] if 'skills' in inside[:-1]
+                        else 'sme-ops-system-builder', desc))
+    for slug, desc in re.findall(r'^- `@?([a-z0-9-]+)` - (.+)$',
+                                 sec('Related Skills', 'Reusable Prompt'), re.M):
+        related.append((slug, desc))
+    d['related'] = related
     d['options'] = select_options(t)
     d['csv'] = block(t, 'csv')
     d['sql'] = block(t, 'sql')
@@ -239,6 +261,47 @@ def table_slugs(root):
     """
     return [s for s in all_slugs(root)
             if not is_helper(os.path.join(module_dir(root, s), 'SKILL.md'))]
+
+
+def resolve_slug(root, slug):
+    """The real directory of a slug, wherever it lives, or None.
+
+    A slug is not a path. ``people-directory`` is a flat module under skills/,
+    ``logo-image-design`` is inside the brand pack, and ``sme-ops-system-builder`` is the
+    root router, whose SKILL.md sits at the repository root with no directory of its own.
+    Anything that turns a slug into a link has to resolve all three, so the lookup is
+    here rather than re-derived per caller.
+
+    The pack search is unambiguous by construction: :func:`all_slugs` cannot produce the
+    same bare name in two packs, and a flat module never shares a name with a pack module.
+    """
+    if slug == 'sme-ops-system-builder':
+        flat = os.path.join(root, 'SKILL.md')
+        return os.path.dirname(flat) if os.path.isfile(flat) else None
+    flat = module_dir(root, slug)
+    if os.path.isfile(os.path.join(flat, 'SKILL.md')):
+        return flat
+    base = os.path.join(root, 'skills')
+    for pack in all_packs(root):
+        d = os.path.join(base, pack, slug)
+        if os.path.isfile(os.path.join(d, 'SKILL.md')):
+            return d
+    return None
+
+
+def relative_skill_link(root, from_path, slug):
+    """A relative link from one SKILL.md to another's, or None if the slug does not exist.
+
+    Computed rather than written out because the depth varies: a flat module reaches a
+    sibling with one ``../``, a pack module reaches a sibling the same way but the root
+    router needs three, and a flat module reaching into a pack needs two. relpath gets
+    all of them right without a layout special case.
+    """
+    target = resolve_slug(root, slug)
+    if target is None:
+        return None
+    dest = os.path.join(target, 'SKILL.md')
+    return Path(os.path.relpath(dest, os.path.dirname(from_path))).as_posix()
 
 
 def all_skill_files(root):

@@ -146,6 +146,14 @@ def check(path, verbose=False):
         if st not in body:
             bad('missing ' + st)
 
+    # A Related Skills entry is a relative link, and a link that does not resolve is
+    # worse than a backticked slug: it reads as a promise the repository does not keep.
+    # Checked before the no-table return, because a router and a helper navigate too.
+    for label, target in re.findall(r'^- \[([^\]\n]+)\]\(([^)\n]+)\) - ', body, re.M):
+        dest = os.path.normpath(os.path.join(os.path.dirname(path), target))
+        if not os.path.isfile(dest):
+            bad('broken related link', '%s -> %s' % (label, target))
+
     # A router routes between modules and a helper renders another module's table, so
     # neither defines a table of its own and the artifact requirements below do not
     # apply. The frontmatter, section and step checks above still ran.

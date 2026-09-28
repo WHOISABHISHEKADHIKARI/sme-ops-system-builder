@@ -392,11 +392,11 @@ Our biggest customer says we owe them less than our books show and we cannot pro
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `sales-accounting` - raises the invoices that make up the debtor balance.
-- `receipt-accounting` - records the receipts that should clear that balance.
-- `credit-cycle-analysis` - reads the aging that tells you which parties to chase first.
-- `monthly-closing-statements` - pulls the ledger totals this reconciliation compares against.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Sales Accounting](../sales-accounting/SKILL.md) - raises the invoices that make up the debtor balance.
+- [Receipt Accounting](../receipt-accounting/SKILL.md) - records the receipts that should clear that balance.
+- [Debtor & Creditor Credit-Cycle Analysis](../credit-cycle-analysis/SKILL.md) - reads the aging that tells you which parties to chase first.
+- [Monthly Closing & Statements](../monthly-closing-statements/SKILL.md) - pulls the ledger totals this reconciliation compares against.
 
 ## Reusable Prompt
 

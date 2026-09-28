@@ -516,19 +516,19 @@ posts, and we keep paying for tools we barely use.
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
 - `../references/free-design-resource-map.md` - the evidence base behind every entry in this
   register, with the source and the caveat for each category.
-- `design-theme-guide` - where the chosen type, colour and spacing tools are actually
+- [Design Theme Guide](../design-theme-guide/SKILL.md) - where the chosen type, colour and spacing tools are actually
   applied, and where contrast is verified.
-- `logo-image-design` - the artwork itself, and the usage rights that a logo needs
+- [Logo & Image Design](../logo-image-design/SKILL.md) - the artwork itself, and the usage rights that a logo needs
   separately from a font or an icon.
-- `brand-kit-print-collateral` - the print specifications a chosen tool must be able to
+- [Brand Kit & Print Collateral](../brand-kit-print-collateral/SKILL.md) - the print specifications a chosen tool must be able to
   export, bleed included.
-- `business-website-setup` - the site's template licence, page speed and accessibility.
-- `social-media-setup` - platform-native tools are free, and the licence for any asset
+- [Business Website Setup](../business-website-setup/SKILL.md) - the site's template licence, page speed and accessibility.
+- [Social Media Setup](../social-media-setup/SKILL.md) - platform-native tools are free, and the licence for any asset
   uploaded to them.
-- `presentation-deck` - slide templates, and the font and image licences inside them.
+- [Presentation Deck](../presentation-deck/SKILL.md) - slide templates, and the font and image licences inside them.
 - `vendor-supplier-scorecard` (`me-ops-system-builder`) - recurring cost, renewal date and
   the real spend per tool.
 - `cloud-cost-variance-tracker` (`me-ops-system-builder`) - reconciles estimated cost

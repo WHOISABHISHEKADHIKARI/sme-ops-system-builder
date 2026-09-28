@@ -481,18 +481,18 @@ Month-end takes us ten days and we still find mistakes in the numbers afterwards
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `party-ledger-reconciliation` - the reconciliations this close depends on.
-- `inventory-stock-reconciliation` - the inventory gate in this checklist.
-- `tds-booking-payment` - the withholding gate in this checklist.
-- `receipt-accounting` - the receipt entries completed before the close.
-- `payment-accounting` - the payment entries completed before the close.
-- `purchase-accounting` - the purchase side of the entry completion gate.
-- `sales-accounting` - the sales side of the entry completion gate.
-- `day-book` - the cash and bank book the cash and bank gates are checked against.
-- `credit-cycle-analysis` - the receivables and payables review in this checklist, measured.
-- `expense-accounting` - where the period expenses behind the profit figure come from.
-- `audit-preparation` - where the finished pack and its working papers are collected.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Party / Ledger Reconciliation](../party-ledger-reconciliation/SKILL.md) - the reconciliations this close depends on.
+- [Inventory / Stock Reconciliation](../inventory-stock-reconciliation/SKILL.md) - the inventory gate in this checklist.
+- [TDS Booking & Payment](../tds-booking-payment/SKILL.md) - the withholding gate in this checklist.
+- [Receipt Accounting](../receipt-accounting/SKILL.md) - the receipt entries completed before the close.
+- [Payment Accounting](../payment-accounting/SKILL.md) - the payment entries completed before the close.
+- [Purchase Accounting](../purchase-accounting/SKILL.md) - the purchase side of the entry completion gate.
+- [Sales Accounting](../sales-accounting/SKILL.md) - the sales side of the entry completion gate.
+- [Day Book](../day-book/SKILL.md) - the cash and bank book the cash and bank gates are checked against.
+- [Debtor & Creditor Credit-Cycle Analysis](../credit-cycle-analysis/SKILL.md) - the receivables and payables review in this checklist, measured.
+- [Expense Accounting](../expense-accounting/SKILL.md) - where the period expenses behind the profit figure come from.
+- [Audit Preparation](../audit-preparation/SKILL.md) - where the finished pack and its working papers are collected.
 
 ## Reusable Prompt
 

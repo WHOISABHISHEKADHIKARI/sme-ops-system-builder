@@ -392,11 +392,11 @@ Payroll runs on a sheet and at month end we cannot tell what is still owed as PF
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `expense-accounting` - books the salary and wage lines into the expense register.
-- `payment-accounting` - records the bank or cash payment that settles the net figure.
-- `tds-booking-payment` - carries the salary TDS into the statutory register and return.
-- `source-document-filing` - stores the signed wage sheet and the deposit challan.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Expense Accounting](../expense-accounting/SKILL.md) - books the salary and wage lines into the expense register.
+- [Payment Accounting](../payment-accounting/SKILL.md) - records the bank or cash payment that settles the net figure.
+- [TDS Booking & Payment](../tds-booking-payment/SKILL.md) - carries the salary TDS into the statutory register and return.
+- [Source Document & Filing](../source-document-filing/SKILL.md) - stores the signed wage sheet and the deposit challan.
 
 ## Reusable Prompt
 

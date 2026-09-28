@@ -518,9 +518,9 @@ none, and this skill creates no `.xlsx` by writing to any external system.
 
 ## Related Skills
 
-- `sme-ops-system-builder` - routes to the module that owns the field list.
-- `csv-manual-export` - the plain CSV of the same field list, for import or handoff.
-- `json-schema-manual` - the same field list as a validation schema.
+- [SME Ops System Builder](../../SKILL.md) - routes to the module that owns the field list.
+- [CSV Manual Export](../csv-manual-export/SKILL.md) - the plain CSV of the same field list, for import or handoff.
+- [JSON Schema Manual](../json-schema-manual/SKILL.md) - the same field list as a validation schema.
 
 ## Reusable Prompt
 

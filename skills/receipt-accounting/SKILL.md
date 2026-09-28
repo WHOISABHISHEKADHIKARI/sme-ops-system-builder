@@ -396,18 +396,18 @@ with the bank.
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other 15 modules.
-- `sales-accounting` - the invoice side of `Sales Invoice Allocated`.
-- `payment-accounting` - the other half of the cash and bank movement.
-- `source-document-filing` - holds the `Source Document` target.
-- `party-ledger-reconciliation` - proves the debtor balance after allocation.
-- `day-book` - the daily book these receipts land in.
-- `tds-booking-payment` - carries `TDS Collected on Receipt` through to the return.
-- `petty-cash-management` - the same receipt-versus-income question in cash.
-- `monthly-closing-statements` - where the unapplied balance either clears or gets written off.
-- `credit-cycle-analysis` - uses the unallocated balance to age the debtors.
-- `audit-preparation` - the receipt register is an audit-trail item.
-- `expense-accounting` - the receipt side that is not income at all.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other 15 modules.
+- [Sales Accounting](../sales-accounting/SKILL.md) - the invoice side of `Sales Invoice Allocated`.
+- [Payment Accounting](../payment-accounting/SKILL.md) - the other half of the cash and bank movement.
+- [Source Document & Filing](../source-document-filing/SKILL.md) - holds the `Source Document` target.
+- [Party / Ledger Reconciliation](../party-ledger-reconciliation/SKILL.md) - proves the debtor balance after allocation.
+- [Day Book](../day-book/SKILL.md) - the daily book these receipts land in.
+- [TDS Booking & Payment](../tds-booking-payment/SKILL.md) - carries `TDS Collected on Receipt` through to the return.
+- [Petty Cash Management](../petty-cash-management/SKILL.md) - the same receipt-versus-income question in cash.
+- [Monthly Closing & Statements](../monthly-closing-statements/SKILL.md) - where the unapplied balance either clears or gets written off.
+- [Debtor & Creditor Credit-Cycle Analysis](../credit-cycle-analysis/SKILL.md) - uses the unallocated balance to age the debtors.
+- [Audit Preparation](../audit-preparation/SKILL.md) - the receipt register is an audit-trail item.
+- [Expense Accounting](../expense-accounting/SKILL.md) - the receipt side that is not income at all.
 
 ## Reusable Prompt
 

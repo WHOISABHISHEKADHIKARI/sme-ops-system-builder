@@ -291,6 +291,50 @@ def add_input_index(path, text):
     return text[:cut].rstrip("\n") + "\n\n" + input_index() + "\n\n" + text[cut:]
 
 
+# The `@` goes inside the backticks in a router's entry and outside them in a module's,
+# so both spellings are accepted. A converted entry starts with `[`, which this pattern
+# cannot match, which is what makes a second run a no-op.
+RELATED_ENTRY = re.compile(r"^- `?(@?)([a-z0-9-]+)`? - ", re.M)
+
+
+def add_related_links(path, text):
+    """Turn each Related Skills entry into a relative link to that skill's SKILL.md.
+
+    A skill that names a sibling in backticks leaves the reader to work out where the
+    file is, and the answer differs by layout: a flat module is one level away, a pack
+    module's sibling also one, the root router three from inside a pack and two from the
+    flat layout, and a pack module from a flat module two. The paths are computed here so
+    the answer is always right, and an entry naming a skill that does not exist is left
+    as it was rather than linked to nothing.
+    """
+    m = re.search(r"^## Related Skills\n\n", text, re.M)
+    if not m:
+        return text
+    end = re.search(r"^## ", text[m.end():], re.M)
+    stop = m.end() + (end.start() if end else len(text) - m.end())
+    section = text[m.end():stop]
+
+    def link(mo):
+        at, slug = mo.group(1), mo.group(2)
+        target = skillmd.resolve_slug(ROOT, slug)
+        rel = skillmd.relative_skill_link(ROOT, path, slug)
+        if target is None or rel is None:
+            return mo.group(0)
+        # The H1 alone, not read_skill: a router has no `> **Q:**` line, and read_skill
+        # parses the whole file, so asking it for a title would demand a module's
+        # structure from a file that is allowed to be a router.
+        title = re.search(r"^# (.+)$",
+                          open(os.path.join(target, 'SKILL.md')).read(), re.M).group(1).strip()
+        # A router's `@` marks an entry as routable, so it moves into the link text
+        # rather than being dropped: the convention still reads, and the link is new.
+        return "- [%s%s](%s) - " % (at, title, rel)
+
+    new = RELATED_ENTRY.sub(link, section)
+    if new == section:
+        return text
+    return text[:m.end()] + new + text[stop:]
+
+
 def standardize(path):
     text = path.read_text(encoding="utf-8")
     original = text
@@ -376,6 +420,7 @@ def standardize(path):
         text,
     )
 
+    text = add_related_links(path, text)
     text = add_notion_gate(path, text)
     text = add_notion_pitfall(path, text)
     text = add_input_index(path, text)

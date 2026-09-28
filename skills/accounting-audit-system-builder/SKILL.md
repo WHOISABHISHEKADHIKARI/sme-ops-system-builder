@@ -280,10 +280,10 @@ monthly-closing-statements   -> skills/monthly-closing-statements/SKILL.md    th
 
 ## Related Skills
 
-- `sme-ops-system-builder` - the 71 operational modules; routes the non-audit side.
-- `expense-management` - operational expense claims, upstream of `expense-accounting`.
-- `tax-register` - the tax filing calendar, upstream of `tds-booking-payment`.
-- `notification-reminder-hub` - turns due dates across these modules into reminders.
+- [SME Ops System Builder](../../SKILL.md) - the 71 operational modules; routes the non-audit side.
+- [Expense Management](../expense-management/SKILL.md) - operational expense claims, upstream of `expense-accounting`.
+- [Tax Register](../tax-register/SKILL.md) - the tax filing calendar, upstream of `tds-booking-payment`.
+- [Notification & Reminder Hub](../notification-reminder-hub/SKILL.md) - turns due dates across these modules into reminders.
 
 ## Reusable Prompt
 

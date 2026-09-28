@@ -318,8 +318,8 @@ We want a consistent way to describe what good looks like per role.
 
 ## Related Skills
 
-- `sme-ops-system-builder` - routes to this skill and the other modules.
-- `skill-gap-analysis` - actual vs expected for a named person; this skill stores expected
+- [SME Ops System Builder](../../SKILL.md) - routes to this skill and the other modules.
+- [Skill Gap Analysis](../skill-gap-analysis/SKILL.md) - actual vs expected for a named person; this skill stores expected
   levels per role, not a person's gap.
 
 ## Reusable Prompt

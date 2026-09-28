@@ -232,8 +232,8 @@ is the module being run.
 
 ## Related Skills
 
-- `@sme-ops-system-builder` - the 71-module operational router this pack sits beside.
-- `@accounting-audit-system-builder` - the 16-module accounting cycle this pack feeds.
+- [@SME Ops System Builder](../../SKILL.md) - the 71-module operational router this pack sits beside.
+- [@Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - the 16-module accounting cycle this pack feeds.
 - `@company-email-accounts` (operational pack) - the account register behind the email
   templates in `business-email-template`.
 - `@asset-it-management` (operational pack) - holds the issued laptops, cards and devices

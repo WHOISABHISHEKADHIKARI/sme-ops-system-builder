@@ -457,9 +457,9 @@ process facts supplied, not carried over from a template:
 Informational only. None is required for this skill to run, and a missing one never blocks
 execution.
 
-- `sme-ops-system-builder` - routes to this skill and the other modules in the pack.
-- `people-directory` - a possible subject source, if the user chooses to model one.
-- `notification-reminder-hub` - optional, if the user wants due dates turned into reminders.
+- [SME Ops System Builder](../../SKILL.md) - routes to this skill and the other modules in the pack.
+- [People Directory](../people-directory/SKILL.md) - a possible subject source, if the user chooses to model one.
+- [Notification & Reminder Hub](../notification-reminder-hub/SKILL.md) - optional, if the user wants due dates turned into reminders.
 
 ## Reusable Prompt
 

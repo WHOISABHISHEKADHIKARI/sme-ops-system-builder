@@ -485,7 +485,7 @@ nothing was recorded anywhere.
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
 - `policy-acknowledgement` (operational pack) - the acknowledgement mechanism, if the
   business wants a separate tracker from the case register.
 - `disciplinary-pip-tracker` (operational pack) - where a referred case is actually handled.
@@ -494,8 +494,8 @@ nothing was recorded anywhere.
 - `legal-compliance-vault` (operational pack) - where the signed policy versions are stored.
 - `onboarding-playbook` (operational pack) - where the induction session that produces
   `Training Completed Date` belongs.
-- `brand-kit-print-collateral` - the employee ID card, and where the policy is posted.
-- `presentation-deck` - a small part of the deck may be conduct or privacy - never about a
+- [Brand Kit & Print Collateral](../brand-kit-print-collateral/SKILL.md) - the employee ID card, and where the policy is posted.
+- [Presentation Deck](../presentation-deck/SKILL.md) - a small part of the deck may be conduct or privacy - never about a
   specific person.
 - `people-directory` (operational pack) - holds the person reference this table points at.
 

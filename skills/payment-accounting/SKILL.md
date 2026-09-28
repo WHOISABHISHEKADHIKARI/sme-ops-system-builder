@@ -393,18 +393,18 @@ We pay suppliers on the last day of the month and nobody can show the TDS we ded
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other 15 modules.
-- `purchase-accounting` - the invoice side of `Purchase Invoice Allocated`.
-- `receipt-accounting` - the other half of the cash and bank movement.
-- `tds-booking-payment` - takes the deducted TDS through to the return.
-- `source-document-filing` - holds the `Source Document` target.
-- `expense-accounting` - the payments with no supplier invoice behind them.
-- `salary-wage-accounting` - the other recurring payment run, with its own evidence rules.
-- `day-book` - the daily book these payments land in.
-- `party-ledger-reconciliation` - proves the supplier balance after allocation.
-- `monthly-closing-statements` - where the TDS payable and the vendor balances are proved.
-- `audit-preparation` - the payment register is a primary audit-trail item.
-- `accounting-software-selection` - decides which voucher formats the software accepts.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other 15 modules.
+- [Purchase Accounting](../purchase-accounting/SKILL.md) - the invoice side of `Purchase Invoice Allocated`.
+- [Receipt Accounting](../receipt-accounting/SKILL.md) - the other half of the cash and bank movement.
+- [TDS Booking & Payment](../tds-booking-payment/SKILL.md) - takes the deducted TDS through to the return.
+- [Source Document & Filing](../source-document-filing/SKILL.md) - holds the `Source Document` target.
+- [Expense Accounting](../expense-accounting/SKILL.md) - the payments with no supplier invoice behind them.
+- [Salary & Wage Accounting](../salary-wage-accounting/SKILL.md) - the other recurring payment run, with its own evidence rules.
+- [Day Book](../day-book/SKILL.md) - the daily book these payments land in.
+- [Party / Ledger Reconciliation](../party-ledger-reconciliation/SKILL.md) - proves the supplier balance after allocation.
+- [Monthly Closing & Statements](../monthly-closing-statements/SKILL.md) - where the TDS payable and the vendor balances are proved.
+- [Audit Preparation](../audit-preparation/SKILL.md) - the payment register is a primary audit-trail item.
+- [Accounting Software Selection](../accounting-software-selection/SKILL.md) - decides which voucher formats the software accepts.
 
 ## Reusable Prompt
 

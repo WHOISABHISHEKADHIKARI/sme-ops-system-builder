@@ -600,8 +600,8 @@ instead, and tell them to delete the pasted data from the conversation.
 
 ## Related Skills
 
-- `sme-ops-system-builder` - routes to the module that owns the field list.
-- `template-library` - where a reusable starting template belongs once one is proven.
+- [SME Ops System Builder](../../SKILL.md) - routes to the module that owns the field list.
+- [Template Library](../template-library/SKILL.md) - where a reusable starting template belongs once one is proven.
 
 ## Reusable Prompt
 

@@ -392,13 +392,13 @@ Supplier bills pile up for a week before anyone checks the VAT on them.
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `source-document-filing` - files the invoice with its PO, challan and other support.
-- `tds-booking-payment` - books and pays the withholding deducted here.
-- `payment-accounting` - clears the payable carried in Net Payable and Balance.
-- `expense-accounting` - the same flow for bills booked as expense rather than stock.
-- `inventory-stock-reconciliation` - checks the stock side of Inventory/Purchase entries.
-- `party-ledger-reconciliation` - reconciles the supplier balance against this register.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Source Document & Filing](../source-document-filing/SKILL.md) - files the invoice with its PO, challan and other support.
+- [TDS Booking & Payment](../tds-booking-payment/SKILL.md) - books and pays the withholding deducted here.
+- [Payment Accounting](../payment-accounting/SKILL.md) - clears the payable carried in Net Payable and Balance.
+- [Expense Accounting](../expense-accounting/SKILL.md) - the same flow for bills booked as expense rather than stock.
+- [Inventory / Stock Reconciliation](../inventory-stock-reconciliation/SKILL.md) - checks the stock side of Inventory/Purchase entries.
+- [Party / Ledger Reconciliation](../party-ledger-reconciliation/SKILL.md) - reconciles the supplier balance against this register.
 
 ## Reusable Prompt
 

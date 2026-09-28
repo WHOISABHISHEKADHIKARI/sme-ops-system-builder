@@ -348,11 +348,11 @@ Our accountant keeps asking for supporting documents and nobody can find them.
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `purchase-accounting` - the purchase entries these documents support.
-- `sales-accounting` - the sales entries these documents support.
-- `payment-accounting` - the payment entries these documents support.
-- `audit-preparation` - reads this register to answer evidence requests.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Purchase Accounting](../purchase-accounting/SKILL.md) - the purchase entries these documents support.
+- [Sales Accounting](../sales-accounting/SKILL.md) - the sales entries these documents support.
+- [Payment Accounting](../payment-accounting/SKILL.md) - the payment entries these documents support.
+- [Audit Preparation](../audit-preparation/SKILL.md) - reads this register to answer evidence requests.
 
 ## Reusable Prompt
 

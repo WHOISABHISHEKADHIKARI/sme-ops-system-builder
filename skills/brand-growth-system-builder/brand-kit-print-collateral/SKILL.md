@@ -474,13 +474,13 @@ with a white edge around the logo and the letterhead was a different blue to the
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `logo-image-design` - the master mark and the vector files this module needs. Run first.
-- `design-theme-guide` - the colour and type tokens every item here must use.
-- `business-email-template` - the email body; the signature block stays in this module.
-- `free-design-resources` - stock photography, fonts, print services and mockups.
-- `presentation-deck` - the printed leave-behind version of the deck.
-- `code-of-conduct` - what the employee card shows, and where the conduct rules are posted.
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
+- [Logo & Image Design](../logo-image-design/SKILL.md) - the master mark and the vector files this module needs. Run first.
+- [Design Theme Guide](../design-theme-guide/SKILL.md) - the colour and type tokens every item here must use.
+- [Business Email Templates](../business-email-template/SKILL.md) - the email body; the signature block stays in this module.
+- [Free Design Resources](../free-design-resources/SKILL.md) - stock photography, fonts, print services and mockups.
+- [Presentation Deck](../presentation-deck/SKILL.md) - the printed leave-behind version of the deck.
+- [Professional Code of Conduct](../code-of-conduct/SKILL.md) - what the employee card shows, and where the conduct rules are posted.
 - `asset-it-management` (operational pack) - the issued card, lanyard and laptop as assets.
 
 ## Reusable Prompt

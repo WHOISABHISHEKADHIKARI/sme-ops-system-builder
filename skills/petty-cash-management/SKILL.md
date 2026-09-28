@@ -420,17 +420,17 @@ Petty cash keeps running out before the month ends and we never know by how much
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other 15 modules.
-- `day-book` - the daily cash book the float is counted into.
-- `payment-accounting` - the replenishment, when it is made from bank.
-- `expense-accounting` - where the expenses paid from the float are classified.
-- `source-document-filing` - where the supporting documents behind each entry are held.
-- `salary-wage-accounting` - wage sheets are one of the acceptable petty cash documents.
-- `receipt-accounting` - cash received into the float, if the business does that.
-- `monthly-closing-statements` - where the counted balance is proved at period end.
-- `audit-preparation` - count sheets and custodian sign-off are audit-trail items.
-- `inventory-stock-reconciliation` - the same count-and-investigate discipline applied to stock.
-- `party-ledger-reconciliation` - proves payee balances where the float paid a supplier.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other 15 modules.
+- [Day Book](../day-book/SKILL.md) - the daily cash book the float is counted into.
+- [Payment Accounting](../payment-accounting/SKILL.md) - the replenishment, when it is made from bank.
+- [Expense Accounting](../expense-accounting/SKILL.md) - where the expenses paid from the float are classified.
+- [Source Document & Filing](../source-document-filing/SKILL.md) - where the supporting documents behind each entry are held.
+- [Salary & Wage Accounting](../salary-wage-accounting/SKILL.md) - wage sheets are one of the acceptable petty cash documents.
+- [Receipt Accounting](../receipt-accounting/SKILL.md) - cash received into the float, if the business does that.
+- [Monthly Closing & Statements](../monthly-closing-statements/SKILL.md) - where the counted balance is proved at period end.
+- [Audit Preparation](../audit-preparation/SKILL.md) - count sheets and custodian sign-off are audit-trail items.
+- [Inventory / Stock Reconciliation](../inventory-stock-reconciliation/SKILL.md) - the same count-and-investigate discipline applied to stock.
+- [Party / Ledger Reconciliation](../party-ledger-reconciliation/SKILL.md) - proves payee balances where the float paid a supplier.
 
 ## Reusable Prompt
 

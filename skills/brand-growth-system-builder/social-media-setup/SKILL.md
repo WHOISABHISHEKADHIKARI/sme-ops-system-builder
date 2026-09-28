@@ -528,20 +528,20 @@ want to be on TikTok because our competitor is. Nobody here has ever posted on i
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `logo-image-design` - the avatar, the cover and every post image, with rights attached.
-- `design-theme-guide` - the brand voice's visual counterpart, and the token rules any
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
+- [Logo & Image Design](../logo-image-design/SKILL.md) - the avatar, the cover and every post image, with rights attached.
+- [Design Theme Guide](../design-theme-guide/SKILL.md) - the brand voice's visual counterpart, and the token rules any
   social graphic must use.
-- `linktree-link-hub` - the one link every bio points to.
-- `business-website-setup` - where the traffic actually has to arrive, and the ranking
+- [Link-in-Bio Hub](../linktree-link-hub/SKILL.md) - the one link every bio points to.
+- [Business Website Setup](../business-website-setup/SKILL.md) - where the traffic actually has to arrive, and the ranking
   asset that a social profile is not.
-- `gbp-local-seo-intent` - the same photos, the same hours, the same NAP; the profile
+- [GBP & Local SEO Intent](../gbp-local-seo-intent/SKILL.md) - the same photos, the same hours, the same NAP; the profile
   usually has them already.
-- `presentation-deck` - repurposed into a post, and the source of most good business
+- [Presentation Deck](../presentation-deck/SKILL.md) - repurposed into a post, and the source of most good business
   content.
-- `seo-directory-backlinks` - the LinkedIn company page is one of the highest-authority
+- [SEO Directories & Backlinks](../seo-directory-backlinks/SKILL.md) - the LinkedIn company page is one of the highest-authority
   citations available.
-- `free-design-resources` - the free graphic tools, icon sets and stock sources for posts.
+- [Free Design Resources](../free-design-resources/SKILL.md) - the free graphic tools, icon sets and stock sources for posts.
 
 ## Reusable Prompt
 

@@ -389,18 +389,18 @@ The auditor asked for twelve documents in one email and we found seven of them.
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `source-document-filing` - where the documents collected here are stored day to day.
-- `party-ledger-reconciliation` - the reconciliations that form the working papers.
-- `inventory-stock-reconciliation` - the stock working papers the auditor will ask for.
-- `monthly-closing-statements` - the statements and the trial balance in section A.
-- `day-book` - the cash book and day book in section A.
-- `salary-wage-accounting` - the payroll records behind section F.
-- `tds-booking-payment` - the withholding returns and vouchers behind section H.
-- `expense-accounting` - the expense detail supporting the profit and loss account.
-- `receipt-accounting` - the receipt trail behind the cash book.
-- `payment-accounting` - the payment trail behind the cash book.
-- `credit-cycle-analysis` - the receivables and payables analysis the auditor reads.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Source Document & Filing](../source-document-filing/SKILL.md) - where the documents collected here are stored day to day.
+- [Party / Ledger Reconciliation](../party-ledger-reconciliation/SKILL.md) - the reconciliations that form the working papers.
+- [Inventory / Stock Reconciliation](../inventory-stock-reconciliation/SKILL.md) - the stock working papers the auditor will ask for.
+- [Monthly Closing & Statements](../monthly-closing-statements/SKILL.md) - the statements and the trial balance in section A.
+- [Day Book](../day-book/SKILL.md) - the cash book and day book in section A.
+- [Salary & Wage Accounting](../salary-wage-accounting/SKILL.md) - the payroll records behind section F.
+- [TDS Booking & Payment](../tds-booking-payment/SKILL.md) - the withholding returns and vouchers behind section H.
+- [Expense Accounting](../expense-accounting/SKILL.md) - the expense detail supporting the profit and loss account.
+- [Receipt Accounting](../receipt-accounting/SKILL.md) - the receipt trail behind the cash book.
+- [Payment Accounting](../payment-accounting/SKILL.md) - the payment trail behind the cash book.
+- [Debtor & Creditor Credit-Cycle Analysis](../credit-cycle-analysis/SKILL.md) - the receivables and payables analysis the auditor reads.
 
 ## Reusable Prompt
 

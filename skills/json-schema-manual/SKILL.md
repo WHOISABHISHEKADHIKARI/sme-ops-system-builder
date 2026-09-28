@@ -537,9 +537,9 @@ echoing the data back, and tell them to delete the pasted payload from the conve
 
 ## Related Skills
 
-- `sme-ops-system-builder` - routes to the module that owns the field list.
-- `csv-manual-export` - the same field list as a file for a system that reads CSV.
-- `spreadsheet-manual-build` - the same field list as a formatted workbook.
+- [SME Ops System Builder](../../SKILL.md) - routes to the module that owns the field list.
+- [CSV Manual Export](../csv-manual-export/SKILL.md) - the same field list as a file for a system that reads CSV.
+- [Spreadsheet Manual Build](../spreadsheet-manual-build/SKILL.md) - the same field list as a formatted workbook.
 
 ## Reusable Prompt
 

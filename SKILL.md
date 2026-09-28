@@ -183,10 +183,10 @@ onboarding-playbook -> skills/onboarding-playbook/SKILL.md  nothing in place, so
 
 ## Related Skills
 
-- `@people-directory` - the employee master record most modules link to.
-- `@clients-accounts` - the customer record invoicing and payments link to.
-- `@notification-reminder-hub` - turns due dates across modules into reminders.
-- `@notion-manual-import` - the unconnected path: CSV, property mapping and import steps
+- [@People Directory](skills/people-directory/SKILL.md) - the employee master record most modules link to.
+- [@Clients & Accounts](skills/clients-accounts/SKILL.md) - the customer record invoicing and payments link to.
+- [@Notification & Reminder Hub](skills/notification-reminder-hub/SKILL.md) - turns due dates across modules into reminders.
+- [@Notion Manual Import](skills/notion-manual-import/SKILL.md) - the unconnected path: CSV, property mapping and import steps
   for a user who would rather not connect Notion. Reached through a module, not routed to.
 
 ### Sub-packs
@@ -194,10 +194,10 @@ onboarding-playbook -> skills/onboarding-playbook/SKILL.md  nothing in place, so
 These are routers of their own, not modules. Route to them when the question is outside
 the operational process, and read the pack's own catalog rather than loading all of it.
 
-- `accounting-audit-system-builder` - 16 modules, one per stage of the accounting cycle.
+- [Accounting & Audit System Builder](skills/accounting-audit-system-builder/SKILL.md) - 16 modules, one per stage of the accounting cycle.
   Use for the entry, the reconciliation and the audit trail. Where a topic exists in both
   places, this pack owns the cycle and the flat modules own the ongoing process.
-- `brand-growth-system-builder` - 13 modules covering how the business looks and how it is
+- [Brand & Growth System Builder](skills/brand-growth-system-builder/SKILL.md) - 13 modules covering how the business looks and how it is
   found: design tokens, the mark and its rights, print collateral, the page register, the
   Business Profile, citations, email, decks and social. It routes on three jobs -
   consistent, findable, credible - and orders upstream first, because tokens and the mark

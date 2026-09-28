@@ -447,14 +447,14 @@ fine on the laptop but the founder says people struggle on the website.
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `logo-image-design` - the mark and the image library that sit on top of these tokens.
-- `brand-kit-print-collateral` - letterhead, cards and folders rendered from the same tokens.
-- `presentation-deck` - slide layouts constrained to the type scale and colour roles.
-- `business-email-template` - email needs its own type scale; web tokens do not survive
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
+- [Logo & Image Design](../logo-image-design/SKILL.md) - the mark and the image library that sit on top of these tokens.
+- [Brand Kit & Print Collateral](../brand-kit-print-collateral/SKILL.md) - letterhead, cards and folders rendered from the same tokens.
+- [Presentation Deck](../presentation-deck/SKILL.md) - slide layouts constrained to the type scale and colour roles.
+- [Business Email Templates](../business-email-template/SKILL.md) - email needs its own type scale; web tokens do not survive
   every mail client.
-- `free-design-resources` - the open systems, token formats and contrast checkers used here.
-- `social-media-setup` - per-platform safe areas and the platform's own colour constraints.
+- [Free Design Resources](../free-design-resources/SKILL.md) - the open systems, token formats and contrast checkers used here.
+- [Social Media Setup](../social-media-setup/SKILL.md) - per-platform safe areas and the platform's own colour constraints.
 - `website-setup` (if present) / `business-website-setup` - where these tokens get built.
 
 ## Reusable Prompt

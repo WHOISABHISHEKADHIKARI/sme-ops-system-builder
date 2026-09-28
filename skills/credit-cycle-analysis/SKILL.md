@@ -881,19 +881,19 @@ We are profitable on paper but cash is always tight and we cannot say why.
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other 15 modules.
-- `party-ledger-reconciliation` - agree the balances before measuring the cycle.
-- `sales-accounting` - where the credit movement on the debtor side is recorded.
-- `purchase-accounting` - where the credit movement on the creditor side is recorded.
-- `receipt-accounting` - the collections that shorten the debtor cycle.
-- `payment-accounting` - the payments that set the creditor cycle.
-- `day-book` - the cash movement behind both cycles.
-- `monthly-closing-statements` - the receivables and payables review this measures.
-- `source-document-filing` - where the invoice or bill behind an aging line is filed.
-- `tds-booking-payment` - deductions taken on collection, which change the settled amount.
-- `petty-cash-management` - the small working-capital swings this sits alongside.
-- `expense-accounting` - the expense detail behind a payment cycle.
-- `inventory-stock-reconciliation` - the same count discipline applied to stock.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other 15 modules.
+- [Party / Ledger Reconciliation](../party-ledger-reconciliation/SKILL.md) - agree the balances before measuring the cycle.
+- [Sales Accounting](../sales-accounting/SKILL.md) - where the credit movement on the debtor side is recorded.
+- [Purchase Accounting](../purchase-accounting/SKILL.md) - where the credit movement on the creditor side is recorded.
+- [Receipt Accounting](../receipt-accounting/SKILL.md) - the collections that shorten the debtor cycle.
+- [Payment Accounting](../payment-accounting/SKILL.md) - the payments that set the creditor cycle.
+- [Day Book](../day-book/SKILL.md) - the cash movement behind both cycles.
+- [Monthly Closing & Statements](../monthly-closing-statements/SKILL.md) - the receivables and payables review this measures.
+- [Source Document & Filing](../source-document-filing/SKILL.md) - where the invoice or bill behind an aging line is filed.
+- [TDS Booking & Payment](../tds-booking-payment/SKILL.md) - deductions taken on collection, which change the settled amount.
+- [Petty Cash Management](../petty-cash-management/SKILL.md) - the small working-capital swings this sits alongside.
+- [Expense Accounting](../expense-accounting/SKILL.md) - the expense detail behind a payment cycle.
+- [Inventory / Stock Reconciliation](../inventory-stock-reconciliation/SKILL.md) - the same count discipline applied to stock.
 
 ## Reusable Prompt
 

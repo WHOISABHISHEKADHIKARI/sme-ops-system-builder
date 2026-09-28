@@ -1071,13 +1071,13 @@ We are replacing our accounting package and cannot tell which one actually cover
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `purchase-accounting` - the entry flow the chosen package has to support.
-- `sales-accounting` - the entry flow the chosen package has to support.
-- `salary-wage-accounting` - the payroll module being evaluated here.
-- `tds-booking-payment` - the withholding module being evaluated here.
-- `monthly-closing-statements` - the reporting output being evaluated here.
-- `credit-cycle-analysis` - the receivables and payables work being evaluated here.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Purchase Accounting](../purchase-accounting/SKILL.md) - the entry flow the chosen package has to support.
+- [Sales Accounting](../sales-accounting/SKILL.md) - the entry flow the chosen package has to support.
+- [Salary & Wage Accounting](../salary-wage-accounting/SKILL.md) - the payroll module being evaluated here.
+- [TDS Booking & Payment](../tds-booking-payment/SKILL.md) - the withholding module being evaluated here.
+- [Monthly Closing & Statements](../monthly-closing-statements/SKILL.md) - the reporting output being evaluated here.
+- [Debtor & Creditor Credit-Cycle Analysis](../credit-cycle-analysis/SKILL.md) - the receivables and payables work being evaluated here.
 
 ## Reusable Prompt
 

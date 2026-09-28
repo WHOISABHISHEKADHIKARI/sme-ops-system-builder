@@ -513,14 +513,14 @@ We issue credit invoices and nobody can tell which customers have actually paid.
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `source-document-filing` - files the invoice with its supporting documents.
-- `receipt-accounting` - clears the receivable carried in `Net Receivable` and `Balance`.
-- `payment-accounting` - records the receipt against `Payment Status` and reduces `Balance`.
-- `credit-cycle-analysis` - ages the outstanding balances this module produces.
-- `party-ledger-reconciliation` - reconciles the debtor ledger against this register.
-- `tds-booking-payment` - handles TDS customers deduct, at the rate confirmed for that customer.
-- `day-book` - the daily entry log this register feeds.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Source Document & Filing](../source-document-filing/SKILL.md) - files the invoice with its supporting documents.
+- [Receipt Accounting](../receipt-accounting/SKILL.md) - clears the receivable carried in `Net Receivable` and `Balance`.
+- [Payment Accounting](../payment-accounting/SKILL.md) - records the receipt against `Payment Status` and reduces `Balance`.
+- [Debtor & Creditor Credit-Cycle Analysis](../credit-cycle-analysis/SKILL.md) - ages the outstanding balances this module produces.
+- [Party / Ledger Reconciliation](../party-ledger-reconciliation/SKILL.md) - reconciles the debtor ledger against this register.
+- [TDS Booking & Payment](../tds-booking-payment/SKILL.md) - handles TDS customers deduct, at the rate confirmed for that customer.
+- [Day Book](../day-book/SKILL.md) - the daily entry log this register feeds.
 
 ## Reusable Prompt
 

@@ -490,16 +490,16 @@ years.
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `gbp-local-seo-intent` - the local ranking asset that sits beside the site, sharing the
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
+- [GBP & Local SEO Intent](../gbp-local-seo-intent/SKILL.md) - the local ranking asset that sits beside the site, sharing the
   same keywords and the same NAP.
-- `seo-directory-backlinks` - the off-site citations that must match this NAP exactly.
-- `design-theme-guide` - the tokens the site is built from, including the contrast floor.
-- `logo-image-design` - the mark, the favicon and the page imagery.
-- `linktree-link-hub` - where social traffic lands before the site exists.
-- `social-media-setup` - where the site's URLs get distributed.
-- `presentation-deck` - the pitch that sells the website build to a stakeholder.
-- `free-design-resources` - PageSpeed Insights, Lighthouse, WAVE, Search Console, schema
+- [SEO Directories & Backlinks](../seo-directory-backlinks/SKILL.md) - the off-site citations that must match this NAP exactly.
+- [Design Theme Guide](../design-theme-guide/SKILL.md) - the tokens the site is built from, including the contrast floor.
+- [Logo & Image Design](../logo-image-design/SKILL.md) - the mark, the favicon and the page imagery.
+- [Link-in-Bio Hub](../linktree-link-hub/SKILL.md) - where social traffic lands before the site exists.
+- [Social Media Setup](../social-media-setup/SKILL.md) - where the site's URLs get distributed.
+- [Presentation Deck](../presentation-deck/SKILL.md) - the pitch that sells the website build to a stakeholder.
+- [Free Design Resources](../free-design-resources/SKILL.md) - PageSpeed Insights, Lighthouse, WAVE, Search Console, schema
   validators and the free hosting tiers.
 
 ## Reusable Prompt

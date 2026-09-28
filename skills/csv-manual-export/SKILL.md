@@ -486,9 +486,9 @@ writes text, and the user does the import.
 
 ## Related Skills
 
-- `sme-ops-system-builder` - routes to the module that owns the field list.
-- `notion-manual-import` - the same CSV, with the property mapping and the import steps.
-- `spreadsheet-manual-build` - the same field list as a formatted workbook.
+- [SME Ops System Builder](../../SKILL.md) - routes to the module that owns the field list.
+- [Notion Manual Import](../notion-manual-import/SKILL.md) - the same CSV, with the property mapping and the import steps.
+- [Spreadsheet Manual Build](../spreadsheet-manual-build/SKILL.md) - the same field list as a formatted workbook.
 
 ## Reusable Prompt
 

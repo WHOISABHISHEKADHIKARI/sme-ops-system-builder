@@ -531,12 +531,12 @@ asked for entries only.
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `payment-accounting` - pays the net figure, when payment tracking is in scope.
-- `source-document-filing` - stores the bill or supporting document that must be attached.
-- `tds-booking-payment` - carries the deduction into the statutory register.
-- `salary-wage-accounting` - handles the wage sheet and salary expense lines.
-- `day-book` - the dated journal trail the entries land in.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Payment Accounting](../payment-accounting/SKILL.md) - pays the net figure, when payment tracking is in scope.
+- [Source Document & Filing](../source-document-filing/SKILL.md) - stores the bill or supporting document that must be attached.
+- [TDS Booking & Payment](../tds-booking-payment/SKILL.md) - carries the deduction into the statutory register.
+- [Salary & Wage Accounting](../salary-wage-accounting/SKILL.md) - handles the wage sheet and salary expense lines.
+- [Day Book](../day-book/SKILL.md) - the dated journal trail the entries land in.
 
 ## Reusable Prompt
 

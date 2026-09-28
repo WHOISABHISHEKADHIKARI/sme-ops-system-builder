@@ -305,9 +305,9 @@ Three people now miss contract renewal dates and we hear about it after the fact
 
 ## Related Skills
 
-- `sme-ops-system-builder` - routes to this skill and the other 70 modules.
-- `people-directory` - the employee master record most modules link to.
-- `notification-reminder-hub` - turns due dates in this module into reminders.
+- [SME Ops System Builder](../../SKILL.md) - routes to this skill and the other 70 modules.
+- [People Directory](../people-directory/SKILL.md) - the employee master record most modules link to.
+- [Notification & Reminder Hub](SKILL.md) - turns due dates in this module into reminders.
 
 ## Reusable Prompt
 

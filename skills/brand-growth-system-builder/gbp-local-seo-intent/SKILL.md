@@ -563,17 +563,17 @@ video of the shopfront.
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `business-website-setup` - the pages every post and service points at, sharing the same
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
+- [Business Website Setup](../business-website-setup/SKILL.md) - the pages every post and service points at, sharing the same
   keywords and the same NAP.
-- `seo-directory-backlinks` - the citations that must agree with this profile exactly.
-- `logo-image-design` - the logo, the shopfront photography and the product images that go
+- [SEO Directories & Backlinks](../seo-directory-backlinks/SKILL.md) - the citations that must agree with this profile exactly.
+- [Logo & Image Design](../logo-image-design/SKILL.md) - the logo, the shopfront photography and the product images that go
   on the profile.
-- `business-email-template` - the review request, and any offer announcement.
-- `linktree-link-hub` - where the booking and call actions land.
-- `social-media-setup` - cross-posting the weekly post, with the platform's own constraints.
-- `code-of-conduct` - how reviews and complaints are handled when they are about staff.
-- `free-design-resources` - Search Console, PageSpeed Insights, the schema validators and
+- [Business Email Templates](../business-email-template/SKILL.md) - the review request, and any offer announcement.
+- [Link-in-Bio Hub](../linktree-link-hub/SKILL.md) - where the booking and call actions land.
+- [Social Media Setup](../social-media-setup/SKILL.md) - cross-posting the weekly post, with the platform's own constraints.
+- [Professional Code of Conduct](../code-of-conduct/SKILL.md) - how reviews and complaints are handled when they are about staff.
+- [Free Design Resources](../free-design-resources/SKILL.md) - Search Console, PageSpeed Insights, the schema validators and
   the free stock sources for photos.
 
 ## Reusable Prompt

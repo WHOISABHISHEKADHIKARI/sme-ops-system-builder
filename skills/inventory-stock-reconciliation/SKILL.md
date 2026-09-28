@@ -586,14 +586,14 @@ is still `Unknown`, because nobody supplied it.
 
 ## Related Skills
 
-- `accounting-audit-system-builder` - routes to this skill and the other accounting modules.
-- `purchase-accounting` - where unrecorded purchases are found and booked.
-- `sales-accounting` - where unrecorded issues usually turn out to have come from.
-- `day-book` - the stock entries this count is compared against.
-- `expense-accounting` - absorbs the cost of damaged and expired stock.
-- `party-ledger-reconciliation` - the same compare-and-investigate logic applied to balances.
-- `monthly-closing-statements` - the closing that depends on this reconciliation.
-- `audit-preparation` - where the filed count sheets are audited.
+- [Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - routes to this skill and the other accounting modules.
+- [Purchase Accounting](../purchase-accounting/SKILL.md) - where unrecorded purchases are found and booked.
+- [Sales Accounting](../sales-accounting/SKILL.md) - where unrecorded issues usually turn out to have come from.
+- [Day Book](../day-book/SKILL.md) - the stock entries this count is compared against.
+- [Expense Accounting](../expense-accounting/SKILL.md) - absorbs the cost of damaged and expired stock.
+- [Party / Ledger Reconciliation](../party-ledger-reconciliation/SKILL.md) - the same compare-and-investigate logic applied to balances.
+- [Monthly Closing & Statements](../monthly-closing-statements/SKILL.md) - the closing that depends on this reconciliation.
+- [Audit Preparation](../audit-preparation/SKILL.md) - where the filed count sheets are audited.
 
 ## Reusable Prompt
 

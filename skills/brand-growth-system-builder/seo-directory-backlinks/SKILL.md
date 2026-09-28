@@ -512,15 +512,15 @@ and ask for a reciprocal link. Should we do them all?
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `gbp-local-seo-intent` - the map profile that has to agree with every one of these
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
+- [GBP & Local SEO Intent](../gbp-local-seo-intent/SKILL.md) - the map profile that has to agree with every one of these
   listings.
-- `business-website-setup` - the pages these links should point at.
-- `linktree-link-hub` - a low-authority citation site, and the Tier 5 row for it.
-- `social-media-setup` - the LinkedIn company page is one of the highest-authority
+- [Business Website Setup](../business-website-setup/SKILL.md) - the pages these links should point at.
+- [Link-in-Bio Hub](../linktree-link-hub/SKILL.md) - a low-authority citation site, and the Tier 5 row for it.
+- [Social Media Setup](../social-media-setup/SKILL.md) - the LinkedIn company page is one of the highest-authority
   citations available, and it lives in that module.
-- `presentation-deck` - the guest contribution and the local press angle both start here.
-- `free-design-resources` - the free reference, resource and design files published on
+- [Presentation Deck](../presentation-deck/SKILL.md) - the guest contribution and the local press angle both start here.
+- [Free Design Resources](../free-design-resources/SKILL.md) - the free reference, resource and design files published on
   Issuu, Scribd and Slideshare, which are real citations.
 
 ## Reusable Prompt

@@ -433,15 +433,15 @@ is on the shopfront, and we are now printing visiting cards.
 
 ## Related Skills
 
-- `brand-growth-system-builder` - routes to this skill and the other 12 modules.
-- `design-theme-guide` - the colour and type tokens this module's assets must use.
-- `brand-kit-print-collateral` - where the mark gets onto letterhead, cards and folders.
-- `free-design-resources` - icon sets, illustration libraries, stock photography, and the
+- [Brand & Growth System Builder](../SKILL.md) - routes to this skill and the other 12 modules.
+- [Design Theme Guide](../design-theme-guide/SKILL.md) - the colour and type tokens this module's assets must use.
+- [Brand Kit & Print Collateral](../brand-kit-print-collateral/SKILL.md) - where the mark gets onto letterhead, cards and folders.
+- [Free Design Resources](../free-design-resources/SKILL.md) - icon sets, illustration libraries, stock photography, and the
   trademark search databases.
-- `gbp-local-seo-intent` - the profile photos and the store-front shots, which are the
+- [GBP & Local SEO Intent](../gbp-local-seo-intent/SKILL.md) - the profile photos and the store-front shots, which are the
   highest-value images the business owns.
-- `presentation-deck` - the mark on slides, and the misuse rules that apply there too.
-- `social-media-setup` - per-platform avatar and cover crops of the same master.
+- [Presentation Deck](../presentation-deck/SKILL.md) - the mark on slides, and the misuse rules that apply there too.
+- [Social Media Setup](../social-media-setup/SKILL.md) - per-platform avatar and cover crops of the same master.
 
 ## Reusable Prompt
 
