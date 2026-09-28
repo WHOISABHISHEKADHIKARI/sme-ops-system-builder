@@ -10,20 +10,20 @@
     {
       "readme": "README.md",
       "path": "",
-      "title": "SME Ops System Builder: 71 Operational Database Skills for Small Teams",
-      "description": "71 operational database skills for small and medium businesses, plus one router that picks the right two or three. Each defines one process as a real table."
+      "title": "SME Ops System Builder: {{module_count}} Operational Database Skills for Small Teams",
+      "description": "{{module_count}} operational database skills for small and medium businesses, plus one router that picks the right two or three. Each defines one process as a real table."
     },
     {
       "readme": "skills/README.md",
       "path": "skills/",
-      "title": "Skills: 71 Operational Database Modules | SME Ops System Builder",
+      "title": "Skills: {{flat_count}} Operational Database Modules | SME Ops System Builder",
       "description": "One directory per module, each with the SKILL.md a tool loads and the README.md a person reads. Same table, written to be executed and to be understood."
     },
     {
       "readme": "references/README.md",
       "path": "references/",
       "title": "References | SME Ops System Builder",
-      "description": "Material a module may need but should not carry inline: the 71-module catalog, grouped by layer, kept out of every SKILL.md so no module loads 71 descriptions."
+      "description": "Material a module needs but should not carry inline: the {{module_count}}-module catalog by layer, the shared execution contract, and the schema references."
     },
     {
       "readme": "tools/README.md",

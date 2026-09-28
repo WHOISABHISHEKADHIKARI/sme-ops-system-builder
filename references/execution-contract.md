@@ -49,14 +49,22 @@ Intent changes the response:
 - Never request or expose secrets, tokens, passwords, private keys, banking details, or
   unnecessary personal data.
 
-## Notion output requires a connected workspace
+## Notion runs through `notion-manual-import`
 
-A `notion` request is the one output that cannot be produced as text alone: creating or
-updating a Notion database needs an authorized workspace connection. When the user selects
-Notion, the connection comes before the build, and the module file says so at its own Step
-5. This section is the single source of the prerequisite; the module repeats the rule, not
-the wording.
+A selected `notion` output is one workflow, and it lives in one file:
+`skills/notion-manual-import/SKILL.md`. The module confirms the fields; the helper renders
+them as the CSV, the property mapping, the import steps and the verification checklist. It
+is not a fallback for the unconnected case - it is the Notion step for every module, so
+there is one place where the mapping and the click-path can be right.
 
+- When the user selects Notion, route that step to `notion-manual-import`. Do not restate
+  the mapping inside the module and do not improvise the import steps; the helper renders
+  the active module's Field Reference and the module says so at its own Step 5.
+- A `notion` request is also the one output that cannot be produced as text alone:
+  creating or updating a Notion database needs an authorized workspace connection. When
+  the platform exposes a Notion connector, the connection comes before the build and the
+  helper then builds in the workspace. This section is the single source of the
+  prerequisite; the module repeats the rule, not the wording.
 - Never claim a connection exists. Check whether the platform exposes a Notion connector;
   use it when it does.
 - If it does not, emit the block below verbatim, once, as the prerequisite, before any
@@ -66,12 +74,10 @@ the wording.
   one-question-per-message rule. Do not append a second question to it.
 - If the user replies `Notion connected.`, or says the equivalent, build in Notion and
   apply the module's property mapping.
-- If the user declines or defers, still emit the Notion property mapping table as text, and
-  add one line saying the mapping is unverified until the workspace is connected. A static
-  mapping is a real artifact and is never withheld.
-- For the full manual route - the CSV, the mapping, the import click-path and the
-  verification checklist - hand off to `notion-manual-import`. It is the path for a user
-  who has not connected and does not want to, and it asks for no connection.
+- If the user declines or defers, the helper's manual route is already the plan: the CSV,
+  the mapping, the import click-path and the verification checklist, with no connection
+  asked for. Add one line saying the mapping is unverified until the workspace is
+  connected. A static mapping is a real artifact and is never withheld.
 - The mapping table on its own is never described as a connected or created database.
 - Ask which Notion workspace to write to. Never choose a page, parent or database location
   for the user, and never open, share or move anything they did not name.

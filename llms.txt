@@ -1,6 +1,6 @@
 # SME Ops System Builder
 
-> 71 operational database skills for small and medium businesses. Each skill defines one business process as a real table, and emits the same field list as CSV, PostgreSQL DDL, JSON Schema and a Notion property mapping from a single source, so the four artifacts cannot drift apart.
+> 100 operational database skills for small and medium businesses. Each skill defines one business process as a real table, and emits the same field list as CSV, PostgreSQL DDL, JSON Schema and a Notion property mapping from a single source, so the four artifacts cannot drift apart.
 
 Each page answers three questions in its first screen: what the system is, why a small team needs it, and what to type to get a working version. Every page ends with a citable summary block, an author and a last-reviewed date.
 

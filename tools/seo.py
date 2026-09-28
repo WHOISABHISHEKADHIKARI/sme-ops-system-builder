@@ -35,6 +35,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import skillmd  # noqa: E402
 from skillmd import (all_slugs, read_module, keyword_for, slugify,  # noqa: E402
                      section)
 
@@ -50,6 +51,14 @@ FOOT_OPEN, FOOT_CLOSE = '<!-- seo:foot -->', '<!-- /seo:foot -->'
 # Hand-written prose therefore carries this token and seo.py owns the value, so a field
 # change propagates on the next run instead of needing a hand edit in every README.
 FIELD_COUNT = '{{field_count}}'
+# Same reasoning for the repository's own tallies. "71 modules" was a literal in the
+# README, the catalog, site.json and every page title, and 158fc1e invalidated all of it
+# by flattening 16 modules out of a pack. The token makes the number an output of the
+# module list rather than something eight files have to agree on.
+MODULE_COUNT = '{{module_count}}'
+FLAT_COUNT = '{{flat_count}}'
+PACK_COUNT = '{{pack_count}}'
+HELPER_COUNT = '{{helper_count}}'
 
 # bare module name -> qualified slug, so a sibling link can be written once and resolve
 # whether the target is a flat module or lives in a sub-pack
@@ -59,10 +68,22 @@ for _s in all_slugs(ROOT):
 
 # pages that are not modules but must still be indexed and linked
 EXTRA_PAGES = [
-    ('', 'SME Ops System Builder', 'Index of all 71 operational database skills for small teams.'),
+    ('', 'SME Ops System Builder',
+     'Index of all %s operational database skills for small teams.' % MODULE_COUNT),
     ('references', 'Reference', 'Module catalog grouped by layer, plus the field and type contract.'),
     ('tools', 'Tools', 'Verification and SEO tooling used to keep the repository consistent.'),
 ]
+
+
+# Documents that carry the derived counts but are not pages: seo.py writes no head block
+# for them, so without this pass their tokens would ship to the site unresolved.
+COUNT_ONLY_DOCS = (
+    'references/catalog.md',
+    'skills/accounting-audit-system-builder/README.md',
+    'skills/brand-growth-system-builder/README.md',
+    'skills/accounting-audit-system-builder/catalog.md',
+    'skills/brand-growth-system-builder/catalog.md',
+)
 
 
 def load_config():
@@ -276,10 +297,10 @@ def llms(cfg, modules):
     out = [
         '# SME Ops System Builder',
         '',
-        '> 71 operational database skills for small and medium businesses. Each skill '
+        '> %s operational database skills for small and medium businesses. Each skill '
         'defines one business process as a real table, and emits the same field list as '
         'CSV, PostgreSQL DDL, JSON Schema and a Notion property mapping from a single '
-        'source, so the four artifacts cannot drift apart.',
+        'source, so the four artifacts cannot drift apart.' % MODULE_COUNT,
         '',
         'Each page answers three questions in its first screen: what the system is, why a '
         'small team needs it, and what to type to get a working version. Every page ends '
@@ -401,6 +422,20 @@ def resolve_field_count(text, n):
     return text.replace(FIELD_COUNT, str(n))
 
 
+def resolve_counts(text, c=None):
+    """Substitute the repository's derived tallies into hand-written prose.
+
+    Applies to every page seo.py writes, not just the module pages, because the counts
+    appear in the index, the catalog and the pack READMEs - which is exactly where they
+    drifted apart when 158fc1e moved 16 modules.
+    """
+    c = c or skillmd.counts(ROOT)
+    for token, value in ((MODULE_COUNT, c['modules']), (FLAT_COUNT, c['flat']),
+                         (PACK_COUNT, c['pack_modules']), (HELPER_COUNT, c['helpers'])):
+        text = text.replace(token, str(value))
+    return text
+
+
 def run(write=True):
     cfg = load_config()
     left = placeholders(cfg)
@@ -424,7 +459,8 @@ def run(write=True):
         if write:
             text = splice(text, head, HEAD_OPEN, HEAD_CLOSE, r'^# .+$')
             text = splice(text, foot, FOOT_OPEN, FOOT_CLOSE, PUBLISHED_BY, before=True)
-            open(path, 'w').write(resolve_field_count(text, m['fields']))
+            open(path, 'w').write(resolve_counts(resolve_field_count(
+                skillmd.drop_stale_counts(text), m['fields'])))
         entries.append((page_url(cfg, cpath), cfg['date_reviewed'], '0.8'))
 
     # non-module pages carry a canonical but keep their own hand-written closing
@@ -441,22 +477,33 @@ def run(write=True):
         if write:
             text = open(f).read()
             text = splice(text, head, HEAD_OPEN, HEAD_CLOSE, r'^# .+$')
-            open(f, 'w').write(splice(text, foot, FOOT_OPEN, FOOT_CLOSE,
-                                      PUBLISHED_BY, before=True))
+            # The index, the catalog and the tools page state the module totals in their
+            # own prose, so the counts are resolved here as well as on module pages.
+            open(f, 'w').write(resolve_counts(splice(
+                text, foot, FOOT_OPEN, FOOT_CLOSE, PUBLISHED_BY, before=True)))
         entries.append((page_url(cfg, page['path']), cfg['date_reviewed'],
                         '1.0' if not page['path'] else '0.5'))
 
     if write:
+        for doc in COUNT_ONLY_DOCS:
+            f = os.path.join(ROOT, doc)
+            if os.path.exists(f):
+                # read first: opening for write truncates, and the read has to happen
+                # before the handle is opened or the file is emptied before it is read.
+                with open(f) as fh:
+                    original = fh.read()
+                with open(f, 'w') as fh:
+                    fh.write(resolve_counts(original))
         with open(os.path.join(ROOT, 'sitemap.xml'), 'w') as fh:
             fh.write(sitemap(cfg, entries))
         with open(os.path.join(ROOT, 'robots.txt'), 'w') as fh:
             fh.write(robots(cfg))
         with open(os.path.join(ROOT, 'llms.txt'), 'w') as fh:
-            fh.write(llms(cfg, [
+            fh.write(resolve_counts(llms(cfg, [
                 (m['h1'],
                  (m['description'][:150] or 'Operational database skill.'),
                  page_url(cfg, canon_path(m)))
-                for m in mods]))
+                for m in mods])))
     return cfg, mods, entries
 
 
@@ -545,7 +592,73 @@ def verify(cfg, mods):
     for f in ('llms.txt',):
         if not os.path.exists(os.path.join(ROOT, f)):
             bad['missing'].append(f)
+    bad.update(stale_counts(mods))
     return bad
+
+
+# A module total in hand-written prose, in either the "N modules" or "All N" spelling.
+COUNT_PROSE = re.compile(r'\b(\d{1,3}) (?:operational database skills|modules)\b')
+COUNT_INDEX = re.compile(r'^#+ (?:All )?(\d{1,3}) modules\b', re.M)
+
+
+def stale_counts(mods):
+    """Module totals in the hand-written pages, checked against the module list.
+
+    The same treatment :func:`verify` gives a field count. "71 modules" sat in the index,
+    the catalog, site.json and the tools page while the module list said 100, and nothing
+    failed, so the numbers are checked now: an unresolved token, or a literal that is not
+    the current total, is an error. The words are checked only in the module-count
+    phrasing, since a page may legitimately say "13 modules" about one sub-pack.
+    """
+    c = skillmd.counts(ROOT)
+    bad = collections.defaultdict(list)
+    for page in [''] + [p['path'] for p in load_config().get('pages', [])]:
+        f = os.path.join(ROOT, page, 'README.md') if page else os.path.join(ROOT, 'README.md')
+        if not os.path.isfile(f):
+            continue
+        name = page or 'index'
+        t = open(f).read()
+        for token in (MODULE_COUNT, FLAT_COUNT, PACK_COUNT, HELPER_COUNT):
+            if token in t:
+                bad['unresolved count token'].append('%s (%s)' % (name, token))
+        for n in sorted({int(x) for x in COUNT_PROSE.findall(t)}):
+            if n != c['modules'] and not any(n == p for p in pack_module_counts()):
+                bad['stale module count'].append('%s (says %d, has %d)'
+                                                 % (name, n, c['modules']))
+        for n in set(COUNT_INDEX.findall(t)):
+            if int(n) != c['modules']:
+                bad['stale module count'].append('%s (heading says %s, has %d)'
+                                                 % (name, n, c['modules']))
+    return dict(bad)
+
+
+def pack_module_counts():
+    """Counts a page may legitimately state, so the checker does not flag real group sizes.
+
+    A page is allowed to name a group, not only the total: the brand pack really does hold
+    13 modules, and the accounting cycle really is 16 modules that were flattened into the
+    flat layout in 158fc1e. Both numbers are read from the repository - the packs from the
+    filesystem, the cycle from the accounting pack's own catalog - so a group that grows
+    moves the number with it instead of turning this into a hardcoded list.
+    """
+    out = set()
+    for pack in skillmd.all_packs(ROOT):
+        out.add(len([s for s in skillmd.all_slugs(ROOT) if s.startswith(pack + '/')]))
+    out.add(len([s for s in skillmd.table_slugs(ROOT) if '/' not in s]))
+    out.add(len([s for s in skillmd.all_slugs(ROOT)
+                 if skillmd.is_helper(skillmd.module_dir(ROOT, s) + '/SKILL.md')]))
+    out.add(len(skillmd.all_routers(ROOT)))
+    out.add(catalog_row_count(os.path.join(ROOT, 'skills', 'accounting-audit-system-builder',
+                                           'catalog.md')))
+    return {n for n in out if n}
+
+
+def catalog_row_count(path):
+    """Number of module rows in a catalog, or 0 when the file is absent."""
+    if not os.path.exists(path):
+        return 0
+    return len(re.findall(r'^\| [^|]+? \| [^|]* \| \w+ \| \d+ \| `skills/[^`]+` \|$',
+                          open(path).read(), re.M))
 
 
 def main():

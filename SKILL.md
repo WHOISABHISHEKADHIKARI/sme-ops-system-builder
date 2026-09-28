@@ -15,13 +15,13 @@ tools: []
 
 **What it is:** Picks the two or three operational modules a small business should run.
 
-Router for 71 operational skills covering people, hiring, leave, finance, projects,
+Router for 100 operational skills covering people, hiring, leave, finance, projects,
 governance, analytics, and exit. It identifies the smallest useful shortlist and hands
 the selected workflow to its module skill. It never builds artifacts itself.
 
 ## Overview
 
-A business does not need 71 databases. It needs the two or three it will actually keep
+A business does not need 100 databases. It needs the two or three it will actually keep
 current. This skill identifies the intent, asks only what is still missing one question at
 a time, stops as soon as the answers stop changing the route, then recommends two or
 three modules and waits for the user to pick.
@@ -73,10 +73,10 @@ it never blocks a request.
 
 **Growth** - Starter plus more, once headcount or volume justifies it.
 
-**Scale** - all 71, once the business runs on them rather than around them.
+**Scale** - all 100, once the business runs on them rather than around them.
 
 Present the shortlist, say why each one fits in a single line, and ask which to start.
-A list of 71 is not a recommendation. Full index: `references/catalog.md`.
+A list of 100 is not a recommendation. Full index: `references/catalog.md`.
 
 ### Step 3 - Hand off
 
@@ -86,8 +86,10 @@ questions, build its fields, or run a second module in the same conversation. Ne
 two modules into one questionnaire.
 
 **Notion is the module's step, not this one's.** If the user wants the build in
-Notion, hand off first: the module emits the connection prerequisite and waits for
-"Notion connected." This router never prints the prerequisite itself.
+Notion, hand off twice: the module emits the connection prerequisite and waits for
+"Notion connected.", and the Notion step itself runs in `notion-manual-import`,
+which renders the module's field list. This router never prints the prerequisite
+itself and never restates the mapping.
 
 If a listed path is missing, stop and report the missing module instead of guessing a
 replacement. If no catalog entry clearly matches, say so and ask one question that
@@ -159,7 +161,7 @@ onboarding-playbook -> skills/onboarding-playbook/SKILL.md  nothing in place, so
 - Routing only. It does not build, compare or merge schemas.
 - It cannot judge local compliance. Leave, tax and payroll rules vary by country.
 - Tier is a hint, not a gate. A 3 person company may genuinely need the ESOP tracker.
-- 71 near-identical skills is a lot of catalog surface. Prefer this router over reading
+- 100 near-identical skills is a lot of catalog surface. Prefer this router over reading
   all module files.
 
 ## Security & Safety Notes

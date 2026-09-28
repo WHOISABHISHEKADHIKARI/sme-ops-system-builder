@@ -19,7 +19,7 @@ skill. It never builds anything itself.
 
 ## Overview
 
-A business does not need 16 databases. It needs the two or three it will keep current
+A business does not need 100 databases. It needs the two or three it will keep current
 for the stage it is at. This skill identifies the stage, asks only what is still missing
 one question at a time, stops as soon as the remaining answers stop changing the route,
 then recommends two or three modules and waits for the user to pick.
@@ -106,7 +106,7 @@ invent an answer - if the user does not know, record it as unknown and carry on.
 ### Step 3 - Recommend the smallest workflow
 
 Match on what the user named, not on what the tier allows. Present two or three modules,
-one line of reason each, and ask which to start. A list of 16 is not a recommendation.
+one line of reason each, and ask which to start. A list of 100 is not a recommendation.
 Full index: `catalog.md`.
 
 **Starter** - 7 modules, the usual starting set: Sales Accounting, Purchase Accounting,
@@ -117,7 +117,7 @@ Accounting. Add TDS Booking & Payment once the business is registered and deduct
 Ledger Reconciliation, Inventory / Stock Reconciliation, Salary & Wage Accounting and
 Monthly Closing & Statements.
 
-**Scale** - all 16, once the business runs on them rather than around them.
+**Scale** - all 100, once the business runs on them rather than around them.
 
 ### Step 4 - Hand off
 
@@ -127,8 +127,10 @@ questions, build its fields, or run a second module in the same conversation. Ne
 merge two modules into one questionnaire.
 
 **Notion is the module's step, not this one's.** If the user wants the build in
-Notion, hand off first: the module emits the connection prerequisite and waits for
-"Notion connected." This router never prints the prerequisite itself.
+Notion, hand off twice: the module emits the connection prerequisite and waits for
+"Notion connected.", and the Notion step itself runs in `notion-manual-import`,
+which renders the module's field list. This router never prints the prerequisite
+itself and never restates the mapping.
 
 ### Step 5 - Output
 
@@ -251,7 +253,7 @@ monthly-closing-statements   -> skills/monthly-closing-statements/SKILL.md    th
   auditor opines on the financials.
 - It cannot pick software for you. It structures the evaluation; the decision and the
   cost sit with the business.
-- 16 near-identical skills is a lot of catalog surface. Prefer this router.
+- 100 near-identical skills is a lot of catalog surface. Prefer this router.
 
 ## Security & Safety Notes
 
@@ -280,7 +282,7 @@ monthly-closing-statements   -> skills/monthly-closing-statements/SKILL.md    th
 
 ## Related Skills
 
-- [SME Ops System Builder](../../SKILL.md) - the 71 operational modules; routes the non-audit side.
+- [SME Ops System Builder](../../SKILL.md) - the operational router; routes the non-audit side.
 - [Expense Management](../expense-management/SKILL.md) - operational expense claims, upstream of `expense-accounting`.
 - [Tax Register](../tax-register/SKILL.md) - the tax filing calendar, upstream of `tds-booking-payment`.
 - [Notification & Reminder Hub](../notification-reminder-hub/SKILL.md) - turns due dates across these modules into reminders.

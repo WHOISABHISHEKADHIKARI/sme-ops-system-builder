@@ -112,8 +112,10 @@ This router produces no files. When the user picks a module, say so and stop. Ea
 skill owns its own artifacts and its own field list.
 
 **Notion is the module's step, not this one's.** If the user wants the build in
-Notion, hand off first: the module emits the connection prerequisite and waits for
-"Notion connected." This router never prints the prerequisite itself.
+Notion, hand off twice: the module emits the connection prerequisite and waits for
+"Notion connected.", and the Notion step itself runs in `notion-manual-import`,
+which renders the module's field list. This router never prints the prerequisite
+itself and never restates the mapping.
 
 ## Examples
 
@@ -232,7 +234,7 @@ is the module being run.
 
 ## Related Skills
 
-- [@SME Ops System Builder](../../SKILL.md) - the 71-module operational router this pack sits beside.
+- [@SME Ops System Builder](../../SKILL.md) - the operational router this pack sits beside.
 - [@Accounting & Audit System Builder](../accounting-audit-system-builder/SKILL.md) - the 16-module accounting cycle this pack feeds.
 - `@company-email-accounts` (operational pack) - the account register behind the email
   templates in `business-email-template`.

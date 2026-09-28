@@ -25,6 +25,7 @@ Four scripts. No dependencies beyond the Python 3 standard library.
 |---|---|---|
 | [check.py](check.py) | per-module agreement across the four artifacts | `python3 tools/check.py all [-v]` |
 | [validate.py](validate.py) | repository structure, sections, frontmatter, prompt blocks | `python3 tools/validate.py` |
+| [check_indexes.py](check_indexes.py) | the published indexes against the modules they list | `python3 tools/check_indexes.py` |
 | [seo.py](seo.py) | canonicals, citations, backlinks, discovery files | `python3 tools/seo.py [--check]` |
 | [skillmd.py](skillmd.py) | reading a `SKILL.md` from your own code | `python3 tools/skillmd.py` |
 | [qa_verify.py](qa_verify.py) | category-nested pack artifact agreement | `python3 tools/qa_verify.py --pack skills/<pack>` |
@@ -49,6 +50,25 @@ cannot compare columns, which is the one thing this repository exists to prevent
 python3 tools/check.py all        # every module
 python3 tools/check.py leave-management -v
 ```
+
+## check_indexes.py
+
+The catalogs, the root README table and each pack catalog are hand-written, and they are
+the part of the repository that cannot be checked one module at a time. When 158fc1e
+flattened 16 accounting modules out of their sub-pack, the modules moved and the indexes
+did not: the root table lost 16 rows, the headline kept the old total, five rows kept field
+counts their module no longer had, and the brand pack's 13 links pointed at `skills/<slug>/`
+where nothing existed.
+
+`check_indexes.py` reads each index and compares it with the modules on disk. Every module
+that belongs in an index is present exactly once, every row's link resolves, and every tier
+and field count is the one the module's own `SKILL.md` declares. The module is the source
+of truth: a row that disagrees with its module is the thing that is wrong, so the numbers
+are never taken from the prose.
+
+The accounting pack's catalog is exempt from the completeness check, because it is a second
+view of modules the flat index already lists rather than a partition of them. Its links,
+tiers and field counts are still checked.
 
 ## validate.py
 

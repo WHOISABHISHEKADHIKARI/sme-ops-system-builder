@@ -3,7 +3,7 @@
 **Router for:** 16 accounting and audit modules
 **Skill:** `SKILL.md`
 **Catalog:** `catalog.md`
-**Companion pack:** `../../` - 71 operational modules (`sme-ops-system-builder`)
+**Companion pack:** `../../` - 100 operational modules (`sme-ops-system-builder`)
 
 ## What it is
 

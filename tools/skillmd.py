@@ -304,6 +304,71 @@ def relative_skill_link(root, from_path, slug):
     return Path(os.path.relpath(dest, os.path.dirname(from_path))).as_posix()
 
 
+SIBLING_COUNT = re.compile(r'the other \d+ (?:operational )?modules')
+
+
+def drop_stale_counts(text):
+    """Remove a sibling count from related-skills prose.
+
+    "routes to this skill and the other 70 modules" was written into 100 module files and
+    went stale in every one of them when 158fc1e flattened 16 modules out of a pack. The
+    count carries no information the index does not already give, so the sentence keeps
+    its meaning without the number. Shared by standardize_skills.py, which fixes the
+    SKILL.md files, and seo.py, which writes the README that mirrors them.
+    """
+    return SIBLING_COUNT.sub('the other modules', text)
+
+
+def counts(root):
+    """The repository's tallies, derived rather than written down anywhere.
+
+    Every "71 modules" in the README, the catalog and site.json was a literal that went
+    stale when 158fc1e flattened the accounting pack's 16 modules into skills/ - the
+    index silently lost those modules and every headline kept the old number. The tools
+    read this instead, and seo.py substitutes it into the prose, so a count can only be
+    wrong where a module does not exist.
+    """
+    slugs = all_slugs(root)
+    helpers = [s for s in slugs
+               if is_helper(os.path.join(module_dir(root, s), 'SKILL.md'))]
+    tables = [s for s in slugs if s not in helpers]
+    flat = [s for s in tables if '/' not in s]
+    packs = {s.split('/')[0] for s in tables if '/' in s}
+    return {
+        'modules': len(tables),
+        'flat': len(flat),
+        'pack_modules': len(tables) - len(flat),
+        'helpers': len(helpers),
+        'routers': 1 + len(all_packs(root)),
+        'packs': sorted(packs),
+        # every SKILL.md in the repository: the modules, the helpers, the root router and
+        # one router per pack. Counted rather than added up, so a new layout cannot make
+        # this quietly wrong.
+        'all': len(all_skill_files(root)),
+    }
+
+
+# The root router states the module total in running prose, where a token cannot be used
+# because the file is read by a tool that does not run seo.py. Each phrase is rewritten
+# from counts() instead, so the number is derived on every run rather than maintained.
+ROUTER_COUNT_PROSE = (
+    (re.compile(r'\b\d+ operational skills\b'), '{n} operational skills'),
+    (re.compile(r'\b\d+ operational modules\b'), '{n} operational modules'),
+    (re.compile(r'\b\d+ databases\b'), '{n} databases'),
+    (re.compile(r'\b\d+ near-identical skills\b'), '{n} near-identical skills'),
+    (re.compile(r'\*\*Scale\*\* - all \d+,'), '**Scale** - all {n},'),
+    (re.compile(r'\bA list of \d+ is not\b'), 'A list of {n} is not'),
+)
+
+
+def apply_router_counts(text, root):
+    """Rewrite the root router's prose counts from the real tallies."""
+    n = counts(root)['modules']
+    for pattern, template in ROUTER_COUNT_PROSE:
+        text = pattern.sub(template.format(n=n), text)
+    return text
+
+
 def all_skill_files(root):
     """Every SKILL.md that :func:`all_slugs` and :func:`all_routers` cover."""
     return ([os.path.join(module_dir(root, s), 'SKILL.md') for s in all_slugs(root)]

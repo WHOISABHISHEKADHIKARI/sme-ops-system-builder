@@ -137,13 +137,15 @@ reviewed once a quarter → Anything with a mismatched NAP corrected or removed
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-**Notion needs a connected workspace first.** When the user selects Notion as the
-output, emit the connection prerequisite from the
-[shared execution contract](../../../references/execution-contract.md) verbatim before
-the Notion mapping, then stop and wait for the reply "Notion connected." If the user
-would rather not connect, emit the mapping as text, add one line saying it is
-unverified until the workspace is connected, and offer
-[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+**A selected Notion output is rendered by `notion-manual-import`, so route the
+Notion step there.** When the user selects Notion, hand that step to
+[notion-manual-import](../../notion-manual-import/SKILL.md): it holds the CSV, the property
+mapping, the import steps and the verification checklist, and it renders the Field
+Reference below instead of defining a table of its own. Do not restate the mapping
+here and do not improvise the import steps. If the platform exposes a Notion
+connector, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim first, then stop and
+wait for the reply "Notion connected." and let the helper build in the workspace.
 Never claim a connection exists, and never ask for a Notion password or token.
 
 ```csv

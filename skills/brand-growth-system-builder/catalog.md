@@ -7,7 +7,7 @@ CSV + SQL DDL + JSON Schema + Notion template only when asked.
 Route from `brand-growth-system-builder`; do not load this file at runtime unless the user
 asks what is available.
 
-This pack is the brand-side companion to the 71 operational skills in
+This pack is the brand-side companion to the operational skills in
 `../../references/catalog.md` and to the 16 accounting skills in
 `../../accounting-audit-system-builder/catalog.md`. Where a module exists in more than one
 pack, use this pack when the question is about appearance, discovery or evidence, and the
@@ -19,7 +19,7 @@ The licensed inputs everything else is built from. Consult before an asset is ma
 
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
-| Free Design Resources | - | Starter | 18 | `skills/free-design-resources/SKILL.md` |
+| Free Design Resources | - | Starter | 18 | `skills/brand-growth-system-builder/free-design-resources/SKILL.md` |
 
 ## Layer 2: Brand Design
 
@@ -27,9 +27,9 @@ Tokens, then the mark, then what gets printed. This layer is upstream of all the
 
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
-| Design Theme Guide | - | Starter | 24 | `skills/design-theme-guide/SKILL.md` |
-| Logo & Image Design | - | Starter | 20 | `skills/logo-image-design/SKILL.md` |
-| Brand Kit & Print Collateral | - | Starter | 23 | `skills/brand-kit-print-collateral/SKILL.md` |
+| Design Theme Guide | - | Starter | 24 | `skills/brand-growth-system-builder/design-theme-guide/SKILL.md` |
+| Logo & Image Design | - | Starter | 20 | `skills/brand-growth-system-builder/logo-image-design/SKILL.md` |
+| Brand Kit & Print Collateral | - | Starter | 23 | `skills/brand-growth-system-builder/brand-kit-print-collateral/SKILL.md` |
 
 ## Layer 3: Acquire
 
@@ -37,10 +37,10 @@ Being found. The profile, the pages and the citations have to agree with each ot
 
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
-| Business Website Setup | - | Growth | 24 | `skills/business-website-setup/SKILL.md` |
-| GBP & Local SEO Intent | - | Starter | 26 | `skills/gbp-local-seo-intent/SKILL.md` |
-| SEO Directories & Backlinks | - | Growth | 22 | `skills/seo-directory-backlinks/SKILL.md` |
-| Link-in-Bio Hub | - | Starter | 16 | `skills/linktree-link-hub/SKILL.md` |
+| Business Website Setup | - | Growth | 24 | `skills/brand-growth-system-builder/business-website-setup/SKILL.md` |
+| GBP & Local SEO Intent | - | Starter | 26 | `skills/brand-growth-system-builder/gbp-local-seo-intent/SKILL.md` |
+| SEO Directories & Backlinks | - | Growth | 22 | `skills/brand-growth-system-builder/seo-directory-backlinks/SKILL.md` |
+| Link-in-Bio Hub | - | Starter | 16 | `skills/brand-growth-system-builder/linktree-link-hub/SKILL.md` |
 
 ## Layer 5: Fulfil
 
@@ -49,7 +49,7 @@ acquire: it records what each page is for so the citations have something to poi
 
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
-| Business Website Setup | - | Growth | 24 | `skills/business-website-setup/SKILL.md` |
+
 
 ## Layer 6: Engage
 
@@ -57,9 +57,9 @@ The channels that carry the identity outward.
 
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
-| Business Email Templates | - | Starter | 22 | `skills/business-email-template/SKILL.md` |
-| Presentation Deck | - | Growth | 18 | `skills/presentation-deck/SKILL.md` |
-| Social Media Setup | - | Starter | 22 | `skills/social-media-setup/SKILL.md` |
+| Business Email Templates | - | Starter | 22 | `skills/brand-growth-system-builder/business-email-template/SKILL.md` |
+| Presentation Deck | - | Growth | 18 | `skills/brand-growth-system-builder/presentation-deck/SKILL.md` |
+| Social Media Setup | - | Starter | 22 | `skills/brand-growth-system-builder/social-media-setup/SKILL.md` |
 
 ## Layer 7: Protect
 
@@ -67,7 +67,7 @@ The rule, and the evidence that it was read and followed up.
 
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
-| Professional Code of Conduct | - | Starter | 17 | `skills/code-of-conduct/SKILL.md` |
+| Professional Code of Conduct | - | Starter | 17 | `skills/brand-growth-system-builder/code-of-conduct/SKILL.md` |
 
 ## Layer 8: Operate
 
@@ -75,7 +75,7 @@ What is critical, what is measured, and what wakes a human.
 
 | Module | Code | Fits | Fields | Skill |
 |---|---|---|---:|---|
-| Cloud and Observability Planning | - | Growth | 24 | `skills/observability-cloud-planning/SKILL.md` |
+| Cloud and Observability Planning | - | Growth | 24 | `skills/brand-growth-system-builder/observability-cloud-planning/SKILL.md` |
 
 ## Working categories
 

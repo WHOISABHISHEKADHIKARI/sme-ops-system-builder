@@ -14,17 +14,28 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTRACT = ROOT / "references" / "execution-contract.md"
 MARKER = "Follow the [shared execution contract]"
 EXAMPLE_PREFIX = "One example row per artifact, visibly fake."
-NOTION_GATE_MARKER = "**Notion needs a connected workspace first.**"
-ROUTER_NOTION_MARKER = "**Notion is the module's step, not this one's.**"
+NOTION_GATE_MARKER = "A selected Notion output is rendered by `notion-manual-import`"
+ROUTER_NOTION_MARKER = "Notion is the module's step, not this one's."
+# Both the current wording and the one it replaced, so re-running this file rewrites the
+# paragraph in place instead of skipping a module that already carries a gate.
+NOTION_GATE_BLOCK = re.compile(
+    r"\*\*(?:Notion needs a connected workspace first\.|"
+    r"A selected Notion output is rendered by `notion-manual-import`, so route the\n"
+    r"Notion step there\.)\*\*.*?(?=\n\n)", re.S)
+ROUTER_NOTION_BLOCK = re.compile(
+    r"\*\*Notion is the module's step, not this one's\.\*\*.*?(?=\n\n)", re.S)
 # The module owns the artifact steps, so the gate goes in the step that emits artifacts.
 MODULE_NOTION_STEP = "### Step 5 - Build only on request"
 # A router stops at the shortlist, so the gate goes in the step that hands the module off.
 ROUTER_NOTION_STEP = ("### Step 3 - Hand off", "### Step 4 - Hand off",
                       "### Step 5 - Never build here", "### Step 5 - Output")
 NOTION_PITFALL = (
-    "- **Problem:** the Notion mapping is handed over with no workspace connected.\n"
-    "  **Solution:** the connection prerequisite goes first, and a mapping handed over as\n"
-    "  text is labelled unverified until the workspace is connected.\n"
+    "- **Problem:** the Notion step is worked through inside the module instead of being\n"
+    "  handed to `notion-manual-import`, so the mapping and the import steps drift from the\n"
+    "  one place that owns them.\n"
+    "  **Solution:** when the user selects Notion, route the step to `notion-manual-import`\n"
+    "  and let it render this module's field list. If a Notion connector is exposed, the\n"
+    "  connection prerequisite goes first and the helper still builds in the workspace.\n"
 )
 EMPTY_TEMPLATE_RULE = (
     "The rows above are documentation examples only. Emit empty templates unless the "
@@ -181,13 +192,15 @@ def helper_link(path):
 def notion_gate(path):
     """The rule a module repeats from the shared contract. Wording stays in the contract."""
     return (
-        "\n\n**Notion needs a connected workspace first.** When the user selects Notion as the\n"
-        "output, emit the connection prerequisite from the\n"
-        f"[shared execution contract]({contract_link(path)}) verbatim before\n"
-        "the Notion mapping, then stop and wait for the reply \"Notion connected.\" If the user\n"
-        "would rather not connect, emit the mapping as text, add one line saying it is\n"
-        "unverified until the workspace is connected, and offer\n"
-        f"[notion-manual-import]({helper_link(path)}) for the full manual path.\n"
+        "\n\n**A selected Notion output is rendered by `notion-manual-import`, so route the\n"
+        "Notion step there.** When the user selects Notion, hand that step to\n"
+        f"[notion-manual-import]({helper_link(path)}): it holds the CSV, the property\n"
+        "mapping, the import steps and the verification checklist, and it renders the Field\n"
+        "Reference below instead of defining a table of its own. Do not restate the mapping\n"
+        "here and do not improvise the import steps. If the platform exposes a Notion\n"
+        "connector, emit the connection prerequisite from the\n"
+        f"[shared execution contract]({contract_link(path)}) verbatim first, then stop and\n"
+        "wait for the reply \"Notion connected.\" and let the helper build in the workspace.\n"
         "Never claim a connection exists, and never ask for a Notion password or token."
     )
 
@@ -195,8 +208,10 @@ def notion_gate(path):
 def router_notice():
     return (
         "\n\n**Notion is the module's step, not this one's.** If the user wants the build in\n"
-        "Notion, hand off first: the module emits the connection prerequisite and waits for\n"
-        "\"Notion connected.\" This router never prints the prerequisite itself."
+        "Notion, hand off twice: the module emits the connection prerequisite and waits for\n"
+        "\"Notion connected.\", and the Notion step itself runs in `notion-manual-import`,\n"
+        "which renders the module's field list. This router never prints the prerequisite\n"
+        "itself and never restates the mapping."
     )
 
 
@@ -214,24 +229,22 @@ def after_first_paragraph(text, heading):
 
 
 def add_notion_gate(path, text):
-    if NOTION_GATE_MARKER in text or ROUTER_NOTION_MARKER in text:
-        return text
     if os.fspath(path) in helpers(ROOT):
-        # The manual-import helper is the unconnected path. It states that in its own
+        # The manual-import helper is the Notion step itself. It states that in its own
         # Step 5 and must never be given the prerequisite to emit, or it would gate a
         # build on the very connection it exists to avoid needing.
         return text
-    is_router = os.fspath(path) in routers(ROOT)
-    if is_router:
+    if os.fspath(path) in routers(ROOT):
         step = next((h for h in ROUTER_NOTION_STEP if h in text), None)
         if step is None:
             raise ValueError(f"no hand-off step to anchor the Notion notice: {path}")
-        block = router_notice()
+        block, existing = router_notice(), ROUTER_NOTION_BLOCK.search(text)
     else:
         if MODULE_NOTION_STEP not in text:
             raise ValueError(f"no {MODULE_NOTION_STEP} to anchor the Notion gate: {path}")
-        step = MODULE_NOTION_STEP
-        block = notion_gate(path)
+        block, existing = notion_gate(path), NOTION_GATE_BLOCK.search(text)
+    if existing:
+        return text[:existing.start()] + block.strip("\n") + text[existing.end():]
     at = after_first_paragraph(text, step)
     return text[:at] + block + text[at:]
 
@@ -313,6 +326,8 @@ def add_related_links(path, text):
     end = re.search(r"^## ", text[m.end():], re.M)
     stop = m.end() + (end.start() if end else len(text) - m.end())
     section = text[m.end():stop]
+
+    section = skillmd.drop_stale_counts(section)
 
     def link(mo):
         at, slug = mo.group(1), mo.group(2)
@@ -424,6 +439,8 @@ def standardize(path):
     text = add_notion_gate(path, text)
     text = add_notion_pitfall(path, text)
     text = add_input_index(path, text)
+    if os.fspath(path) in routers(ROOT):
+        text = skillmd.apply_router_counts(text, ROOT)
 
     if text != original:
         path.write_text(text, encoding="utf-8")

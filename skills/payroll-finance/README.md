@@ -168,7 +168,7 @@ Payroll & Finance touches decisions with legal, financial or employment conseque
 
 ## Related skills
 
-- [`sme-ops-system-builder`](../../SKILL.md) - routes to this skill and the other 70 modules.
+- [`sme-ops-system-builder`](../../SKILL.md) - routes to this skill and the other modules.
 - [`people-directory`](../people-directory/SKILL.md) - the employee master record most modules link to.
 - [`notification-reminder-hub`](../notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
 

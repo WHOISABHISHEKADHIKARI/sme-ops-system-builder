@@ -1,6 +1,6 @@
 ---
 name: notion-manual-import
-description: "Notion Manual Import: CSV, property mapping and import steps for a database the user uploads themselves. Use when Notion is not connected or the user wants to import manually."
+description: "Notion Manual Import: the Notion step for any module - CSV, property mapping, import steps and verification for the field list the active module confirmed. Use whenever the user picks Notion."
 category: business
 risk: safe
 source: self
@@ -14,8 +14,10 @@ table: none
 
 # Notion Manual Import
 
-**What it is:** the unconnected path into Notion - a CSV, a property mapping and the
-click-path to import, for a user who will upload the database themselves.
+**What it is:** the Notion step for every module - a CSV, a property mapping and the
+click-path to import, for a user who will upload the database themselves. Any module that
+gets a selected Notion output routes that step here, so the mapping and the import steps
+exist in exactly one place.
 
 ## Overview
 
@@ -23,9 +25,15 @@ Prepares a database so the user can upload it into Notion by hand. It handles th
 confirmed fields, the CSV, the Notion property mapping, select and status options, the
 manual import steps, and the post-import verification.
 
-It does not require a connected Notion workspace, and it never asks for one. This is a
-helper: it defines no table of its own and renders whatever field list the active module
-already confirmed, so its CSV and mapping are derived, never re-invented.
+This is a helper: it defines no table of its own and renders whatever field list the
+active module already confirmed, so its CSV and mapping are derived, never re-invented.
+It is the Notion workflow, not a consolation prize - the module confirms the fields and
+hands the Notion step to this file.
+
+It does not require a connected Notion workspace, and it never asks for one. If the
+platform does expose a Notion connector, the module emits the connection prerequisite
+first, and once the user replies `Notion connected.` this skill builds in the workspace
+instead of handing over a file.
 
 Layer: n/a. Fits: every stage. Table code: n/a - it renders the active module's table.
 
@@ -37,15 +45,18 @@ Layer: n/a. Fits: every stage. Table code: n/a - it renders the active module's 
 - create a CSV for Notion
 - give me Notion import instructions
 - Notion is not connected
+- set this up in Notion
 - make this Notion-ready
 - show me how to create this database manually
 
-Also use it when another skill produces a database structure but direct Notion creation is
+Use it whenever the user selects Notion as an output, whatever module is active. Also use
+it when another skill produces a database structure but direct Notion creation is
 unavailable, or when the user declines the connection prerequisite and asks for the manual
 route instead.
 
-Do not use it when the workspace is connected and the user wants the database built for
-them. That is the module skill's own Notion build; this skill only formats the file.
+It is still the only skill that carries the Notion steps, connected or not: when the
+workspace is connected, the connection prerequisite has already been emitted and this
+skill is the one that builds the database.
 
 ## How It Works
 
@@ -281,13 +292,14 @@ is generated from those catalogs and the module files, so it cannot name a modul
 does not exist. `references/catalog.md` is the index to show a user; the module's own
 `SKILL.md` holds the field list.
 
-**Layer 1: Foundation** - 5 modules
+**Layer 1: Foundation** - 6 modules
 
 - `skills/access-matrix/SKILL.md` - Access Matrix (16 fields)
 - `skills/organization-design/SKILL.md` - Organization Design (13 fields)
 - `skills/policy-acknowledgement/SKILL.md` - Policy Acknowledgement (12 fields)
 - `skills/policy-library/SKILL.md` - Policy Library (14 fields)
 - `skills/sop-company-wiki/SKILL.md` - SOP & Company Wiki (12 fields)
+- `skills/accounting-software-selection/SKILL.md` - Accounting Software Selection (57 fields)
 
 **Layer 2: Acquire** - 3 modules
 
@@ -307,7 +319,7 @@ does not exist. `references/catalog.md` is the index to show a user; the module'
 - `skills/pre-boarding/SKILL.md` - Pre-boarding (14 fields)
 - `skills/probation-tracker/SKILL.md` - Probation Tracker (19 fields)
 
-**Layer 4: Manage** - 13 modules
+**Layer 4: Manage** - 15 modules
 
 - `skills/360-feedback-system/SKILL.md` - 360° Feedback System (11 fields)
 - `skills/attendance/SKILL.md` - Attendance (15 fields)
@@ -322,6 +334,8 @@ does not exist. `references/catalog.md` is the index to show a user; the module'
 - `skills/performance-management/SKILL.md` - Performance Management (22 fields)
 - `skills/team-calendar/SKILL.md` - Team Calendar (13 fields)
 - `skills/time-tracking/SKILL.md` - Time Tracking (20 fields)
+- `skills/expense-accounting/SKILL.md` - Expense Accounting (22 fields)
+- `skills/salary-wage-accounting/SKILL.md` - Salary & Wage Accounting (27 fields)
 
 **Layer 5: Develop** - 9 modules
 
@@ -345,7 +359,7 @@ does not exist. `references/catalog.md` is the index to show a user; the module'
 - `skills/health-wellness/SKILL.md` - Health & Wellness (13 fields)
 - `skills/internal-communication/SKILL.md` - Internal Communication (12 fields)
 
-**Layer 7: Protect** - 10 modules
+**Layer 7: Protect** - 13 modules
 
 - `skills/admin-access-register/SKILL.md` - Admin Access Register (22 fields)
 - `skills/audit-log/SKILL.md` - Audit Log (11 fields)
@@ -357,8 +371,11 @@ does not exist. `references/catalog.md` is the index to show a user; the module'
 - `skills/legal-compliance-vault/SKILL.md` - Legal & Compliance Vault (12 fields)
 - `skills/tax-register/SKILL.md` - Tax Register (21 fields)
 - `skills/template-library/SKILL.md` - Template Library (9 fields)
+- `skills/source-document-filing/SKILL.md` - Source Document & Filing (22 fields)
+- `skills/tds-booking-payment/SKILL.md` - TDS Booking & Payment (25 fields)
+- `skills/audit-preparation/SKILL.md` - Audit Preparation (19 fields)
 
-**Layer 8: Operate** - 8 modules
+**Layer 8: Operate** - 16 modules
 
 - `skills/budget-cash-flow/SKILL.md` - Budget & Cash Flow (15 fields)
 - `skills/clients-accounts/SKILL.md` - Clients & Accounts (21 fields)
@@ -368,14 +385,24 @@ does not exist. `references/catalog.md` is the index to show a user; the module'
 - `skills/projects-work-management/SKILL.md` - Projects & Work Management (22 fields)
 - `skills/remote-work-tracker/SKILL.md` - Remote Work Tracker (12 fields)
 - `skills/vendor-contractor-management/SKILL.md` - Vendor & Contractor Management (14 fields)
+- `skills/purchase-accounting/SKILL.md` - Purchase Accounting (29 fields)
+- `skills/sales-accounting/SKILL.md` - Sales Accounting (33 fields)
+- `skills/receipt-accounting/SKILL.md` - Receipt Accounting (23 fields)
+- `skills/payment-accounting/SKILL.md` - Payment Accounting (24 fields)
+- `skills/petty-cash-management/SKILL.md` - Petty Cash Management (24 fields)
+- `skills/day-book/SKILL.md` - Day Book (31 fields)
+- `skills/party-ledger-reconciliation/SKILL.md` - Party / Ledger Reconciliation (27 fields)
+- `skills/inventory-stock-reconciliation/SKILL.md` - Inventory / Stock Reconciliation (28 fields)
 
-**Layer 9: Analyze** - 5 modules
+**Layer 9: Analyze** - 7 modules
 
 - `skills/advanced-analytics-dashboard/SKILL.md` - Advanced Analytics Dashboard (11 fields)
 - `skills/data-export-engine/SKILL.md` - Data Export Engine (11 fields)
 - `skills/notification-reminder-hub/SKILL.md` - Notification & Reminder Hub (12 fields)
 - `skills/reports-analytics/SKILL.md` - Reports & Analytics (11 fields)
 - `skills/stakeholder-investor-reports/SKILL.md` - Stakeholder & Investor Reports (10 fields)
+- `skills/monthly-closing-statements/SKILL.md` - Monthly Closing & Statements (32 fields)
+- `skills/credit-cycle-analysis/SKILL.md` - Debtor & Creditor Credit-Cycle Analysis (33 fields)
 
 **Layer 10: Exit** - 2 modules
 
@@ -441,10 +468,6 @@ does not exist. `references/catalog.md` is the index to show a user; the module'
 - `skills/brand-growth-system-builder/gbp-local-seo-intent/SKILL.md` - GBP & Local SEO Intent (26 fields)
 - `skills/brand-growth-system-builder/seo-directory-backlinks/SKILL.md` - SEO Directories & Backlinks (22 fields)
 - `skills/brand-growth-system-builder/linktree-link-hub/SKILL.md` - Link-in-Bio Hub (16 fields)
-
-**Sub-pack `brand-growth-system-builder` - Layer 5: Fulfil** - 1 module
-
-- `skills/brand-growth-system-builder/business-website-setup/SKILL.md` - Business Website Setup (24 fields)
 
 **Sub-pack `brand-growth-system-builder` - Layer 6: Engage** - 3 modules
 
