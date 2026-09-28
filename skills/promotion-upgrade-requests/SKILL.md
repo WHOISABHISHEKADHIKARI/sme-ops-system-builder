@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, develop]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Promotion & Upgrade Requests
@@ -39,6 +39,8 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+
 ### Step 1 - Identify intent
 
 Read the request and pick the intent before asking anything.
@@ -57,7 +59,10 @@ One message, one question, no batching. Open with:
 Skip anything the user already answered, in any earlier message. Ask the rest one at a
 time, and stop as soon as the remaining answers would not change the output.
 
-- **Requests** - Who requests? / How often? / Any grade or role change?
+- **Requests** - ask these as separate messages, in this order when still material: who
+  requests; how often; whether the request includes a grade or role change. Never combine
+  two of them into one clarification. For an ambiguous Requests answer, clarify who may
+  request first, then wait.
 - **Criteria** - Fixed criteria? / Performance score needed? / Time in role?
 - **Approval** - Who approves? / One or two levels? / Effective date set by?
 - **Current process** - How do you handle it now? / Email or nothing? / What gets delayed?
@@ -100,8 +105,10 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
@@ -130,7 +137,7 @@ CREATE TABLE promotion_upgrade_requests (
   current_salary NUMERIC(14,2) NOT NULL,
   proposed_salary NUMERIC(14,2) NOT NULL,
   currency VARCHAR(255),
-  increase NUMERIC NOT NULL,
+  increase_pct NUMERIC NOT NULL,
   approver VARCHAR(255),
   decision VARCHAR(255),
   effective_date DATE NOT NULL,
@@ -220,7 +227,7 @@ CREATE INDEX idx_promotion_upgrade_requests_status ON promotion_upgrade_requests
 | Upgrade ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
@@ -304,7 +311,7 @@ Promotions happen over email and the reasoning is lost.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -319,7 +326,9 @@ Promotions happen over email and the reasoning is lost.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything
@@ -350,4 +359,3 @@ Ask me one short question at a time, and only about what I have not already told
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
-

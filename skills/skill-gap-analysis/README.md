@@ -217,7 +217,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/skill-gap-analysis/what-is-skill-gap-analysis> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: salary-benchmarking](../salary-benchmarking/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: sop-company-wiki](../sop-company-wiki/)
+**Navigation:** [Previous: sales-accounting](../sales-accounting/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: sop-company-wiki](../sop-company-wiki/)
 
 ### AI Training for Cooperatives
 

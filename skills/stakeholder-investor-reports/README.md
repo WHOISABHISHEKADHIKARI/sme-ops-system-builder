@@ -209,7 +209,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/stakeholder-investor-reports/what-is-stakeholder-and-investor-reports> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: sop-company-wiki](../sop-company-wiki/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: tax-register](../tax-register/)
+**Navigation:** [Previous: source-document-filing](../source-document-filing/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: tax-register](../tax-register/)
 
 ### AI Training for Cooperatives
 

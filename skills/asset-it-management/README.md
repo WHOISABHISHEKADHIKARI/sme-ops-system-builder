@@ -104,7 +104,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Asset Name,Asset ID,Asset Type,Assigned Date,Assigned To,Linked Accounts,Brand/Model,Condition,Current Value,Department,Location,Notes,Purchase Date,Purchase Value,Currency,Return Date,Serial Number,Status,Warranty Expiry
-MacBook Pro 14,,Laptop,2026-01-15,Aarav Sharma,"Workspace, VPN",MacBook Pro 14 (2023),New,185000.00,Delivery,Bengaluru,"Warranty runs to December 2027, so the finance depreciation schedule needs to match.",2026-01-15,219000.00,INR,2026-01-15,C02XR1ABJGH5,In Use,2027-11-14
+Example Laptop 14,,Laptop,2026-01-15,Example Employee,"Workspace, VPN",Example Laptop 14 (2023),New,800.00,Delivery,Example City,"Warranty runs to December 2027, so the finance depreciation schedule needs to match.",2026-01-15,1000.00,INR,2026-01-15,SN-EXAMPLE-001,In Use,2027-11-14
 ```
 
 ## Prompt for this

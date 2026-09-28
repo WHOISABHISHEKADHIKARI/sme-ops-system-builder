@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, onboard]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Asset & IT Management
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -100,13 +102,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
 Asset Name,Asset ID,Asset Type,Assigned Date,Assigned To,Linked Accounts,Brand/Model,Condition,Current Value,Department,Location,Notes,Purchase Date,Purchase Value,Currency,Return Date,Serial Number,Status,Warranty Expiry
-MacBook Pro 14,,Laptop,2026-01-15,Aarav Sharma,"Workspace, VPN",MacBook Pro 14 (2023),New,185000.00,Delivery,Bengaluru,"Warranty runs to December 2027, so the finance depreciation schedule needs to match.",2026-01-15,219000.00,INR,2026-01-15,C02XR1ABJGH5,In Use,2027-11-14
+Example Laptop 14,,Laptop,2026-01-15,Example Employee,"Workspace, VPN",Example Laptop 14 (2023),New,800.00,Delivery,Example City,"Warranty runs to December 2027, so the finance depreciation schedule needs to match.",2026-01-15,1000.00,INR,2026-01-15,SN-EXAMPLE-001,In Use,2027-11-14
 ```
 
 ```sql
@@ -202,30 +206,30 @@ CREATE INDEX idx_asset_it_management_status ON asset_it_management (status);
 | Warranty Expiry | Date | Convert to Date |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Asset Name | `text` | `VARCHAR(255)` | `string` | Text | `MacBook Pro 14` |
+| 1 | Asset Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Laptop 14` |
 | 2 | Asset ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
 | 3 | Asset Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Laptop` |
 | 4 | Assigned Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
-| 5 | Assigned To | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
+| 5 | Assigned To | `text` | `VARCHAR(255)` | `string` | Text | `Example Employee` |
 | 6 | Linked Accounts | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `Workspace, VPN` |
-| 7 | Brand/Model | `text` | `VARCHAR(255)` | `string` | Text | `MacBook Pro 14 (2023)` |
+| 7 | Brand/Model | `text` | `VARCHAR(255)` | `string` | Text | `Example Laptop 14 (2023)` |
 | 8 | Condition | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `New` |
-| 9 | Current Value | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `185000.00` |
+| 9 | Current Value | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `800.00` |
 | 10 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
-| 11 | Location | `text` | `VARCHAR(255)` | `string` | Text | `Bengaluru` |
+| 11 | Location | `text` | `VARCHAR(255)` | `string` | Text | `Example City` |
 | 12 | Notes | `long_text` | `TEXT` | `string` | Text | `Warranty runs to December 2027, so the finance depreciation schedule needs to match.` |
 | 13 | Purchase Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
-| 14 | Purchase Value | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `219000.00` |
+| 14 | Purchase Value | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1000.00` |
 | 15 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
 | 16 | Return Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
-| 17 | Serial Number | `text` | `VARCHAR(255)` | `string` | Text | `C02XR1ABJGH5` |
+| 17 | Serial Number | `text` | `VARCHAR(255)` | `string` | Text | `SN-EXAMPLE-001` |
 | 18 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In Use` |
 | 19 | Warranty Expiry | `date` | `DATE` | `string, format: date` | Date | `2027-11-14` |
 
@@ -285,7 +289,7 @@ Laptops keep disappearing after people leave and we cannot find them.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -300,7 +304,9 @@ Laptops keep disappearing after people leave and we cannot find them.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything

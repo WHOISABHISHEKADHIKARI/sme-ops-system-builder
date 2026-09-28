@@ -235,7 +235,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/tax-register/what-is-tax-register> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: stakeholder-investor-reports](../stakeholder-investor-reports/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: team-calendar](../team-calendar/)
+**Navigation:** [Previous: stakeholder-investor-reports](../stakeholder-investor-reports/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: tds-booking-payment](../tds-booking-payment/)
 
 ### AI Training for Cooperatives
 

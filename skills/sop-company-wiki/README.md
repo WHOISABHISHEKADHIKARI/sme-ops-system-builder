@@ -213,7 +213,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/sop-company-wiki/what-is-sop-and-company-wiki> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: skill-gap-analysis](../skill-gap-analysis/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: stakeholder-investor-reports](../stakeholder-investor-reports/)
+**Navigation:** [Previous: skill-gap-analysis](../skill-gap-analysis/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: source-document-filing](../source-document-filing/)
 
 ### AI Training for Cooperatives
 

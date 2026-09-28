@@ -100,7 +100,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Attendance Record,Employee Name,Department,Date,Check-in Time,Check-out Time,Hours Worked,Work Mode,Attendance Status,Late (Minutes),On Approved Leave,Manager,Regularisation Requested,Notes,Attendance ID
-ATT-2026-014,Aarav Sharma,Delivery,2026-01-15,09:58,18:30,8.5,Office,Present,12,FALSE,Sneha Iyer,FALSE,"Late arrivals cluster on Mondays; discussed with the team rather than logged as a penalty.",
+ATT-EXAMPLE-001,Example Employee,Delivery,2026-01-15,09:58,18:30,8.5,Office,Present,12,FALSE,Example Manager,FALSE,"Late arrivals cluster on Mondays; discussed with the team rather than logged as a penalty.",
 ```
 
 ## Prompt for this

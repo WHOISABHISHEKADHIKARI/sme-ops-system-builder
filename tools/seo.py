@@ -44,6 +44,13 @@ HEAD_OPEN, HEAD_CLOSE = '<!-- seo:head -->', '<!-- /seo:head -->'
 PUBLISHED_BY = r'\n---\n\nPublished by \[' + re.escape(AUTHOR) + r'\]\([^)]*\) - [^\n]*\n'
 FOOT_OPEN, FOOT_CLOSE = '<!-- seo:foot -->', '<!-- /seo:foot -->'
 
+# Prose outside the generated blocks also states the field count, and that prose is
+# hand-written. Left as a literal number it silently goes stale the moment a module's
+# Field Reference gains or loses a row - the page then understates its own field list.
+# Hand-written prose therefore carries this token and seo.py owns the value, so a field
+# change propagates on the next run instead of needing a hand edit in every README.
+FIELD_COUNT = '{{field_count}}'
+
 # bare module name -> qualified slug, so a sibling link can be written once and resolve
 # whether the target is a flat module or lives in a sub-pack
 _BY_NAME = {}
@@ -382,6 +389,11 @@ def citation_sentence(cfg, m):
                review_date(cfg)))
 
 
+def resolve_field_count(text, n):
+    """Substitute the real field count into hand-written prose."""
+    return text.replace(FIELD_COUNT, str(n))
+
+
 def run(write=True):
     cfg = load_config()
     left = placeholders(cfg)
@@ -405,7 +417,7 @@ def run(write=True):
         if write:
             text = splice(text, head, HEAD_OPEN, HEAD_CLOSE, r'^# .+$')
             text = splice(text, foot, FOOT_OPEN, FOOT_CLOSE, PUBLISHED_BY, before=True)
-            open(path, 'w').write(text)
+            open(path, 'w').write(resolve_field_count(text, m['fields']))
         entries.append((page_url(cfg, cpath), cfg['date_reviewed'], '0.8'))
 
     # non-module pages carry a canonical but keep their own hand-written closing
@@ -475,6 +487,23 @@ def verify(cfg, mods):
                       'Meta description', 'ld+json', '<script'):
             if token in rendered:
                 bad['markup leaks into page'].append('%s (%s)' % (m['slug'], token))
+
+        # the field count stated in hand-written prose must match the Field Reference.
+        # Both halves matter: an unresolved token means a run has not happened since the
+        # token was introduced, and a wrong number means prose was edited by hand.
+        if FIELD_COUNT in t:
+            bad['unresolved field-count token'].append(m['slug'])
+        else:
+            stale = sorted({int(n) for n in re.findall(r'\b(\d{1,3}) fields?\b', t)
+                            if int(n) != m['fields']})
+            if stale:
+                bad['stale field count in prose'].append(
+                    '%s (says %s, has %d)'
+                    % (m['slug'], '/'.join(map(str, stale)), m['fields']))
+            for label, cell in re.findall(r'\|\s*(Fields(?: to map)?)\s*\|\s*(\d{1,3})\s*\|', t):
+                if int(cell) != m['fields']:
+                    bad['stale field count in table'].append(
+                        '%s (%s says %s, has %d)' % (m['slug'], label, cell, m['fields']))
 
         # every relative link must resolve to a file that exists
         base = os.path.join(ROOT, 'skills', m['slug'])

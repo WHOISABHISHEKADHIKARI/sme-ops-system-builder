@@ -16,3 +16,8 @@ __pycache__/
 # Secrets and local env
 .env
 .env.*
+
+# Local scratch and build output
+.dbg/
+outputs/
+*.zip

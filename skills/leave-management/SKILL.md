@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, manage]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Leave Management
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -100,8 +102,10 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
@@ -194,7 +198,7 @@ CREATE INDEX idx_leave_management_status ON leave_management (status);
 | Status | Select (add options after import) | Convert to Select, add options: "Pending", "Approved", "Declined", "Cancelled", "Taken" |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
@@ -270,7 +274,7 @@ We are 12 people and want leave requests approved in one place.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -285,7 +289,9 @@ We are 12 people and want leave requests approved in one place.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything

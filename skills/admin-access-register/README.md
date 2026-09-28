@@ -107,7 +107,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 System or Tool,Category,Main Admin,Backup Admin,Department,Access Level,Number of Admin Users,Billing Owner,Plan,Seats,Renewal Date,Company Owned Account,Shared Login,Password Manager Entry,Two Factor On,Last Access Review,Next Access Review,Offboarding Checklist Item,Risk Level,Status,Notes,Admin ID
-Zoho Books,General,Ananya Rao,Vikram Singh,Delivery,Full,3,Karan Malhotra,Business,5,2026-01-15,TRUE,FALSE,Shared vault - Finance,TRUE,2026-01-15,2026-01-15,"Remove from payroll, revoke accounts, collect laptop",Low,Provisioned,Shared logins retired after the February access review; two orphaned accounts still need an owner.,
+Example Product,General,Example Admin,Example Backup Admin,Delivery,Full,3,Example Owner,Business,5,2026-01-15,TRUE,FALSE,Shared vault - Finance,TRUE,2026-01-15,2026-01-15,"Remove from payroll, revoke accounts, collect laptop",Low,Provisioned,Shared logins retired after the February access review; two orphaned accounts still need an owner.,
 ```
 
 ## Prompt for this
@@ -237,7 +237,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/admin-access-register/what-is-admin-access-register> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: accounting-audit-system-builder/tds-booking-payment](../accounting-audit-system-builder/tds-booking-payment/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: advanced-analytics-dashboard](../advanced-analytics-dashboard/)
+**Navigation:** [Previous: accounting-software-selection](../accounting-software-selection/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: advanced-analytics-dashboard](../advanced-analytics-dashboard/)
 
 ### AI Training for Cooperatives
 

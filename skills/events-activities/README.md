@@ -229,7 +229,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/events-activities/what-is-events-and-activities> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: esop-equity-tracker](../esop-equity-tracker/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: expense-management](../expense-management/)
+**Navigation:** [Previous: esop-equity-tracker](../esop-equity-tracker/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: expense-accounting](../expense-accounting/)
 
 ### AI Training for Cooperatives
 

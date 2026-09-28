@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, foundation]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Access Matrix
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -100,13 +102,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
 Module,Module ID,Layer,SME Tier,Owner / CEO,Board,Finance,Tax,HR,IT & Admin,Department Head,Line Manager,Employee,Intern,Client,Confidential
-Invoices & Billing,,Layer 8: Operate,Small,Full - all modules,Read - board pack only,"Read, add, edit - payroll and invoices","Read, add, edit - tax register",Full - people and compliance modules,"Read, add, edit - assets and access",Sneha Iyer,"Read, add, edit - own team",Read - own records,Read - onboarding only,Northwind Traders,Internal
+Invoices & Billing,,Layer 8: Operate,Small,Full - all modules,Read - board pack only,"Read, add, edit - payroll and invoices","Read, add, edit - tax register",Full - people and compliance modules,"Read, add, edit - assets and access",Example Reviewer,"Read, add, edit - own team",Read - own records,Read - onboarding only,Example Customer,Internal
 ```
 
 ```sql
@@ -184,7 +188,7 @@ CREATE TABLE access_matrix (
 | Confidential | Select (add options after import) | Convert to Select, add options: "Public", "Internal", "Restricted", "Highly Restricted" |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
@@ -201,11 +205,11 @@ and anything pointing at another table stays `relation`.
 | 8 | Tax | `text` | `VARCHAR(255)` | `string` | Text | `Read, add, edit - tax register` |
 | 9 | HR | `text` | `VARCHAR(255)` | `string` | Text | `Full - people and compliance modules` |
 | 10 | IT & Admin | `text` | `VARCHAR(255)` | `string` | Text | `Read, add, edit - assets and access` |
-| 11 | Department Head | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
+| 11 | Department Head | `text` | `VARCHAR(255)` | `string` | Text | `Example Reviewer` |
 | 12 | Line Manager | `text` | `VARCHAR(255)` | `string` | Text | `Read, add, edit - own team` |
 | 13 | Employee | `text` | `VARCHAR(255)` | `string` | Text | `Read - own records` |
 | 14 | Intern | `text` | `VARCHAR(255)` | `string` | Text | `Read - onboarding only` |
-| 15 | Client | `text` | `VARCHAR(255)` | `string` | Text | `Northwind Traders` |
+| 15 | Client | `text` | `VARCHAR(255)` | `string` | Text | `Example Customer` |
 | 16 | Confidential | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Internal` |
 
 ## Select Options
@@ -259,7 +263,7 @@ We have 6 roles and want to know who can see payroll and bank details.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -274,7 +278,9 @@ We have 6 roles and want to know who can see payroll and bank details.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything

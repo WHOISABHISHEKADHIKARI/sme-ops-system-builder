@@ -1,6 +1,6 @@
 ---
 name: 360-feedback-system
-description: "360° Feedback System: context-first intake, then CSV, SQL, JSON Schema and Notion on request. One short question per message. Use for 360 feedback."
+description: "360 feedback system: context-first intake, then CSV, SQL, JSON Schema and Notion on request, derived from one field list. Use for 360 feedback, peer review or a feedback cycle."
 category: business
 risk: safe
 source: self
@@ -8,21 +8,33 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, manage]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # 360° Feedback System
 
-**What it is:** Holistic feedback.
+**What it is:** Records one feedback response per row, with the field list built only from what the user confirms.
 
 ## Overview
 
-Works out the smallest useful **360° Feedback System** setup for the business in front of it, then
-builds it only when asked. The default output is a short recommendation, not a
-spreadsheet. Artifacts - CSV, SQL DDL, JSON Schema, Notion mapping - are produced on
-request, from one field list so they cannot drift apart.
+Works out the smallest useful 360° feedback setup for the business in front of it, then builds
+it only when asked. The default output is a short recommendation, not a spreadsheet. CSV, SQL
+DDL, JSON Schema and the Notion mapping are derived from the one Field Reference below, so they
+cannot drift apart.
 
-Layer: Layer 4: Manage. Fits: Growth stage. Table code: n/a.
+Three conceptual models are kept separate, because merging them is what forces fields to be
+invented:
+
+- **Response** - one row per feedback response. The only model with a table in this skill.
+- **Scoring Configuration** - scale, weights, missing and not-applicable handling, rounding.
+  Configuration, never a column on the response row.
+- **Questions** - the question set and its version, held only when questions change between
+  cycles. A question ID is a column on Response only once that requirement is confirmed.
+
+Artifacts are empty templates by default. The single illustrative row is a shape placeholder
+carrying `Example` / `-EXAMPLE-` values, never business data.
+
+Layer: Layer 4: Manage. Table code: n/a.
 
 ## When to Use This Skill
 
@@ -32,219 +44,315 @@ Layer: Layer 4: Manage. Fits: Growth stage. Table code: n/a.
 - 360 degree feedback tracker
 
 Also use it when the user says "holistic feedback", or describes the same process happening in a
-spreadsheet, a document or someone inboxes.
+spreadsheet, a document or someone's inbox.
 
-Do not use it for: payroll calculation, tax filing, or legal advice. This skill produces
-empty templates only - it never holds or processes real employee or customer data.
+Not for payroll, tax, legal, or employment-decision work. This skill does not automate those.
 
 ## How It Works
 
+The rules below stand on their own. If the shared execution contract at
+`../../references/execution-contract.md` is unavailable, follow this file directly; a missing
+reference never blocks basic execution.
+
 ### Step 1 - Identify intent
 
-Read the request and pick the intent before asking anything.
+Read the request and pick one intent before asking anything. This is the canonical set, used
+here and in the context block with the same spelling:
 
-- "set up" or "build" or "create" -> the user wants artifacts; go to Step 2.
-- "our process is ..." or "it is in a sheet" -> the user wants to move an existing process; capture it, then Step 2.
-- "is this right" or "review" or "audit" -> the user wants a check, not a build; answer from what they share.
-- "how do I ..." -> advice question; answer directly and offer the build only if it helps.
+| Intent | Trigger | Go to |
+|---|---|---|
+| `advice` | "how do I ...", "what should we" | Answer, offer the build only if it helps |
+| `review` | "is this right", "review", "audit" | Check what they share |
+| `build` | "set up", "build", "create" | Step 2 |
+| `convert` | "move it from our sheet/forms" | Capture their process, then Step 2 |
+| `export` | "give me the CSV / SQL / JSON / Notion" for confirmed rules | Step 5 |
 
-One message, one question, no batching. Open with:
+One message, one question, no batching. Never ask a question whose answer would not change the
+recommendation or the requested artifact.
 
-> **Q:** How many people are on your team?
+### Scope boundary
+
+Decline only the specific high-risk action that is out of scope, and continue with the rest of
+the request. Example: for a request that mixes feedback capture with payroll, decline the payroll
+calculation and proceed with the feedback setup.
 
 ### Step 2 - Ask only what is missing
 
-Skip anything the user already answered, in any earlier message. Ask the rest one at a
-time, and stop as soon as the remaining answers would not change the output.
+Skip anything already answered in any earlier message. Ask the rest one at a time, and stop as
+soon as the remaining answers would not change the output.
 
-- **Team** - How many people? / Who gives feedback? / Who receives it?
-- **Purpose** - What is the feedback for? / Regular reviews or a project? / How often?
-- **Feedback** - Anonymous? / Scores, comments or both? / Which areas?
-- **Current process** - How do you collect it today? / What goes wrong? / Which tools exist?
-- **Outcome** - What should happen after? / Summaries, reports or actions?
+Decide fields from the answers, not from habit. The only fields that need no confirmation are the
+ones in the minimum core below. Each optional field needs a confirmed requirement behind it:
 
-Never invent an answer. If the user does not know, record it as unknown and carry on.
+| Candidate field | Only add when the user confirms |
+|---|---|
+| `Score` | A scoring mode on a defined scale |
+| Additional score fields | Named competency areas, one per confirmed area |
+| `Due Date` | Deadlines are part of their process |
+| `Reviewer` | Responses are identified or confidential, not anonymous |
+| `Review Cycle` | Feedback runs in more than one cycle |
+| `Submitted Date` | Submission is timestamped in their process |
+| `Question ID` | The question set changes between cycles |
+| `Feedback Subject` | A subject is recorded at all |
+
+`Feedback Subject` stays a generic label. The subject may be a person, a project, a customer or
+a team, so take the type from the user rather than assuming an employee.
+
+Never invent an answer. Record it as unknown and carry on. `Unknown` is a real value meaning not
+yet supplied. Never turn Unknown into zero, and never turn a blank into a zero. Never re-ask an
+unknown already recorded.
+
+Answers like `yes`, `no`, `maybe`, `same`, `okay` or `fine` are not an answer to a
+multiple-choice question. Re-ask as an explicit choice:
+
+> **Q:** Which do you mean: **identified** or **anonymous** feedback?
+>
+> **A:** maybe
+
+Keep only the answered part of a partial answer, and leave the rest `Unknown`.
 
 ### Step 3 - Hold the internal context
 
-Hold the answers in this shape. It stays internal - it is not shown to the user unless
-they ask, and it never carries a value the user did not give.
+Hold the answers in this shape. It stays internal, is not shown unless asked, and never carries a
+value the user did not give.
 
 ```yaml
 module: 360-feedback-system
-intent: null            # set in Step 1, one of: set up, fix, review, report, import
-scale: null             # Starter | Growth | Scale, only if the answer changes it
+intent: null            # advice | review | build | convert | export
+scale: null             # only when the answer changes the recommendation
 areas:
-  "Team": null
-  "Purpose": null
-  "Feedback": null
-  "Current process": null
-  "Outcome": null
-requested_outputs: []   # csv | sql | json | notion - only what was explicitly asked for
+  "Subject": null
+  "Relationships": null
+  "Visibility": null
+  "Scoring": null
+  "Follow-up": null
+requested_outputs: []   # csv | sql | json | notion | xlsx - only what was explicitly asked
 confirmed_facts: []     # only what the user actually said
+unknowns: []            # asked and not answered
 open_questions: []      # the unanswered ones, in the order worth asking
 ```
 
 ### Step 4 - Recommend the smallest workflow
 
-Give a short recommendation, then ask whether to build it. Do not build unprompted. Ask: "Want me to build the CSV, SQL DDL, JSON Schema, Notion mapping, or an Excel workbook from these confirmed rules?"
+Give the smallest recommendation: one approach sentence, one workflow line, and only the
+unresolved facts that matter. Generate the approach and the workflow from confirmed context. Do
+not carry a canned approach, a canned rationale, or a fixed step list across requests.
 
-**Recommended approach:** Keep the existing collection tool and add an analysis layer. Only build scores if the reviewers need to be compared on a scale.
+Build the workflow line from the collection, review and follow-up process the user described. If
+they described none, say the workflow is `Unknown` and ask. Do not assume a review role, an
+automated analysis step, or a specific tool.
 
-**Why this one:** Feedback volume and privacy drive the design more than team size. If collection already works, the missing piece is usually analysis and follow-up.
+Do not enumerate fields, statuses or schema mappings unless the user asks for a schema or
+artifact. Follow-up and completion are process steps, not fields in this module.
 
-**Workflow:** Form → Sheet → AI analysis → Manager review → Feedback discussion → Actions
+When scoring is mentioned but its policy is incomplete, label each missing input explicitly:
+`Scale: Unknown`, `Included scores: Unknown`, `Weights: Unknown`,
+`Missing-score behavior: Unknown`, `Not-applicable handling: Unknown`, `Rounding: Unknown`. Do not
+compute an overall figure until all six are resolved.
+
+Do not build unprompted. End with an offer naming the artifacts not yet requested.
 
 ### Step 5 - Build only on request
 
-Once the user asks for it, derive the fields from the confirmed context and emit the
-artifacts as data only. No preamble, no summary, no closing line.
+Once asked, derive the fields from the confirmed context and emit only the requested artifacts.
+When more than one is requested, generate every one of them from the same Field Reference, in one
+pass, so they cannot disagree.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
-that need a number, date or currency format applied.
+Validate before replying, then check cross-format consistency: same field names, same spelling,
+same order, same required set in all artifacts.
+
+Reply with the artifact or link, plus a short note only when there is an error, a limitation, or
+an unresolved unknown to surface. Do not append column counts, validation claims or closing text
+to an otherwise clean artifact request.
+
+If artifact generation or validation fails, return the error in one line naming the field or
+format that failed, emit the artifacts that did succeed, and say which one is missing. Never
+substitute a plausible value to make a build pass.
+
+The examples below show a documented shape. They are not this business's schema.
+
+**CSV.** UTF-8 with a byte order mark so Excel opens the text correctly. A CSV is not an
+`.xlsx` workbook; create one only when the user asks. A CSV carries no types, so when import
+guidance is requested, name the columns needing a number, date or currency format applied.
 
 ```csv
-Feedback Record,Anonymous,Collaboration Score,Communication Score,Department,Due Date,Feedback ID,Feedback Type,Key Improvements,Key Strengths,Leadership Score,Notes,Overall Score,Review Cycle,Reviewer,Status,Subject Employee,Submitted Date,Technical Score
-FB-2026-Q1-004,FALSE,5,4,Delivery,2026-01-22,,Peer,"Earlier status updates, and one named owner per client account.",Reliable follow-through and clear ownership of her accounts.,4,Reviewer asked for a follow-up chat in the next cycle.,4.2,Q1 2026,Sneha Iyer,Collecting,Aarav Sharma,2026-01-15,4
+Feedback ID,Feedback Type,Feedback Subject,Reviewer,Visibility Mode,Review Cycle,Submitted Date,Status,Due Date,Score,Comments
+,Peer,Example Subject 01,Example Reviewer,Identified,Example Cycle 2026-Q1,2026-01-15,Collecting,2026-01-22,4,Example comment recorded to show free text.
+```
+
+**SQL.** Portable types. The engine is not known, so `SERIAL PRIMARY KEY` is shown as the
+PostgreSQL form; on an unconfirmed engine use a portable `feedback_id <int type> PRIMARY KEY` and
+state the engine in one line. No `CHECK` is emitted against a Select column here, because the
+option list is not yet a confirmed taxonomy. Once the user confirms options for a Select field,
+generate the constraint from that confirmed set:
+
+```text
+ALTER TABLE feedback_cycle_responses ADD CONSTRAINT chk_feedback_type CHECK (feedback_type IN (<confirmed options>));
 ```
 
 ```sql
-CREATE TABLE "360_feedback_system" (
-  feedback_record VARCHAR(255),
-  anonymous BOOLEAN NOT NULL,
-  collaboration_score NUMERIC NOT NULL,
-  communication_score NUMERIC NOT NULL,
-  department VARCHAR(255),
-  due_date DATE NOT NULL,
+CREATE TABLE feedback_cycle_responses (
   feedback_id SERIAL PRIMARY KEY,
   feedback_type VARCHAR(100) NOT NULL,
-  key_improvements VARCHAR(255),
-  key_strengths VARCHAR(255),
-  leadership_score NUMERIC NOT NULL,
-  notes TEXT,
-  overall_score NUMERIC NOT NULL,
-  review_cycle VARCHAR(255),
+  feedback_subject VARCHAR(255),
   reviewer VARCHAR(255),
+  visibility_mode VARCHAR(100) NOT NULL,
+  review_cycle VARCHAR(255),
+  submitted_date DATE,
   status VARCHAR(100) NOT NULL,
-  subject_employee VARCHAR(255),
-  submitted_date DATE NOT NULL,
-  technical_score NUMERIC NOT NULL,
+  due_date DATE,
+  score NUMERIC,
+  comments TEXT,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE INDEX idx_360_feedback_system_status ON "360_feedback_system" (status);
+CREATE INDEX idx_feedback_cycle_responses_status ON feedback_cycle_responses (status);
 ```
+
+**JSON Schema.** `required` is derived from business necessity, not from what data happens to
+exist. The three required fields are the ones without which a response cannot be interpreted.
+`Reviewer` and `Due Date` are absent from `required` because a legitimate response may omit them.
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "360° Feedback System",
+  "title": "360 Feedback Response",
   "type": "object",
   "additionalProperties": false,
   "properties": {
-      "Feedback Record": { "type": "string" },
-      "Anonymous": { "type": "boolean" },
-      "Collaboration Score": { "type": "number" },
-      "Communication Score": { "type": "number" },
-      "Department": { "type": "string" },
-      "Due Date": { "type": "string", "format": "date" },
       "Feedback ID": { "type": "integer" },
       "Feedback Type": { "type": "string" },
-      "Key Improvements": { "type": "string" },
-      "Key Strengths": { "type": "string" },
-      "Leadership Score": { "type": "number" },
-      "Notes": { "type": "string" },
-      "Overall Score": { "type": "number" },
-      "Review Cycle": { "type": "string" },
+      "Feedback Subject": { "type": "string" },
       "Reviewer": { "type": "string" },
-      "Status": { "type": "string" },
-      "Subject Employee": { "type": "string" },
+      "Visibility Mode": { "type": "string" },
+      "Review Cycle": { "type": "string" },
       "Submitted Date": { "type": "string", "format": "date" },
-      "Technical Score": { "type": "number" }
+      "Status": { "type": "string" },
+      "Due Date": { "type": "string", "format": "date" },
+      "Score": { "type": "number" },
+      "Comments": { "type": "string" }
   },
   "required": [
-      "Collaboration Score",
-      "Communication Score",
-      "Due Date",
       "Feedback Type",
-      "Leadership Score",
-      "Overall Score",
-      "Status",
-      "Submitted Date",
-      "Technical Score"
+      "Visibility Mode",
+      "Status"
   ]
 }
 ```
 
+**Notion.** A mapping table, not a build. Convert properties after import.
+
 ```markdown
 | CSV column | Notion property | Set after import |
 |---|---|---|
-| Feedback Record | Text | Leave as Text |
-| Anonymous | Checkbox | Convert to Checkbox |
-| Collaboration Score | Number | Convert to Number |
-| Communication Score | Number | Convert to Number |
-| Department | Text | Leave as Text |
-| Due Date | Date | Convert to Date |
-| Feedback ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
+| Feedback ID | Text | Leave as Text |
 | Feedback Type | Select (add options after import) | Convert to Select, add options: "Self", "Peer", "Manager", "Direct Report", "Cross Functional" |
-| Key Improvements | Text | Leave as Text |
-| Key Strengths | Text | Leave as Text |
-| Leadership Score | Number | Convert to Number |
-| Notes | Text | Leave as Text |
-| Overall Score | Number | Convert to Number |
-| Review Cycle | Text | Leave as Text |
+| Feedback Subject | Text | Leave as Text |
 | Reviewer | Text | Leave as Text |
-| Status | Select (add options after import) | Convert to Select, add options: "Not Launched", "Collecting", "Consolidated", "Shared", "Closed" |
-| Subject Employee | Text | Leave as Text |
+| Visibility Mode | Select (add options after import) | Convert to Select, add options: "Identified", "Confidential", "Anonymous" |
+| Review Cycle | Text | Leave as Text |
 | Submitted Date | Date | Convert to Date |
-| Technical Score | Number | Convert to Number |
+| Status | Select (add options after import) | Convert to Select, add options: "Not Launched", "Collecting", "Consolidated", "Shared", "Closed" |
+| Due Date | Date | Convert to Date |
+| Score | Number | Convert to Number |
+| Comments | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
-and anything pointing at another table stays `relation`.
+Notion's own auto-ID is platform-specific and does not replace the canonical `Feedback ID`. Use
+one as the Notion primary column and the other as a business reference, and say which is which.
+
+**Inline versus file.** Inline output returns the artifact in the message. File output returns the
+link. Do not mix: never return a link when inline data was requested, or inline data when a file
+was requested.
 
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Feedback Record | `text` | `VARCHAR(255)` | `string` | Text | `FB-2026-Q1-004` |
-| 2 | Anonymous | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
-| 3 | Collaboration Score | `number` | `NUMERIC` | `number` | Number | `5` |
-| 4 | Communication Score | `number` | `NUMERIC` | `number` | Number | `4` |
-| 5 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
-| 6 | Due Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-22` |
-| 7 | Feedback ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
-| 8 | Feedback Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Peer` |
-| 9 | Key Improvements | `text` | `VARCHAR(255)` | `string` | Text | `Earlier status updates, and one named owner per client account.` |
-| 10 | Key Strengths | `text` | `VARCHAR(255)` | `string` | Text | `Reliable follow-through and clear ownership of her accounts.` |
-| 11 | Leadership Score | `number` | `NUMERIC` | `number` | Number | `4` |
-| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `Reviewer asked for a follow-up chat in the next cycle.` |
-| 13 | Overall Score | `number` | `NUMERIC` | `number` | Number | `4.2` |
-| 14 | Review Cycle | `text` | `VARCHAR(255)` | `string` | Text | `Q1 2026` |
-| 15 | Reviewer | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
-| 16 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Collecting` |
-| 17 | Subject Employee | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
-| 18 | Submitted Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
-| 19 | Technical Score | `number` | `NUMERIC` | `number` | Number | `4` |
+| 1 | Feedback ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `(blank)` |
+| 2 | Feedback Type | `select` | `VARCHAR(100) NOT NULL` | `string` | Select (add options after import) | `Peer` |
+| 3 | Feedback Subject | `text` | `VARCHAR(255)` | `string` | Text | `Example Subject 01` |
+| 4 | Reviewer | `text` | `VARCHAR(255)` | `string` | Text | `Example Reviewer` |
+| 5 | Visibility Mode | `select` | `VARCHAR(100) NOT NULL` | `string` | Select (add options after import) | `Identified` |
+| 6 | Review Cycle | `text` | `VARCHAR(255)` | `string` | Text | `Example Cycle 2026-Q1` |
+| 7 | Submitted Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
+| 8 | Status | `select` | `VARCHAR(100) NOT NULL` | `string` | Select (add options after import) | `Collecting` |
+| 9 | Due Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-22` |
+| 10 | Score | `number` | `NUMERIC` | `number` | Number | `4` |
+| 11 | Comments | `long_text` | `TEXT` | `string` | Text | `Example comment recorded to show free text.` |
+
+This table is the single source. CSV header, SQL columns, JSON Schema properties and the Notion
+mapping are generated from it, never written by hand.
+
+Three rules govern it:
+
+- **Naming.** One human label plus a machine-safe key, defined once and reused everywhere. The
+  key is the label lowercased with non-alphanumerics replaced by `_`.
+- **Inclusion.** A field exists only when a confirmed requirement justifies it. This is why the
+  list is short.
+- **Deduplication.** Before emitting any artifact, collapse semantically equivalent fields. One
+  identity, one field. A second identifier for the same record is a duplicate unless the user
+  asked for a human-readable reference alongside the system key.
+
+`created_at` and `updated_at` are the only artifact-only additions. They are technical metadata,
+not business fields, and are labelled as such.
 
 ## Select Options
+
+These lists are a documented shape, not a confirmed taxonomy. The Notion column always says
+"add options after import". If the user supplied their own values, theirs win and these are
+replaced. Never present them as the business's confirmed options.
 
 **Feedback Type**
 
 ```
 Self | Peer | Manager | Direct Report | Cross Functional
 ```
+
+**Visibility Mode**
+
+```
+Identified | Confidential | Anonymous
+```
+
 **Status**
 
 ```
 Not Launched | Collecting | Consolidated | Shared | Closed
 ```
 
+The Status list is a minimal default lifecycle. Use it only when the user confirms a cycle with
+those stages; otherwise derive the statuses from the process they described, or omit the field
+when nothing needs tracking.
+
 ## Relations
 
-Link fields: none
+No relation fields. `Feedback Subject` is text, not a relation, because the subject type is
+whatever the user says it is and no target database is guaranteed to exist. If the user confirms
+a subject directory in the same artifact set, model it as a relation then, and keep the target
+`VARCHAR(255)` with a comment in SQL.
+
+## Scoring Configuration
+
+Not a table. It is configuration, stored outside the response row. Hold it only when the user
+confirms scoring, and report each unset input as `Unknown` rather than assuming a default:
+
+| Setting | Needed before any overall figure exists |
+|---|---|
+| Scale | The permitted values and their meaning |
+| Included scores | Which fields are counted |
+| Weights | Per-field weights, or explicit `equal` |
+| Missing-score behavior | Exclude, or count as zero |
+| Not-applicable handling | Distinct from missing: `N/A` is a deliberate answer |
+| Rounding | Decimal places, and whether it rounds at the end only |
+
+`Not Applicable` is a value the reviewer chose. Keep it distinct from a missing or unanswered
+score; a missing score and a deliberate `N/A` must never collapse into the same result.
+
+An overall figure is computed from these settings, never stored on the response row. Do not show
+a worked example overall figure unless the formula, the inputs and the rounding are all shown
+beside it and reconcile exactly.
 
 ## Examples
 
@@ -264,59 +372,80 @@ We have 12 people and want managers and peers to give anonymous feedback.
 >
 > **Q:** Scores, comments or both?
 > **A:** Both.
-
-**Recommended next step** - offered, not built:
-
-> Keep the existing collection tool and add an analysis layer. Only build scores if the reviewers need to be compared on a scale.
 >
-> Workflow: Form → Sheet → AI analysis → Manager review → Feedback discussion → Actions
+> **Q:** The scale and the weighting are not set yet. What values do reviewers pick from, and do
+> the areas weigh equally?
+> **A:** Five point scale, all equal.
 >
-> Want the CSV, SQL, JSON Schema and Notion mapping for this?
+> **Q:** What happens after collection closes?
+> **A:** A manager reads the summary, then we discuss it.
+
+**Recommended next step** - offered, not built. The workflow below is generated from the two
+process facts supplied, not carried over from a template:
+
+> Keep the existing collection tool and add an analysis layer, since collection already works.
+> Scores only become useful once the scale is set, which it now is: five points, areas weighted
+> equally.
+>
+> Workflow: Google Form to Sheet, manager reads the summary, team discussion
+>
+> Rounding is still `Unknown`. Tell me the decimal places and I can build the CSV, SQL DDL, JSON
+> Schema and Notion mapping.
 
 ## Best Practices
 
 - Recommend before building. The recommendation is the product; the files are the follow-up.
 - One question per message. A batched intake reads as a form and gets guessed at.
-- Keep every field name identical across CSV, SQL and JSON Schema.
-- Use `relation` for anything that points at another table, `text` only for free text.
-- Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- Generate every artifact from the Field Reference, then confirm they agree.
+- Ask which field each optional one replaces, and drop the rest.
+- Keep an overall figure out of the response row.
+- If the user asks for an example row, keep every value obviously fake so nobody imports it.
 
 ## Limitations
 
-- Empty template only. It does not compute payroll, tax, leave balances or KPIs.
-- Notion relations need both databases imported before the link column resolves.
-- Select options are a starting set. Rename them to match how the business talks.
-- No automation, reminders or sync. Those need the integration layer.
-- Does not replace HR or legal review, and does not make employment decisions.
-- Legal, tax and HR review is still required before this drives real decisions.
+- Emits empty templates. It does not run collection, reminders, sync or scheduling.
+- Does not compute payroll, tax, leave balances, tax treatment or employment decisions.
+- Scoring is configuration, not automation: this skill does not calculate, aggregate or rank
+  reviewers.
+- Notion mapping assumes properties are converted after import.
+- Select options are a shape. They do not become the business's taxonomy until confirmed.
+- Does not replace HR or legal review, and makes no employment decision.
 
 ## Security & Safety Notes
 
-- Never fill in real names, salaries, medical or banking data. Placeholders only.
-- Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
-- If the user pastes real employee data, generate the template and tell them to delete
-  the pasted data from the conversation.
-- Privacy, legal and disciplinary cases need a qualified human reviewer before anything
-  is acted on.
+- Never supply a real name, contact detail, identifier, amount or date as an example. Example
+  values only, and identifiers use the `-EXAMPLE-` pattern.
+- Artifacts are templates by default and carry no real person data. If the user pastes real
+  feedback data, build the template and do not retain or reproduce unnecessary sensitive content
+  from it.
+- Where a user holds a stored copy of pasted data, suggest they remove sensitive information from
+  their own records and settings where appropriate. Do not claim to have deleted anything.
+- In `Anonymous` mode, leave `Reviewer` blank. Never infer or reconstruct identity.
+- Warn that free-text comments can identify a reviewer through content, in any visibility mode.
+- Suppress an aggregated result when the number of contributing responses is below a
+  configurable minimum. Ask for that minimum; do not pick one silently.
+- Human review is required before feedback affects any real person's employment, pay, promotion
+  or performance record.
 
 ## Common Pitfalls
 
-- **Problem:** asked all six questions in one message.
-  **Solution:** ask one, wait, and drop any the first answer already covered.
-- **Problem:** built a full system when one table was asked for.
-  **Solution:** build what was requested; mention the parent skill separately.
-- **Problem:** all four artifacts drift apart.
-  **Solution:** derive all four from the field list in this file, never by hand.
+- **Problem:** the response row ends up carrying configuration.
+  **Solution:** weights, rounding and scale live in Scoring Configuration.
+- **Problem:** a field appears because a similar module has it.
+  **Solution:** no confirmed requirement, no field.
+- **Problem:** a total-like value appears that nobody can reproduce.
+  **Solution:** show the formula and the inputs, or show nothing.
 - **Problem:** Notion import shows every column as Text.
-  **Solution:** that is expected. Apply the property mapping table once, after import.
+  **Solution:** that is expected. Apply the property mapping once, after import.
 
 ## Related Skills
 
-- `sme-ops-system-builder` - routes to this skill and the other 70 modules.
-- `people-directory` - the employee master record most modules link to.
-- `notification-reminder-hub` - turns due dates in this module into reminders.
+Informational only. None is required for this skill to run, and a missing one never blocks
+execution.
+
+- `sme-ops-system-builder` - routes to this skill and the other modules in the pack.
+- `people-directory` - a possible subject source, if the user chooses to model one.
+- `notification-reminder-hub` - optional, if the user wants due dates turned into reminders.
 
 ## Reusable Prompt
 
@@ -324,6 +453,5 @@ We have 12 people and want managers and peers to give anonymous feedback.
 I want to set up holistic feedback for my company.
 Ask me one short question at a time, and only about what I have not already told you.
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
-When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
+When I ask, derive every requested format from one field list, and give me the data or the link.
 ```
-

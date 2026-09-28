@@ -221,7 +221,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/mentorship-program/what-is-mentorship-program> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: legal-compliance-vault](../legal-compliance-vault/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: notification-reminder-hub](../notification-reminder-hub/)
+**Navigation:** [Previous: legal-compliance-vault](../legal-compliance-vault/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: monthly-closing-statements](../monthly-closing-statements/)
 
 ### AI Training for Cooperatives
 

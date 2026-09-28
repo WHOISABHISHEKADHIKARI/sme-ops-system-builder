@@ -37,11 +37,11 @@ Concretely it is a table, not a document: one row per capacity record, 12 named 
 
 The 12 fields you would otherwise scatter across a sheet, a chat thread and someone’s memory:
 
-- `Allocation`; `Employee Name`; `Department`; `Project`.
-- `Week Start`; `Available Hours`; `Allocated Hours`; `Utilisation %`.
+- `Employee Name`; `Department`; `Project`; `Week Start`.
+- `Available Hours`; `Allocated Hours`; `Utilisation %`; `Allocation Check`.
 - Plus 4 more: `Leave Days`, `Status`, `Notes`, `Capacity ID`.
 
-Field types break down as 1 auto ID, 4 text, 1 long text, 1 select, 4 number and 1 date. Money stays numeric, dates stay dates, and anything that points at another table stays a relation, so the same field list can be emitted as CSV, SQL, JSON Schema or a Notion mapping without the four drifting apart.
+Field types break down as 1 auto ID, 3 text, 1 long text, 2 select, 4 number and 1 date. Money stays numeric, dates stay dates, and anything that points at another table stays a relation, so the same field list can be emitted as CSV, SQL, JSON Schema or a Notion mapping without the four drifting apart.
 
 ## Why we need this
 
@@ -63,14 +63,14 @@ A scale-tier system: build it when the business already runs on its own data rat
 
 | # | Field | Type |
 |---:|---|---|
-| 1 | Allocation | `text` |
-| 2 | Employee Name | `text` |
-| 3 | Department | `text` |
-| 4 | Project | `text` |
-| 5 | Week Start | `date` |
-| 6 | Available Hours | `number` |
-| 7 | Allocated Hours | `number` |
-| 8 | Utilisation % | `number` |
+| 1 | Employee Name | `text` |
+| 2 | Department | `text` |
+| 3 | Project | `text` |
+| 4 | Week Start | `date` |
+| 5 | Available Hours | `number` |
+| 6 | Allocated Hours | `number` |
+| 7 | Utilisation % | `number` |
+| 8 | Allocation Check | `select` |
 | 9 | Leave Days | `number` |
 | 10 | Status | `select` |
 | 11 | Notes | `long_text` |
@@ -96,8 +96,8 @@ The intended workflow is: People → Available hours → Allocation by week → 
 A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
-Allocation,Employee Name,Department,Project,Week Start,Available Hours,Allocated Hours,Utilisation %,Leave Days,Status,Notes,Capacity ID
-60%,Aarav Sharma,Delivery,Website Redesign,2026-01-05,32,38,80,3,Active,"Two people are over-allocated in March, so the plan needs a trade before it is agreed.",
+Employee Name,Department,Project,Week Start,Available Hours,Allocated Hours,Utilisation %,Allocation Check,Leave Days,Status,Notes,Capacity ID
+Example Employee,Delivery,Website Redesign,2026-01-05,32,38,119,Over-allocated,3,Draft,"Allocated 38 hours against 32 available, so this week needs a trade before it can be approved.",
 ```
 
 ## Prompt for this

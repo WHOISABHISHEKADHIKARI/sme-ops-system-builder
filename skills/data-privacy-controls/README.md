@@ -217,7 +217,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/data-privacy-controls/what-is-data-privacy-controls> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: data-export-engine](../data-export-engine/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: dei-dashboard](../dei-dashboard/)
+**Navigation:** [Previous: data-export-engine](../data-export-engine/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: day-book](../day-book/)
 
 ### AI Training for Cooperatives
 

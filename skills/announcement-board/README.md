@@ -98,7 +98,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Announcement Title,Acknowledged By,Ann ID,Author,Category,Department,Expiry Date,Priority,Publish Date,Status,Summary,Target Audience,Views
-Office closed on 15th,"Aarav Sharma, Priya Nair",,Karan Malhotra,Company,Delivery,2026-01-15,Low,2026-01-15,Published,Office closed on the 15th for the public holiday.,All employees,184
+Office closed on 15th,"Example Person 1, Example Person 2",,Example Author,Company,Delivery,2026-01-15,Low,2026-01-15,Published,Office closed on the 15th for the public holiday.,All employees,184
 ```
 
 ## Prompt for this

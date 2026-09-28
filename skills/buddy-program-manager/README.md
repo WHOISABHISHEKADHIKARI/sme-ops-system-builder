@@ -97,7 +97,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Buddy Pair,New Hire,Buddy,Department,Start Date,End Date,Check-ins Planned,Check-ins Done,Feedback Score,Status,Notes,Buddy ID
-Priya Nair + Rohit Verma,Priya Nair,Rohit Verma,Delivery,2026-01-05,2026-12-19,6,3,4,Active,First-week check-in done; the buddy asked for a narrower first assignment.,
+Example New Hire + Example Buddy,Example New Hire,Example Buddy,Delivery,2026-01-05,2026-12-19,6,3,4,Active,First-week check-in done; the buddy asked for a narrower first assignment.,
 ```
 
 ## Prompt for this
@@ -213,7 +213,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/buddy-program-manager/what-is-buddy-program-manager> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: board-governance](../board-governance/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: budget-cash-flow](../budget-cash-flow/)
+**Navigation:** [Previous: brand-growth-system-builder/social-media-setup](../brand-growth-system-builder/social-media-setup/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: budget-cash-flow](../budget-cash-flow/)
 
 ### AI Training for Cooperatives
 

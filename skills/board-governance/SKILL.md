@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, protect]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Board & Governance
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -100,13 +102,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
 Board Item,Item Type,Meeting Date,Agenda,Presented By,Decision,Resolution Number,Vote Result,Action Owner,Due Date,Risk Level,Linked Report,Documents,Confidential,Status,Board Item ID
-Approve FY27 budget,Resolution,2026-01-15,1. Q1 budget 2. Audit scope 3. Hiring freeze,Karan Malhotra,Approved,BR-2026-04,Unanimous,Sneha Iyer,2026-01-15,Low,RPT-2026-02,"Board pack, FY27 budget",Internal,Actioned,
+Approve FY27 budget,Resolution,2026-01-15,1. Q1 budget 2. Audit scope 3. Hiring freeze,Example Presenter,Approved,BR-EXAMPLE-001,Unanimous,Example Owner,2026-01-15,Low,RPT-EXAMPLE-001,"Board pack, FY27 budget",Internal,Actioned,
 ```
 
 ```sql
@@ -190,7 +194,7 @@ CREATE INDEX idx_board_governance_status ON board_governance (status);
 | Board Item ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
@@ -201,14 +205,14 @@ and anything pointing at another table stays `relation`.
 | 2 | Item Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Resolution` |
 | 3 | Meeting Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 4 | Agenda | `text` | `VARCHAR(255)` | `string` | Text | `1. Q1 budget 2. Audit scope 3. Hiring freeze` |
-| 5 | Presented By | `text` | `VARCHAR(255)` | `string` | Text | `Karan Malhotra` |
+| 5 | Presented By | `text` | `VARCHAR(255)` | `string` | Text | `Example Presenter` |
 | 6 | Decision | `text` | `VARCHAR(255)` | `string` | Text | `Approved` |
-| 7 | Resolution Number | `text` | `VARCHAR(255)` | `string` | Text | `BR-2026-04` |
+| 7 | Resolution Number | `text` | `VARCHAR(255)` | `string` | Text | `BR-EXAMPLE-001` |
 | 8 | Vote Result | `text` | `VARCHAR(255)` | `string` | Text | `Unanimous` |
-| 9 | Action Owner | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
+| 9 | Action Owner | `text` | `VARCHAR(255)` | `string` | Text | `Example Owner` |
 | 10 | Due Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 11 | Risk Level | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Low` |
-| 12 | Linked Report | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `RPT-2026-02` |
+| 12 | Linked Report | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `RPT-EXAMPLE-001` |
 | 13 | Documents | `text` | `VARCHAR(255)` | `string` | Text | `Board pack, FY27 budget` |
 | 14 | Confidential | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Internal` |
 | 15 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Actioned` |
@@ -275,7 +279,7 @@ Board actions from last year were never followed up.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -290,7 +294,9 @@ Board actions from last year were never followed up.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything

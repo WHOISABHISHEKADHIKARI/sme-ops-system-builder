@@ -101,7 +101,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Board Item,Item Type,Meeting Date,Agenda,Presented By,Decision,Resolution Number,Vote Result,Action Owner,Due Date,Risk Level,Linked Report,Documents,Confidential,Status,Board Item ID
-Approve FY27 budget,Resolution,2026-01-15,1. Q1 budget 2. Audit scope 3. Hiring freeze,Karan Malhotra,Approved,BR-2026-04,Unanimous,Sneha Iyer,2026-01-15,Low,RPT-2026-02,"Board pack, FY27 budget",Internal,Actioned,
+Approve FY27 budget,Resolution,2026-01-15,1. Q1 budget 2. Audit scope 3. Hiring freeze,Example Presenter,Approved,BR-EXAMPLE-001,Unanimous,Example Owner,2026-01-15,Low,RPT-EXAMPLE-001,"Board pack, FY27 budget",Internal,Actioned,
 ```
 
 ## Prompt for this
@@ -221,7 +221,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/board-governance/what-is-board-and-governance> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: audit-log](../audit-log/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: buddy-program-manager](../buddy-program-manager/)
+**Navigation:** [Previous: audit-preparation](../audit-preparation/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: brand-growth-system-builder/brand-kit-print-collateral](../brand-growth-system-builder/brand-kit-print-collateral/)
 
 ### AI Training for Cooperatives
 

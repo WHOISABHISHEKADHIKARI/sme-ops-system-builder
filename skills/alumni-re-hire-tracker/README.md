@@ -97,7 +97,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Alumni Name,Former Department,Former Job Title,Last Working Day,Rehire Eligible,Personal Email,LinkedIn,Current Company,Last Contact,Re-engage Date,Notes,Alumni ID
-Karan Malhotra,Delivery,Delivery Manager,2026-03-31,TRUE,aarav.personal@example.com,https://linkedin.com/in/priya-nair-example,Bluepeak Systems,2026-01-20,2026-07-01,"Reached out in February; interested in returning once the current notice period ends.",
+Example Person,Delivery,Delivery Manager,2026-03-31,TRUE,person@example.com,https://example.com/in/example-person,Example Company,2026-01-20,2026-07-01,"Reached out in February; interested in returning once the current notice period ends.",
 ```
 
 ## Prompt for this

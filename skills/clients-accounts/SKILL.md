@@ -95,6 +95,23 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 
 **Workflow:** Client recorded → Owner assigned → Activity logged → Next action → Review
 
+**Money basis:** this module does not assume that an amount is tax-inclusive or tax-exclusive. Record the
+basis in `Tax Basis` before the money columns mean anything, and if the user has not said, it stays
+`Not confirmed` - do not deduce it from the currency, the country, or the size of the number. A registration
+number says a business is registered; it never says which tax rate applies or whether the amount includes tax,
+so do not add tax rate or tax amount fields to the schema unless the user asks for tax tracking.
+
+**Derived values - calculate, never accept as typed:**
+
+```
+Outstanding = Total Invoiced - Total Paid
+```
+
+Round once, at the end, to 2 decimal places, and use the rounded figure everywhere. When credits, write-offs
+or a part payment mean the two totals do not explain the difference, record why in `Notes` and leave
+`Outstanding` as the arithmetic result - do not adjust `Total Paid` to force a tie-out. If the user has
+not supplied either total, leave `Outstanding` empty rather than defaulting it to 0.
+
 ### Step 5 - Build only on request
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
@@ -105,8 +122,9 @@ correct text and no import dialog. A CSV carries no types, so after it, name the
 that need a number, date or currency format applied.
 
 ```csv
-Client Name,Client Type,Industry,Contact Person,Email,Phone,Billing Address,Tax ID,Currency,Payment Terms (Days),Account Manager,Projects,Invoices,Total Invoiced,Total Paid,Outstanding,Client Portal Access,Status,Notes,Client ID
-Northwind Traders,Retainer,Professional services,Rahul Mehta,aarav.sharma@example.com,+91 98xxxxxx21,"14 MG Road, Bengaluru 560001",29ABCDE1234F1Z5,INR,30,Rahul Mehta,"Website Redesign, Data Migration","INV-1041, INV-1042",1392400.00,1253160.00,13800.00,"Read-only portal, expires 31 Mar",Active,Account review set for March once the quarterly numbers are signed off.,
+Client Name,Client Type,Industry,Contact Person,Email,Phone,Billing Address,Tax ID,Currency,Tax Basis,Payment Terms (Days),Account Manager,Projects,Invoices,Total Invoiced,Total Paid,Outstanding,Client Portal Access,Status,Notes,Client ID
+Example Customer,Retainer,Professional services,Example Contact,contact@example.com,+91 98xxxxxx21,"Example Address, Example City 000000",PAN-EXAMPLE-001,INR,Not confirmed,30,Example Account Manager,"Website Redesign, Data Migration","INV-EXAMPLE-001, INV-EXAMPLE-002",100000.00,90000.00,10000.00,"Read-only portal, expires 2026-03-31",Active,Account review set for March once the quarterly numbers are signed off.,(blank)
+
 ```
 
 ```sql
@@ -120,28 +138,33 @@ CREATE TABLE clients_accounts (
   billing_address VARCHAR(255),
   tax_id VARCHAR(255),
   currency VARCHAR(255),
-  payment_terms_days NUMERIC NOT NULL,
+  tax_basis VARCHAR(100) NOT NULL,
+  payment_terms_days NUMERIC,
   account_manager VARCHAR(255),
   projects VARCHAR(255),
   invoices VARCHAR(255),
   total_invoiced NUMERIC(14,2) NOT NULL,
   total_paid NUMERIC(14,2) NOT NULL,
-  outstanding NUMERIC(14,2) NOT NULL,
+  outstanding NUMERIC(14,2),
   client_portal_access VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   notes TEXT,
   client_id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
+  updated_at TIMESTAMP DEFAULT NOW(),
+  CHECK (tax_basis IN ('Not confirmed', 'Tax-inclusive', 'Tax-exclusive')),
+  -- Non-negative money. Outstanding is derived, so it is never typed and never NOT NULL.
+  CHECK (total_invoiced >= 0 AND total_paid >= 0)
 );
 
 CREATE INDEX idx_clients_accounts_status ON clients_accounts (status);
+```
 ```
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Clients & Accounts",
+  "title": "Clients and Accounts",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -154,6 +177,7 @@ CREATE INDEX idx_clients_accounts_status ON clients_accounts (status);
       "Billing Address": { "type": "string" },
       "Tax ID": { "type": "string" },
       "Currency": { "type": "string" },
+      "Tax Basis": { "type": "string" },
       "Payment Terms (Days)": { "type": "number" },
       "Account Manager": { "type": "string" },
       "Projects": { "type": "string" },
@@ -167,12 +191,12 @@ CREATE INDEX idx_clients_accounts_status ON clients_accounts (status);
       "Client ID": { "type": "integer" }
   },
   "required": [
-      "Client Type",
-      "Payment Terms (Days)",
-      "Total Invoiced",
-      "Total Paid",
-      "Outstanding",
-      "Status"
+    "Client Type",
+    "Tax Basis",
+    "Payment Terms (Days)",
+    "Total Invoiced",
+    "Total Paid",
+    "Status"
   ]
 }
 ```
@@ -181,25 +205,27 @@ CREATE INDEX idx_clients_accounts_status ON clients_accounts (status);
 | CSV column | Notion property | Set after import |
 |---|---|---|
 | Client Name | Text | Leave as Text |
-| Client Type | Select (add options after import) | Convert to Select, add options: "Retainer", "Project", "One Off", "Enterprise", "SME" |
+| Client Type | Select | Add options: "Retainer", "Project", "One Off", "Enterprise", "SME" |
 | Industry | Text | Leave as Text |
 | Contact Person | Text | Leave as Text |
 | Email | Email | Convert to Email |
 | Phone | Text | Leave as Text |
 | Billing Address | Text | Leave as Text |
-| Tax ID | Text | Leave as Text |
-| Currency | Text | Leave as Text |
+| Tax ID | Text | Leave as Text. Store a registration number as text, never as a number: the leading zeros and the letters are part of the value |
+| Currency | Text | Leave as Text. ISO 4217 code, for example INR, not "Rupees" |
+| Tax Basis | Select | Add options: "Not confirmed", "Tax-inclusive", "Tax-exclusive" |
 | Payment Terms (Days) | Number | Convert to Number |
-| Account Manager | Text | Leave as Text |
-| Projects | Text | Leave as Text |
-| Invoices | Text | Leave as Text |
+| Account Manager | Text | Leave as Text. This is a person, so it stays a name and not a relation; the directory owns the person record |
+| Projects | Text | Leave as Text. Denormalised list, not a Notion Relation: the project table is not part of this build |
+| Invoices | Text | Leave as Text. Denormalised list, not a Notion Relation: the invoice table is not part of this build |
 | Total Invoiced | Number (format: currency) | Convert to Number, set format to Currency |
 | Total Paid | Number (format: currency) | Convert to Number, set format to Currency |
-| Outstanding | Number (format: currency) | Convert to Number, set format to Currency |
+| Outstanding | Number (format: currency) | Convert to Number, set format to Currency, and do not type it: it is calculated from Total Invoiced - Total Paid |
 | Client Portal Access | Text | Leave as Text |
-| Status | Select (add options after import) | Convert to Select, add options: "Prospect", "Active", "Onboarding", "At Risk", "Closed", "Lost" |
+| Status | Select | Add options: "Prospect", "Active", "Onboarding", "At Risk", "Closed", "Lost" |
 | Notes | Text | Leave as Text |
 | Client ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
+```
 ```
 
 One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
@@ -209,28 +235,37 @@ and anything pointing at another table stays `relation`.
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Client Name | `text` | `VARCHAR(255)` | `string` | Text | `Northwind Traders` |
-| 2 | Client Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Retainer` |
+| 1 | Client Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Customer` |
+| 2 | Client Type | `select` | `VARCHAR(100)` | `string` | Select | `Retainer` |
 | 3 | Industry | `text` | `VARCHAR(255)` | `string` | Text | `Professional services` |
-| 4 | Contact Person | `text` | `VARCHAR(255)` | `string` | Text | `Rahul Mehta` |
-| 5 | Email | `email` | `VARCHAR(255)` | `string, format: email` | Email | `aarav.sharma@example.com` |
+| 4 | Contact Person | `text` | `VARCHAR(255)` | `string` | Text | `Example Contact` |
+| 5 | Email | `email` | `VARCHAR(255)` | `string, format: email` | Email | `contact@example.com` |
 | 6 | Phone | `text` | `VARCHAR(255)` | `string` | Text | `+91 98xxxxxx21` |
-| 7 | Billing Address | `text` | `VARCHAR(255)` | `string` | Text | `14 MG Road, Bengaluru 560001` |
-| 8 | Tax ID | `text` | `VARCHAR(255)` | `string` | Text | `29ABCDE1234F1Z5` |
+| 7 | Billing Address | `text` | `VARCHAR(255)` | `string` | Text | `Example Address, Example City 000000` |
+| 8 | Tax ID | `text` | `VARCHAR(255)` | `string` | Text | `PAN-EXAMPLE-001` |
 | 9 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
-| 10 | Payment Terms (Days) | `number` | `NUMERIC` | `number` | Number | `30` |
-| 11 | Account Manager | `text` | `VARCHAR(255)` | `string` | Text | `Rahul Mehta` |
-| 12 | Projects | `text` | `VARCHAR(255)` | `string` | Text | `Website Redesign, Data Migration` |
-| 13 | Invoices | `text` | `VARCHAR(255)` | `string` | Text | `INV-1041, INV-1042` |
-| 14 | Total Invoiced | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1392400.00` |
-| 15 | Total Paid | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1253160.00` |
-| 16 | Outstanding | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `13800.00` |
-| 17 | Client Portal Access | `text` | `VARCHAR(255)` | `string` | Text | `Read-only portal, expires 31 Mar` |
-| 18 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Active` |
-| 19 | Notes | `long_text` | `TEXT` | `string` | Text | `Account review set for March once the quarterly numbers are signed off.` |
-| 20 | Client ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
+| 10 | Tax Basis | `select` | `VARCHAR(100)` | `string` | Select | `Not confirmed` |
+| 11 | Payment Terms (Days) | `number` | `NUMERIC` | `number` | Number | `30` |
+| 12 | Account Manager | `text` | `VARCHAR(255)` | `string` | Text | `Example Account Manager` |
+| 13 | Projects | `text` | `VARCHAR(255)` | `string` | Text | `Website Redesign, Data Migration` |
+| 14 | Invoices | `text` | `VARCHAR(255)` | `string` | Text | `INV-EXAMPLE-001, INV-EXAMPLE-002` |
+| 15 | Total Invoiced | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `100000.00` |
+| 16 | Total Paid | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `90000.00` |
+| 17 | Outstanding | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `10000.00` |
+| 18 | Client Portal Access | `text` | `VARCHAR(255)` | `string` | Text | `Read-only portal, expires 2026-03-31` |
+| 19 | Status | `select` | `VARCHAR(100)` | `string` | Select | `Active` |
+| 20 | Notes | `long_text` | `TEXT` | `string` | Text | `Account review set for March once the quarterly numbers are signed off.` |
+| 21 | Client ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | (blank) |
 
 ## Select Options
+
+**Tax Basis**
+
+```
+Not confirmed | Tax-inclusive | Tax-exclusive
+```
+
+A starting set, not a tax conclusion. `Not confirmed` is the correct value until the user says which basis their amounts use; do not deduce it. The options are deliberately not a tax rate, because a rate is a fact about the user that this module cannot know.
 
 **Client Type**
 
@@ -246,6 +281,15 @@ Prospect | Active | Onboarding | At Risk | Closed | Lost
 ## Relations
 
 Link fields: none
+
+`Projects` and `Invoices` are **not** relations. They hold a denormalised, comma-separated list of records that
+live in their own tables, which are not part of this build. They stay `Text`, and no Notion `Relation` is
+created, because the target database does not exist here and inventing one is forbidden. A list written on the
+client row will drift from the real records, so treat these as a convenience label, not a source of truth; the
+invoice and project tables own that data.
+
+**Link fields: none** is not the same as "no linkage exists". It means this table has no column that holds a
+foreign key. The two list fields are the linkage, and they are text on purpose.
 
 ## Examples
 
@@ -310,6 +354,8 @@ Client details live in three people inboxes.
   **Solution:** build what was requested; mention the parent skill separately.
 - **Problem:** all four artifacts drift apart.
   **Solution:** derive all four from the field list in this file, never by hand.
+- **Problem:** `Outstanding` stops matching `Total Invoiced - Total Paid`.
+  **Solution:** one of the three was typed rather than calculated. Recalculate the difference every time, and when a credit or write-off explains the gap, say so in `Notes` instead of adjusting a total to force agreement.
 - **Problem:** Notion import shows every column as Text.
   **Solution:** that is expected. Apply the property mapping table once, after import.
 

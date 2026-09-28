@@ -213,7 +213,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/payments-received/what-is-payments-received> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: organization-design](../organization-design/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: payroll-finance](../payroll-finance/)
+**Navigation:** [Previous: payment-accounting](../payment-accounting/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: payroll-finance](../payroll-finance/)
 
 ### AI Training for Cooperatives
 

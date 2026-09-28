@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, protect]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Audit Log
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -100,13 +102,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
 Log Entry,Date and Time,User,Module,Record,Action,Field Changed,Old Value,New Value,Reason,Log ID
-Policy updated,2026-01-15 09:30,Sneha Iyer,Invoices & Billing,INV-1041,Update,Status,Draft,Sent,Correction made after a review query,
+Policy updated,2026-01-15 09:30,Example User,Invoices & Billing,INV-EXAMPLE-001,Update,Status,Draft,Sent,Correction made after a review query,
 ```
 
 ```sql
@@ -168,7 +172,7 @@ CREATE TABLE audit_log (
 | Log ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
@@ -177,9 +181,9 @@ and anything pointing at another table stays `relation`.
 |---:|---|---|---|---|---|---|
 | 1 | Log Entry | `text` | `VARCHAR(255)` | `string` | Text | `Policy updated` |
 | 2 | Date and Time | `datetime` | `TIMESTAMP` | `string, format: date-time` | Date (include time) | `2026-01-15 09:30` |
-| 3 | User | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
+| 3 | User | `text` | `VARCHAR(255)` | `string` | Text | `Example User` |
 | 4 | Module | `text` | `VARCHAR(255)` | `string` | Text | `Invoices & Billing` |
-| 5 | Record | `text` | `VARCHAR(255)` | `string` | Text | `INV-1041` |
+| 5 | Record | `text` | `VARCHAR(255)` | `string` | Text | `INV-EXAMPLE-001` |
 | 6 | Action | `text` | `VARCHAR(255)` | `string` | Text | `Update` |
 | 7 | Field Changed | `text` | `VARCHAR(255)` | `string` | Text | `Status` |
 | 8 | Old Value | `text` | `VARCHAR(255)` | `string` | Text | `Draft` |
@@ -229,7 +233,7 @@ When a client questioned an approval we had nothing to show.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -244,7 +248,9 @@ When a client questioned an approval we had nothing to show.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything

@@ -225,7 +225,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/expense-management/what-is-expense-management> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: events-activities](../events-activities/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: gamification-engine](../gamification-engine/)
+**Navigation:** [Previous: expense-accounting](../expense-accounting/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: gamification-engine](../gamification-engine/)
 
 ### AI Training for Cooperatives
 

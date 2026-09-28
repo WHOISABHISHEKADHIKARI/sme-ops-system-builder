@@ -95,6 +95,23 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 
 **Workflow:** Joiner → Create accounts → Assign tools → Leave → Remove access → Log
 
+**The one rule that makes this register mean anything:** `Access Removed Date` is empty for as long as the
+account is live, and is set on the day access is actually removed. Never pre-fill it with a planned or
+probable leaver date, because a removal date that was only a forecast is indistinguishable from one that
+happened, and the register is read to answer "does this person still have access". A record that is `Active`
+with a removal date is a contradiction: fix the status or clear the date, never leave both. `Closed` and
+`Pending Offboarding` must carry the date, or the offboarding is not finished.
+
+**Security columns are facts, not targets.** `Two Factor On`, `Recovery Email Set` and `Password Policy Met`
+record what is true now. They are not a to-do list and must never be pre-set to TRUE to close a ticket. When
+one is FALSE, `Status` may be `Active` - the account genuinely exists - and the fix is the review, not a
+reclassification. Never disable a control in order to make a record look compliant.
+
+**Recurring review needs a due date.** `Last Access Review` alone cannot go stale, because it always shows the
+most recent review and never says the next one is late. `Next Review Due` carries the deadline; a review is
+overdue when the due date has passed and `Last Access Review` is still earlier than it. Do not add a `Review
+Frequency` field unless the user states one - the cadence is theirs, not this module's to invent.
+
 ### Step 5 - Build only on request
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
@@ -105,8 +122,9 @@ correct text and no import dialog. A CSV carries no types, so after it, name the
 that need a number, date or currency format applied.
 
 ```csv
-Account Record,Employee Name,Department,Account Type,Work Email,Aliases,Email Groups,Tool or System,Licence Type,Licence Cost,Currency,Created Date,Created By,Two Factor On,Recovery Email Set,Password Policy Met,Last Access Review,Access Removed Date,Handover To,Status,Notes,Account ID
-ACC-204,Aarav Sharma,Delivery,Work Email,aarav.sharma@example.com,"aarav.sharma, a.sharma","all-staff, delivery-team",Zoho Mail,Per User,144000.00,INR,2026-01-15,Ananya Rao,TRUE,FALSE,FALSE,2026-01-15,2026-01-15,Vikram Singh,Active,Shared team mailbox still has two people on it; both were removed in February.,
+Account Record,Employee Name,Department,Account Type,Work Email,Aliases,Email Groups,Tool or System,Licence Type,Licence Cost,Currency,Created Date,Created By,Two Factor On,Recovery Email Set,Password Policy Met,Last Access Review,Next Review Due,Access Removed Date,Handover To,Status,Notes,Account ID
+ACC-EXAMPLE-001,Example Employee,Delivery,Work Email,employee@example.com,"employee, e.surname","all-staff, delivery-team",Example Mail Service,Per User,1200.00,INR,2026-01-15,Example Requester,TRUE,FALSE,FALSE,2026-02-28,2026-02-28,2026-02-28,Example Successor,Closed,Contract ended 2026-02-28. Access removed and mailbox handed to the Example Successor; licences not reassigned.,(blank)
+
 ```
 
 ```sql
@@ -124,26 +142,34 @@ CREATE TABLE company_email_accounts (
   currency VARCHAR(255),
   created_date DATE NOT NULL,
   created_by VARCHAR(255),
-  two_factor_on BOOLEAN NOT NULL,
-  recovery_email_set BOOLEAN NOT NULL,
-  password_policy_met BOOLEAN NOT NULL,
-  last_access_review DATE NOT NULL,
+  two_factor_on BOOLEAN,
+  recovery_email_set BOOLEAN,
+  password_policy_met BOOLEAN,
+  last_access_review DATE,
+  next_review_due DATE,
   access_removed_date DATE NOT NULL,
   handover_to VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   notes TEXT,
   account_id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
+  updated_at TIMESTAMP DEFAULT NOW(),
+  CHECK (status IN ('Active', 'Suspended', 'Pending Offboarding', 'Closed')),
+  -- The core integrity rule: access that has been removed is dated, and live access is not.
+  CHECK ((status IN ('Closed', 'Pending Offboarding')) = (access_removed_date IS NOT NULL)),
+  -- A review cannot be recorded after the date it was due.
+  CHECK (last_access_review IS NULL OR next_review_due IS NULL
+         OR last_access_review <= next_review_due)
 );
 
 CREATE INDEX idx_company_email_accounts_status ON company_email_accounts (status);
+```
 ```
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Company Email & Accounts",
+  "title": "Company Email Accounts",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -164,6 +190,7 @@ CREATE INDEX idx_company_email_accounts_status ON company_email_accounts (status
       "Recovery Email Set": { "type": "boolean" },
       "Password Policy Met": { "type": "boolean" },
       "Last Access Review": { "type": "string", "format": "date" },
+      "Next Review Due": { "type": "string", "format": "date" },
       "Access Removed Date": { "type": "string", "format": "date" },
       "Handover To": { "type": "string" },
       "Status": { "type": "string" },
@@ -171,13 +198,11 @@ CREATE INDEX idx_company_email_accounts_status ON company_email_accounts (status
       "Account ID": { "type": "integer" }
   },
   "required": [
-      "Account Type",
-      "Licence Type",
-      "Licence Cost",
-      "Created Date",
-      "Last Access Review",
-      "Access Removed Date",
-      "Status"
+    "Account Type",
+    "Licence Type",
+    "Licence Cost",
+    "Created Date",
+    "Status"
   ]
 }
 ```
@@ -185,28 +210,30 @@ CREATE INDEX idx_company_email_accounts_status ON company_email_accounts (status
 ```markdown
 | CSV column | Notion property | Set after import |
 |---|---|---|
-| Account Record | Text | Leave as Text |
+| Account Record | Text | Leave as Text. A human-readable reference you choose, not a generated number, so it stays reproducible |
 | Employee Name | Text | Leave as Text |
 | Department | Text | Leave as Text |
-| Account Type | Select (add options after import) | Convert to Select, add options: "Work Email", "Email Group", "Tool Account", "Admin Account", "Shared Inbox" |
+| Account Type | Select | Add options: "Work Email", "Shared Mailbox", "Tool Account", "Group Address" |
 | Work Email | Email | Convert to Email |
 | Aliases | Text | Leave as Text |
-| Email Groups | Text | Leave as Text |
-| Tool or System | Text | Leave as Text |
-| Licence Type | Select (add options after import) | Convert to Select, add options: "Per User", "Per Device", "Enterprise", "Free" |
+| Email Groups | Text | Leave as Text. Denormalised list, not a Notion Relation: the directory table is not part of this build |
+| Tool or System | Text | Leave as Text. Record the vendor the user named, or a generic value if they did not |
+| Licence Type | Select | Add options: "Per User", "Per Team", "Shared" |
 | Licence Cost | Number (format: currency) | Convert to Number, set format to Currency |
-| Currency | Text | Leave as Text |
+| Currency | Text | Leave as Text. ISO 4217 code, for example INR, not "Rupees" |
 | Created Date | Date | Convert to Date |
 | Created By | Text | Leave as Text |
 | Two Factor On | Checkbox | Convert to Checkbox |
 | Recovery Email Set | Checkbox | Convert to Checkbox |
 | Password Policy Met | Checkbox | Convert to Checkbox |
 | Last Access Review | Date | Convert to Date |
-| Access Removed Date | Date | Convert to Date |
-| Handover To | Text | Leave as Text |
-| Status | Select (add options after import) | Convert to Select, add options: "Active", "Suspended", "Pending Offboarding", "Closed" |
+| Next Review Due | Date | Convert to Date. A recurring review needs a due date, otherwise nothing is ever overdue and the cadence cannot be measured |
+| Access Removed Date | Date | Convert to Date. Leave EMPTY while the account is live; set it on the day access is actually removed, never as a forecast |
+| Handover To | Text | Leave as Text. A person, so a name and not a relation; the directory owns the person record |
+| Status | Select | Add options: "Active", "Suspended", "Pending Offboarding", "Closed" |
 | Notes | Text | Leave as Text |
 | Account ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
+```
 ```
 
 One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
@@ -216,40 +243,41 @@ and anything pointing at another table stays `relation`.
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Account Record | `text` | `VARCHAR(255)` | `string` | Text | `ACC-204` |
-| 2 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
+| 1 | Account Record | `text` | `VARCHAR(255)` | `string` | Text | `ACC-EXAMPLE-001` |
+| 2 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Employee` |
 | 3 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
-| 4 | Account Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Work Email` |
-| 5 | Work Email | `email` | `VARCHAR(255)` | `string, format: email` | Email | `aarav.sharma@example.com` |
-| 6 | Aliases | `text` | `VARCHAR(255)` | `string` | Text | `aarav.sharma, a.sharma` |
+| 4 | Account Type | `select` | `VARCHAR(100)` | `string` | Select | `Work Email` |
+| 5 | Work Email | `email` | `VARCHAR(255)` | `string, format: email` | Email | `employee@example.com` |
+| 6 | Aliases | `text` | `VARCHAR(255)` | `string` | Text | `employee, e.surname` |
 | 7 | Email Groups | `text` | `VARCHAR(255)` | `string` | Text | `all-staff, delivery-team` |
-| 8 | Tool or System | `text` | `VARCHAR(255)` | `string` | Text | `Zoho Mail` |
-| 9 | Licence Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Per User` |
-| 10 | Licence Cost | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `144000.00` |
+| 8 | Tool or System | `text` | `VARCHAR(255)` | `string` | Text | `Example Mail Service` |
+| 9 | Licence Type | `select` | `VARCHAR(100)` | `string` | Select | `Per User` |
+| 10 | Licence Cost | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1200.00` |
 | 11 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
 | 12 | Created Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
-| 13 | Created By | `text` | `VARCHAR(255)` | `string` | Text | `Ananya Rao` |
+| 13 | Created By | `text` | `VARCHAR(255)` | `string` | Text | `Example Requester` |
 | 14 | Two Factor On | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
 | 15 | Recovery Email Set | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
 | 16 | Password Policy Met | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
-| 17 | Last Access Review | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
-| 18 | Access Removed Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
-| 19 | Handover To | `text` | `VARCHAR(255)` | `string` | Text | `Vikram Singh` |
-| 20 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Active` |
-| 21 | Notes | `long_text` | `TEXT` | `string` | Text | `Shared team mailbox still has two people on it; both were removed in February.` |
-| 22 | Account ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
+| 17 | Last Access Review | `date` | `DATE` | `string, format: date` | Date | `2026-02-28` |
+| 18 | Next Review Due | `date` | `DATE` | `string, format: date` | Date | `2026-02-28` |
+| 19 | Access Removed Date | `date` | `DATE` | `string, format: date` | Date | `2026-02-28` |
+| 20 | Handover To | `text` | `VARCHAR(255)` | `string` | Text | `Example Successor` |
+| 21 | Status | `select` | `VARCHAR(100)` | `string` | Select | `Closed` |
+| 22 | Notes | `long_text` | `TEXT` | `string` | Text | `Contract ended 2026-02-28. Access removed and mailbox handed to the Example Successor; licences not reassigned.` |
+| 23 | Account ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | (blank) |
 
 ## Select Options
 
 **Account Type**
 
 ```
-Work Email | Email Group | Tool Account | Admin Account | Shared Inbox
+Work Email | Shared Mailbox | Tool Account | Group Address
 ```
 **Licence Type**
 
 ```
-Per User | Per Device | Enterprise | Free
+Per User | Per Team | Shared
 ```
 **Status**
 
@@ -260,6 +288,12 @@ Active | Suspended | Pending Offboarding | Closed
 ## Relations
 
 Link fields: none
+
+`Email Groups` and `Handover To` are **not** relations. `Email Groups` is a denormalised comma-separated list of
+group addresses, and `Handover To` is a person named inline rather than a foreign key. The directory table that
+owns people is not part of this build, so no Notion `Relation` is created here and inventing a target database is
+forbidden. `Link fields: none` therefore means this table holds no foreign key, not that the register has no
+linkage to people - the linkage is by name, and it will drift from the directory.
 
 ## Examples
 
@@ -324,6 +358,10 @@ People leave and their tool logins stay active for months.
   **Solution:** build what was requested; mention the parent skill separately.
 - **Problem:** all four artifacts drift apart.
   **Solution:** derive all four from the field list in this file, never by hand.
+- **Problem:** an account reads `Active` but has an `Access Removed Date`.
+  **Solution:** one of the two is wrong. Never pre-fill the removal date with a forecast, and fix the pair rather than leaving them to disagree; the SQL CHECK refuses both the contradiction and an undated `Closed` record.
+- **Problem:** a review is overdue but nothing is flagged.
+  **Solution:** `Last Access Review` is a history field and never goes stale on its own. `Next Review Due` is the deadline; compare the two instead of reading the last date as the current state.
 - **Problem:** Notion import shows every column as Text.
   **Solution:** that is expected. Apply the property mapping table once, after import.
 

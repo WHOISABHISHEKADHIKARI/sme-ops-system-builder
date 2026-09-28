@@ -217,7 +217,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/internal-communication/what-is-internal-communication> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: intern-program](../intern-program/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: invoices-billing](../invoices-billing/)
+**Navigation:** [Previous: intern-program](../intern-program/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: inventory-stock-reconciliation](../inventory-stock-reconciliation/)
 
 ### AI Training for Cooperatives
 

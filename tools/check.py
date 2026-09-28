@@ -54,6 +54,10 @@ RESERVED_COL = {'user': 'user_account', 'order': 'sort_order', 'group': 'group_n
 
 
 def snake(n):
+    # '%' is a unit suffix, not a word break: 'TDS Rate %' -> 'tds_rate_pct', the
+    # name the SQL/JSON/Notion artifacts already carry. Dropping it here made
+    # check.py disagree with itself and report clean modules as drifted.
+    n = n.replace('%', ' Pct')
     s = re.sub(r'_+', '_', re.sub(r'[^a-z0-9]+', '_', n.lower()).strip('_')) or 'field'
     return RESERVED_COL.get(s, s)
 
@@ -486,9 +490,11 @@ if __name__ == '__main__':
     nbad = 0
     nmod = 0
     for f in files:
-        # Brand-growth modules use the newer artifact contract checked by
-        # qa_verify.py (including custom SQL widths and boolean fields).
-        if os.path.join('skills', 'brand-growth-system-builder') in f:
+        # Sub-pack modules use the newer artifact contract checked by qa_verify.py
+        # (including portable percentage names, custom SQL widths and booleans).
+        if any(os.path.join('skills', pack) in f for pack in (
+                'accounting-audit-system-builder',
+                'brand-growth-system-builder')):
             continue
         if is_router(f):
             continue

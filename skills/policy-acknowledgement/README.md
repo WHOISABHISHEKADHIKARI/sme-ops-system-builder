@@ -213,7 +213,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/policy-acknowledgement/what-is-policy-acknowledgement> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: performance-management](../performance-management/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: policy-library](../policy-library/)
+**Navigation:** [Previous: petty-cash-management](../petty-cash-management/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: policy-library](../policy-library/)
 
 ### AI Training for Cooperatives
 

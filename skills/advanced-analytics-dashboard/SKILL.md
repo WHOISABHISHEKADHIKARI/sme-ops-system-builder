@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, analyze]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Advanced Analytics Dashboard
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -100,13 +102,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
 Metric,Category,Source Module,Formula or Method,Period,Value,Target,Trend,Owner,Last Updated,Metric ID
-Net revenue,General,Invoices & Billing,"Revenue invoiced minus credits, divided by active clients.",2026-03,139240,95,Up 3 months running,Sneha Iyer,2026-01-15,
+Net revenue,General,Invoices & Billing,"Revenue invoiced minus credits, divided by active clients.",2026-03,1000,100,Up 3 months running,Example Owner,2026-01-15,
 ```
 
 ```sql
@@ -171,7 +175,7 @@ CREATE TABLE advanced_analytics_dashboard (
 | Metric ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
@@ -183,10 +187,10 @@ and anything pointing at another table stays `relation`.
 | 3 | Source Module | `text` | `VARCHAR(255)` | `string` | Text | `Invoices & Billing` |
 | 4 | Formula or Method | `text` | `VARCHAR(255)` | `string` | Text | `Revenue invoiced minus credits, divided by active clients.` |
 | 5 | Period | `text` | `VARCHAR(255)` | `string` | Text | `2026-03` |
-| 6 | Value | `number` | `NUMERIC` | `number` | Number | `139240` |
-| 7 | Target | `number` | `NUMERIC` | `number` | Number | `95` |
+| 6 | Value | `number` | `NUMERIC` | `number` | Number | `1000` |
+| 7 | Target | `number` | `NUMERIC` | `number` | Number | `100` |
 | 8 | Trend | `text` | `VARCHAR(255)` | `string` | Text | `Up 3 months running` |
-| 9 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
+| 9 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Example Owner` |
 | 10 | Last Updated | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 11 | Metric ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
 
@@ -236,7 +240,7 @@ We have a dashboard with 30 tiles that nobody uses.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -251,7 +255,9 @@ We have a dashboard with 30 tiles that nobody uses.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything

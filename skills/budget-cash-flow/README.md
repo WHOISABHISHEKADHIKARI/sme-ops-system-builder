@@ -100,7 +100,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Budget Line,Line Type,Department,Category,Period,Fiscal Year,Budget Amount,Actual Amount,Variance,Used %,Linked Expenses,Owner,Status,Notes,Budget ID
-750000.00,Income,Delivery,General,2026-03,FY2026-27,450000.00,139240.00,-12000.00,64,EXP-2026-014,Sneha Iyer,Active,Forecast refreshed after the February numbers; the delivery line is still optimistic.,
+1000.00,Income,Delivery,General,2026-03,FY2026-27,600.00,400.00,-200.00,67,EXP-EXAMPLE-001,Example Owner,Active,Forecast refreshed after the February numbers; the delivery line is still optimistic.,
 ```
 
 ## Prompt for this

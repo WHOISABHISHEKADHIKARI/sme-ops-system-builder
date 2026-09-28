@@ -96,7 +96,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Metric,Category,Source Module,Formula or Method,Period,Value,Target,Trend,Owner,Last Updated,Metric ID
-Net revenue,General,Invoices & Billing,"Revenue invoiced minus credits, divided by active clients.",2026-03,139240,95,Up 3 months running,Sneha Iyer,2026-01-15,
+Net revenue,General,Invoices & Billing,"Revenue invoiced minus credits, divided by active clients.",2026-03,1000,100,Up 3 months running,Example Owner,2026-01-15,
 ```
 
 ## Prompt for this

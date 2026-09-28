@@ -237,7 +237,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/performance-management/what-is-performance-management> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: people-directory](../people-directory/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: policy-acknowledgement](../policy-acknowledgement/)
+**Navigation:** [Previous: people-directory](../people-directory/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: petty-cash-management](../petty-cash-management/)
 
 ### AI Training for Cooperatives
 

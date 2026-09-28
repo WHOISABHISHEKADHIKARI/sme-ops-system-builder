@@ -233,7 +233,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/course-upskilling-requests/what-is-course-and-upskilling-requests> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: contract-document-renewal](../contract-document-renewal/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: culture-retention](../culture-retention/)
+**Navigation:** [Previous: contract-document-renewal](../contract-document-renewal/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: credit-cycle-analysis](../credit-cycle-analysis/)
 
 ### AI Training for Cooperatives
 

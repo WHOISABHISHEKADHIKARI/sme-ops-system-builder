@@ -215,7 +215,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/organization-design/what-is-organization-design> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: onboarding-playbook](../onboarding-playbook/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: payments-received](../payments-received/)
+**Navigation:** [Previous: onboarding-playbook](../onboarding-playbook/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: party-ledger-reconciliation](../party-ledger-reconciliation/)
 
 ### AI Training for Cooperatives
 

@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, protect]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Admin Access Register
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -100,13 +102,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
 System or Tool,Category,Main Admin,Backup Admin,Department,Access Level,Number of Admin Users,Billing Owner,Plan,Seats,Renewal Date,Company Owned Account,Shared Login,Password Manager Entry,Two Factor On,Last Access Review,Next Access Review,Offboarding Checklist Item,Risk Level,Status,Notes,Admin ID
-Zoho Books,General,Ananya Rao,Vikram Singh,Delivery,Full,3,Karan Malhotra,Business,5,2026-01-15,TRUE,FALSE,Shared vault - Finance,TRUE,2026-01-15,2026-01-15,"Remove from payroll, revoke accounts, collect laptop",Low,Provisioned,Shared logins retired after the February access review; two orphaned accounts still need an owner.,
+Example Product,General,Example Admin,Example Backup Admin,Delivery,Full,3,Example Owner,Business,5,2026-01-15,TRUE,FALSE,Shared vault - Finance,TRUE,2026-01-15,2026-01-15,"Remove from payroll, revoke accounts, collect laptop",Low,Provisioned,Shared logins retired after the February access review; two orphaned accounts still need an owner.,
 ```
 
 ```sql
@@ -211,21 +215,21 @@ CREATE INDEX idx_admin_access_register_status ON admin_access_register (status);
 | Admin ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | System or Tool | `text` | `VARCHAR(255)` | `string` | Text | `Zoho Books` |
+| 1 | System or Tool | `text` | `VARCHAR(255)` | `string` | Text | `Example Product` |
 | 2 | Category | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `General` |
-| 3 | Main Admin | `text` | `VARCHAR(255)` | `string` | Text | `Ananya Rao` |
-| 4 | Backup Admin | `text` | `VARCHAR(255)` | `string` | Text | `Vikram Singh` |
+| 3 | Main Admin | `text` | `VARCHAR(255)` | `string` | Text | `Example Admin` |
+| 4 | Backup Admin | `text` | `VARCHAR(255)` | `string` | Text | `Example Backup Admin` |
 | 5 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 6 | Access Level | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Full` |
 | 7 | Number of Admin Users | `number` | `NUMERIC` | `number` | Number | `3` |
-| 8 | Billing Owner | `text` | `VARCHAR(255)` | `string` | Text | `Karan Malhotra` |
+| 8 | Billing Owner | `text` | `VARCHAR(255)` | `string` | Text | `Example Owner` |
 | 9 | Plan | `text` | `VARCHAR(255)` | `string` | Text | `Business` |
 | 10 | Seats | `number` | `NUMERIC` | `number` | Number | `5` |
 | 11 | Renewal Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
@@ -302,7 +306,7 @@ We have admin accounts for people who left two years ago.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -317,7 +321,9 @@ We have admin accounts for people who left two years ago.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything

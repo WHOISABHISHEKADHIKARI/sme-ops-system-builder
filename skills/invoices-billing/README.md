@@ -241,7 +241,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/invoices-billing/what-is-invoices-and-billing> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: internal-communication](../internal-communication/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: issue-grievance-tracker](../issue-grievance-tracker/)
+**Navigation:** [Previous: inventory-stock-reconciliation](../inventory-stock-reconciliation/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: issue-grievance-tracker](../issue-grievance-tracker/)
 
 ### AI Training for Cooperatives
 

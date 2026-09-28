@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, protect]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Contract & Document Renewal
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -95,18 +97,45 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 
 **Workflow:** Contract recorded → Notice window → Reminder → Review → Renewed, amended or ended
 
+**The notice deadline is the trigger, so it has to exist as a date.** This module exists because the notice
+deadline falls *before* the renewal date, and `Renewal Notice (Days)` alone cannot be watched - a number of days
+never goes red. Store the deadline in `Notice Deadline` and calculate it, never accept it as typed:
+
+```
+Notice Deadline = End Date - Renewal Notice (Days)
+```
+
+Treat the difference as calendar days, count the deadline day itself as day 1, and store the result as a plain
+date in ISO `YYYY-MM-DD`. A notice period is a count of days, not a date, so never accept a date typed into
+`Renewal Notice (Days)` and never accept a deadline typed into `Notice Deadline` - the two disagree silently and
+the register misses the reminder. If the contract auto-renews and no notice is served, `Notice Deadline` is the
+last day the user may still act; after it passes, `Auto-Renew` TRUE means the contract has renewed by operation of
+its own terms and `Status` must not still read `In Renewal`.
+
+**Status means one thing at a time.** `Expiring Soon` is the window between the notice deadline and the end date -
+action is still possible. `In Renewal` is only correct once a renewal has actually been agreed or served. A
+contract whose notice deadline has passed with no action recorded is `Expiring Soon` with the gap stated in
+`Notes`, never `In Renewal` and never silently `Renewed`.
+
+**Money basis:** this module does not assume that `Contract Value` is tax-inclusive or tax-exclusive. Record the
+basis in `Tax Basis` and leave it `Not confirmed` until the user says, rather than deducing it from the currency
+or the size of the number. Do not add tax rate or tax amount fields unless the user asks for tax tracking.
+
 ### Step 5 - Build only on request
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
-Contract Title,Counterparty,Contract Type,Owner,Department,Start Date,End Date,Renewal Notice (Days),Auto-Renew,Contract Value,Currency,Linked Legal Record,Status,Contract ID
-Northwind MSA,Acme Corp,Customer,Sneha Iyer,Delivery,2025-10-01,2026-09-30,60,FALSE,450000.00,INR,LEG-2026-007,In Renewal,
+Contract Title,Counterparty,Contract Type,Owner,Department,Start Date,End Date,Renewal Notice (Days),Notice Deadline,Auto-Renew,Contract Value,Tax Basis,Currency,Linked Legal Record,Status,Contract ID
+Example Master Services Agreement,Example Customer Ltd,Customer,Example Owner,Delivery,2026-04-01,2027-03-31,60,2027-01-30,FALSE,120000.00,Not confirmed,INR,DOC-EXAMPLE-001,Active,(blank)
+
 ```
 
 ```sql
@@ -119,23 +148,37 @@ CREATE TABLE contract_document_renewal (
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
   renewal_notice_days NUMERIC NOT NULL,
-  auto_renew BOOLEAN NOT NULL,
+  notice_deadline DATE,
+  auto_renew BOOLEAN,
   contract_value NUMERIC(14,2) NOT NULL,
+  tax_basis VARCHAR(100) NOT NULL,
   currency VARCHAR(255),
-  linked_legal_record VARCHAR(255),  -- relation -> target record
+  linked_legal_record VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   contract_id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
+  updated_at TIMESTAMP DEFAULT NOW(),
+  -- The notice window is the whole point of this register, so the two dates must be in order.
+  CHECK (end_date > start_date),
+  CHECK (renewal_notice_days >= 0),
+  CHECK (status IN ('Active', 'Expiring Soon', 'In Renewal', 'Renewed', 'Expired', 'Terminated')),
+  CHECK (tax_basis IN ('Not confirmed', 'Tax-inclusive', 'Tax-exclusive')),
+  -- The deadline is derived, so it is never NOT NULL and never typed in by hand.
+  CHECK (notice_deadline IS NULL OR notice_deadline <= end_date)
+  -- Renaming a relation to text is a data decision, not a formatting one:
+  -- Linked Legal Record is VARCHAR(255) naming a document reference. If the signed-document
+  -- library is ever added to this build, it becomes a real foreign key then, not before.
 );
 
 CREATE INDEX idx_contract_document_renewal_status ON contract_document_renewal (status);
+CREATE INDEX idx_contract_document_renewal_notice ON contract_document_renewal (notice_deadline);
+```
 ```
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Contract & Document Renewal",
+  "title": "Contract Document Renewal",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -147,20 +190,23 @@ CREATE INDEX idx_contract_document_renewal_status ON contract_document_renewal (
       "Start Date": { "type": "string", "format": "date" },
       "End Date": { "type": "string", "format": "date" },
       "Renewal Notice (Days)": { "type": "number" },
+      "Notice Deadline": { "type": "string", "format": "date" },
       "Auto-Renew": { "type": "boolean" },
       "Contract Value": { "type": "number" },
+      "Tax Basis": { "type": "string" },
       "Currency": { "type": "string" },
       "Linked Legal Record": { "type": "string" },
       "Status": { "type": "string" },
       "Contract ID": { "type": "integer" }
   },
   "required": [
-      "Contract Type",
-      "Start Date",
-      "End Date",
-      "Renewal Notice (Days)",
-      "Contract Value",
-      "Status"
+    "Contract Type",
+    "Start Date",
+    "End Date",
+    "Renewal Notice (Days)",
+    "Contract Value",
+    "Tax Basis",
+    "Status"
   ]
 }
 ```
@@ -169,42 +215,47 @@ CREATE INDEX idx_contract_document_renewal_status ON contract_document_renewal (
 | CSV column | Notion property | Set after import |
 |---|---|---|
 | Contract Title | Text | Leave as Text |
-| Counterparty | Text | Leave as Text |
-| Contract Type | Select (add options after import) | Convert to Select, add options: "Customer", "Vendor", "Employment", "Lease", "Service", "NDA" |
-| Owner | Text | Leave as Text |
+| Counterparty | Text | Leave as Text. Record the legal entity name the user gives, and keep the registered name and the trading name apart if they differ |
+| Contract Type | Select | Add options: "Customer", "Vendor", "Employment", "Lease", "Service", "NDA" |
+| Owner | Text | Leave as Text. A person, so a name and not a relation; the directory owns the person record |
 | Department | Text | Leave as Text |
 | Start Date | Date | Convert to Date |
 | End Date | Date | Convert to Date |
-| Renewal Notice (Days) | Number | Convert to Number |
+| Renewal Notice (Days) | Number | Convert to Number. A whole number of days, never a date; the date is derived |
+| Notice Deadline | Date | Convert to Date. Calculated, not typed: End Date minus Renewal Notice (Days) |
 | Auto-Renew | Checkbox | Convert to Checkbox |
 | Contract Value | Number (format: currency) | Convert to Number, set format to Currency |
-| Currency | Text | Leave as Text |
-| Linked Legal Record | Relation (link to the target database) | Convert to Relation, link to the target database |
-| Status | Select (add options after import) | Convert to Select, add options: "Active", "Expiring Soon", "In Renewal", "Renewed", "Expired", "Terminated" |
+| Tax Basis | Select | Add options: "Not confirmed", "Tax-inclusive", "Tax-exclusive" |
+| Currency | Text | Leave as Text. ISO 4217 code, for example INR, not "Rupees" |
+| Linked Legal Record | Text | Leave as Text, NOT a Relation. The signed document library is not part of this build, so no target database exists to link to |
+| Status | Select | Add options: "Active", "Expiring Soon", "In Renewal", "Renewed", "Expired", "Terminated" |
 | Contract ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
 ```
+```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Contract Title | `text` | `VARCHAR(255)` | `string` | Text | `Northwind MSA` |
-| 2 | Counterparty | `text` | `VARCHAR(255)` | `string` | Text | `Acme Corp` |
-| 3 | Contract Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Customer` |
-| 4 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
+| 1 | Contract Title | `text` | `VARCHAR(255)` | `string` | Text | `Example Master Services Agreement` |
+| 2 | Counterparty | `text` | `VARCHAR(255)` | `string` | Text | `Example Customer Ltd` |
+| 3 | Contract Type | `select` | `VARCHAR(100)` | `string` | Select | `Customer` |
+| 4 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Example Owner` |
 | 5 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
-| 6 | Start Date | `date` | `DATE` | `string, format: date` | Date | `2025-10-01` |
-| 7 | End Date | `date` | `DATE` | `string, format: date` | Date | `2026-09-30` |
-| 8 | Renewal Notice (Days) | `number` | `NUMERIC` | `number` | Number | `60` |
-| 9 | Auto-Renew | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
-| 10 | Contract Value | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `450000.00` |
-| 11 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
-| 12 | Linked Legal Record | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `LEG-2026-007` |
-| 13 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In Renewal` |
-| 14 | Contract ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
+| 6 | Start Date | `date` | `DATE` | `string, format: date` | Date | `2026-04-01` |
+| 7 | End Date | `date` | `DATE` | `string, format: date` | Date | `2027-03-31` |
+| 8 | Renewal Notice (Days) | `number | `NUMERIC` | `number` | Number | `60` |
+| 9 | Notice Deadline | `date` | `DATE` | `string, format: date` | Date | `2027-01-30` |
+| 10 | Auto-Renew | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
+| 11 | Contract Value | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `120000.00` |
+| 12 | Tax Basis | `select` | `VARCHAR(100)` | `string` | Select | `Not confirmed` |
+| 13 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
+| 14 | Linked Legal Record | `text` | `VARCHAR(255)` | `string` | Text | `DOC-EXAMPLE-001` |
+| 15 | Status | `select` | `VARCHAR(100)` | `string` | Select | `Active` |
+| 16 | Contract ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | (blank) |
 
 ## Select Options
 
@@ -213,6 +264,14 @@ and anything pointing at another table stays `relation`.
 ```
 Customer | Vendor | Employment | Lease | Service | NDA
 ```
+
+**Tax Basis**
+
+```
+Not confirmed | Tax-inclusive | Tax-exclusive
+```
+
+A starting set, not a tax conclusion. `Not confirmed` is correct until the user states their basis; do not deduce it, and do not add a rate field, because a rate is a fact about the user that this module cannot know.
 **Status**
 
 ```
@@ -221,7 +280,16 @@ Active | Expiring Soon | In Renewal | Renewed | Expired | Terminated
 
 ## Relations
 
-Link fields: `Linked Legal Record`
+Link fields: none
+
+`Linked Legal Record` is **not** a relation and is deliberately not typed `relation`. It holds a document
+reference such as `DOC-EXAMPLE-001`. The signed-document library is not part of this build, so the target
+database does not exist, and §8 forbids inventing one or creating a Notion `Relation` to nowhere. It stays
+`Text` in every artifact, with a SQL comment saying what it is, and becomes a real foreign key only if that
+database is ever built. Naming the intended target is what makes that upgrade possible later.
+
+`Owner` is likewise a name, not a foreign key: the directory table is not part of this build, so a person is
+recorded by name and the reference will drift from the directory.
 
 ## Examples
 
@@ -257,7 +325,7 @@ A vendor contract renewed automatically at a higher price because nobody tracked
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -272,7 +340,9 @@ A vendor contract renewed automatically at a higher price because nobody tracked
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything
@@ -286,6 +356,10 @@ A vendor contract renewed automatically at a higher price because nobody tracked
   **Solution:** build what was requested; mention the parent skill separately.
 - **Problem:** all four artifacts drift apart.
   **Solution:** derive all four from the field list in this file, never by hand.
+- **Problem:** a renewal was missed even though the notice period was recorded.
+  **Solution:** `Renewal Notice (Days)` is an input that never goes red on its own. `Notice Deadline` is the date to watch; if it was left empty, the register was watching the wrong field.
+- **Problem:** a contract reads `In Renewal` with no renewal agreed.
+  **Solution:** `In Renewal` claims a renewal has been agreed or served. Between the notice deadline and the end date the correct value is `Expiring Soon`, with the reason in `Notes`. Never promote a record to `Renewed` to make a spreadsheet look tidy.
 - **Problem:** Notion import shows every column as Text.
   **Solution:** that is expected. Apply the property mapping table once, after import.
 

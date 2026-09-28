@@ -213,7 +213,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/dei-dashboard/what-is-dei-dashboard> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: data-privacy-controls](../data-privacy-controls/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: disciplinary-pip-tracker](../disciplinary-pip-tracker/)
+**Navigation:** [Previous: day-book](../day-book/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: disciplinary-pip-tracker](../disciplinary-pip-tracker/)
 
 ### AI Training for Cooperatives
 

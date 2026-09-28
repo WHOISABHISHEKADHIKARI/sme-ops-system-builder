@@ -9,8 +9,8 @@ asks what is available.
 ## Companion pack: accounting & audit
 
 16 further skills, one per stage of the accounting cycle, live in a sub-pack of their
-own so this catalog stays flat: `skills/accounting-audit-system-builder/catalog.md`.
-Route them from `skills/accounting-audit-system-builder/SKILL.md`. Where a topic exists
+own so this catalog stays flat: `skills/catalog.md`.
+Route them from `skills/SKILL.md`. Where a topic exists
 in both, use that pack for the entry, the reconciliation or the audit trail, and this one
 for the ongoing operational process.
 

@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, manage]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Attendance
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -100,13 +102,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
 Attendance Record,Employee Name,Department,Date,Check-in Time,Check-out Time,Hours Worked,Work Mode,Attendance Status,Late (Minutes),On Approved Leave,Manager,Regularisation Requested,Notes,Attendance ID
-ATT-2026-014,Aarav Sharma,Delivery,2026-01-15,09:58,18:30,8.5,Office,Present,12,FALSE,Sneha Iyer,FALSE,"Late arrivals cluster on Mondays; discussed with the team rather than logged as a penalty.",
+ATT-EXAMPLE-001,Example Employee,Delivery,2026-01-15,09:58,18:30,8.5,Office,Present,12,FALSE,Example Manager,FALSE,"Late arrivals cluster on Mondays; discussed with the team rather than logged as a penalty.",
 ```
 
 ```sql
@@ -183,15 +187,15 @@ CREATE TABLE attendance (
 | Attendance ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Attendance Record | `text` | `VARCHAR(255)` | `string` | Text | `ATT-2026-014` |
-| 2 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
+| 1 | Attendance Record | `text` | `VARCHAR(255)` | `string` | Text | `ATT-EXAMPLE-001` |
+| 2 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Employee` |
 | 3 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 4 | Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 5 | Check-in Time | `text` | `VARCHAR(255)` | `string` | Text | `09:58` |
@@ -201,7 +205,7 @@ and anything pointing at another table stays `relation`.
 | 9 | Attendance Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Present` |
 | 10 | Late (Minutes) | `number` | `NUMERIC` | `number` | Number | `12` |
 | 11 | On Approved Leave | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
-| 12 | Manager | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
+| 12 | Manager | `text` | `VARCHAR(255)` | `string` | Text | `Example Manager` |
 | 13 | Regularisation Requested | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
 | 14 | Notes | `long_text` | `TEXT` | `string` | Text | `Late arrivals cluster on Mondays; discussed with the team rather than logged as a penalty.` |
 | 15 | Attendance ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
@@ -252,7 +256,7 @@ We need attendance for payroll and half-days are a mess.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -267,7 +271,9 @@ We need attendance for payroll and half-days are a mess.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything

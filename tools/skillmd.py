@@ -142,13 +142,18 @@ def read_module(root, slug):
 
 
 def _is_pack(path):
-    """A sub-pack holds its own router plus module directories.
+    """A sub-pack holds its own router plus its own catalog.
 
-    Distinguishing it from a module: a module has no child directory that contains
-    its own SKILL.md. A pack has at least one.
+    Two signals, because both occur in the repository: a pack normally holds child
+    module directories, but a pack whose modules were promoted to the flat layout
+    is left holding only its router and its catalog. A flat module has neither, so
+    testing for a sibling ``catalog.md`` keeps a pack router from being read as a
+    module once its modules have moved.
     """
     if not os.path.isdir(path):
         return False
+    if os.path.isfile(os.path.join(path, 'catalog.md')):
+        return True
     for current, dirs, files in os.walk(path):
         if current != path and 'SKILL.md' in files:
             return True

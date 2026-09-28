@@ -96,7 +96,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Log Entry,Date and Time,User,Module,Record,Action,Field Changed,Old Value,New Value,Reason,Log ID
-Policy updated,2026-01-15 09:30,Sneha Iyer,Invoices & Billing,INV-1041,Update,Status,Draft,Sent,Correction made after a review query,
+Policy updated,2026-01-15 09:30,Example User,Invoices & Billing,INV-EXAMPLE-001,Update,Status,Draft,Sent,Correction made after a review query,
 ```
 
 ## Prompt for this
@@ -209,7 +209,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/audit-log/what-is-audit-log> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: attendance](../attendance/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: board-governance](../board-governance/)
+**Navigation:** [Previous: attendance](../attendance/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: audit-preparation](../audit-preparation/)
 
 ### AI Training for Cooperatives
 

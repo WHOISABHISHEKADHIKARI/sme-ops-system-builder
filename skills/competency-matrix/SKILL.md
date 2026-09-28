@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, develop]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Competency Matrix
@@ -31,39 +31,54 @@ Layer: Layer 5: Develop. Fits: Scale stage. Table code: n/a.
 - role competency model
 - capability matrix
 
-Also use it when the user says "skill levels", or describes the same process happening in a
-spreadsheet, a document or someone inboxes.
+Also use it when the user says "skill levels" for **roles** (what each role must show), or
+describes the same process happening in a spreadsheet, a document or someone's inbox.
 
-Do not use it for: payroll calculation, tax filing, or legal advice. This skill produces
-empty templates only - it never holds or processes real employee or customer data.
+Do not use it for: payroll calculation, tax filing, or legal advice; assessing named people
+against expected levels (that is `skill-gap-analysis`); or certifying competence. This skill
+produces empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
 Read the request and pick the intent before asking anything.
 
-- "set up" or "build" or "create" -> the user wants artifacts; go to Step 2.
-- "our process is ..." or "it is in a sheet" -> the user wants to move an existing process; capture it, then Step 2.
-- "is this right" or "review" or "audit" -> the user wants a check, not a build; answer from what they share.
-- "how do I ..." -> advice question; answer directly and offer the build only if it helps.
+- "set up" or "build" or "create" -> `set up`; go to Step 2.
+- "our process is ..." or "it is in a sheet" -> `import`; capture it, then Step 2.
+- "is this right" or "review" or "audit" -> `review`; answer from what they share. Do not open an intake question.
+- "how do I ..." -> `report`; answer directly and offer the build only if it helps.
+- "fix" -> `fix`; correct confirmed defects in the supplied material.
 
-One message, one question, no batching. Open with:
+One message, one question, no batching. If intent is `set up` or `import` and the user has
+not named the roles, open with:
 
 > **Q:** Which roles need a competency model?
+
+If they already named roles, ask the next missing fact that would change the recommendation
+or the requested artifact. Never ask a question whose answer would not change the result.
 
 ### Step 2 - Ask only what is missing
 
 Skip anything the user already answered, in any earlier message. Ask the rest one at a
 time, and stop as soon as the remaining answers would not change the output.
 
-- **Roles** - Which roles? / How many levels? / Technical or general?
-- **Competencies** - Which competencies? / How many per role? / Derived from what?
+- **Roles** - Which roles? Skip if already named. This table also stores two different
+  "level" facts. Do not ask "How many levels?" until you know which: **Grade Level**
+  (job grade) or **Expected Level** (proficiency). First ask which they mean, using those
+  two names. After that answer, ask how many and what they are called.
+- **Competencies** - Which competencies? / Derived from what?
 - **Assessment** - Who assesses? / Self or manager? / How often?
 - **Current process** - Is anything documented? / Training linked? / What is missing?
-- **Outcome** - What do you need? / A matrix, an assessment or a gap link?
+- **Outcome** - What do you need? A matrix, an assessment sheet, or a link to a gap record?
+  Do not assume a skill-gap table unless they asked for that link.
 
 Never invent an answer. If the user does not know, record it as unknown and carry on.
+Country and software are not required inputs for a country-neutral, tool-neutral
+competency-matrix review. Ask for either only when the user supplied country- or
+tool-specific requirements that materially change the requested result.
 
 ### Step 3 - Hold the internal context
 
@@ -87,26 +102,36 @@ open_questions: []      # the unanswered ones, in the order worth asking
 
 ### Step 4 - Recommend the smallest workflow
 
-Give a short recommendation, then ask whether to build it. Do not build unprompted. Ask: "Want me to build the CSV, SQL DDL, JSON Schema, Notion mapping, or an Excel workbook from these confirmed rules?"
+Give a short recommendation from confirmed facts only, then ask whether to build it. Do not
+build unprompted. Ask: "Want me to build the CSV, SQL DDL, JSON Schema, Notion mapping, or an
+Excel workbook from these confirmed rules?"
 
-**Recommended approach:** Define a small set of levels and attach them to roles, then link the assessment result to the skill gap record.
+**Recommended approach:** Define a small set of proficiency levels and attach each competency
+to the confirmed roles. Include grades only when the user named them. Mention a gap or
+training link only when the user confirmed they need one.
 
-**Why this one:** A competency matrix is only useful if it is attached to something that changes, usually training or a promotion request.
+**Why this one:** A matrix that is not attached to roles (and, when confirmed, to a later
+assessment or gap record) does not change any decision.
 
-**Workflow:** Roles → Competencies → Level expectations → Assessment → Gap and training link
+**Workflow:** Roles → Competencies → Level expectations → Assessment. Add a gap and training
+link only when that outcome was confirmed.
 
 ### Step 5 - Build only on request
 
-Once the user asks for it, derive the fields from the confirmed context and emit the
-artifacts as data only. No preamble, no summary, no closing line.
+Once the user asks for it, emit the artifacts as data only. No preamble, no summary, no
+closing line. The Field Reference is the documented starting shape. If the user confirmed
+different grade names, proficiency labels, or category names, emit those as the select
+options instead of the starting set. Do not keep a five-level proficiency list when they
+confirmed four. Do not invent competencies, roles, or grades they did not supply.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
-that need a number, date or currency format applied.
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types. This shape has no number, date, or currency columns to format after import.
 
 ```csv
 Competency,Category,Job Title,Grade Level,Expected Level,Description,Assessment Method,Linked Skill Area,Competency ID
-Stakeholder Management,General,Delivery Manager,L1,1 - Beginner,"Maps each role to the competencies it must show, with the level expected at each grade.",Manager observation plus a practical task,SKL-SQL,
+Example Competency,General,Example Role,L1,1 - Beginner,"States the expected stakeholder work at this grade.",Manager observation plus a practical task,SKL-EXAMPLE-001,
 ```
 
 ```sql
@@ -118,7 +143,7 @@ CREATE TABLE competency_matrix (
   expected_level VARCHAR(100) NOT NULL,
   description TEXT,
   assessment_method VARCHAR(255),
-  linked_skill_area VARCHAR(255),  -- relation -> target record
+  linked_skill_area VARCHAR(255),  -- text reference; not a foreign key in this build
   competency_id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
@@ -160,28 +185,30 @@ CREATE TABLE competency_matrix (
 | Expected Level | Select (add options after import) | Convert to Select, add options: "1 - Beginner", "2 - Basic", "3 - Proficient", "4 - Advanced", "5 - Expert" |
 | Description | Text | Leave as Text |
 | Assessment Method | Text | Leave as Text |
-| Linked Skill Area | Relation (link to the target database) | Convert to Relation, link to the target database |
+| Linked Skill Area | Text | Leave as Text, NOT a Relation. The skill-gap table is not part of this build, so no target database exists to link to |
 | Competency ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
-and anything pointing at another table stays `relation`.
+The rows above are documentation examples only. Emit empty templates unless the user explicitly
+requests examples. This module has no money, date, or relation fields.
 
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Competency | `text` | `VARCHAR(255)` | `string` | Text | `Stakeholder Management` |
+| 1 | Competency | `text` | `VARCHAR(255)` | `string` | Text | `Example Competency` |
 | 2 | Category | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `General` |
-| 3 | Job Title | `text` | `VARCHAR(255)` | `string` | Text | `Delivery Manager` |
+| 3 | Job Title | `text` | `VARCHAR(255)` | `string` | Text | `Example Role` |
 | 4 | Grade Level | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `L1` |
 | 5 | Expected Level | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `1 - Beginner` |
-| 6 | Description | `long_text` | `TEXT` | `string` | Text | `Maps each role to the competencies it must show, with the level expected at each grade.` |
+| 6 | Description | `long_text` | `TEXT` | `string` | Text | `States the expected stakeholder work at this grade.` |
 | 7 | Assessment Method | `text` | `VARCHAR(255)` | `string` | Text | `Manager observation plus a practical task` |
-| 8 | Linked Skill Area | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `SKL-SQL` |
+| 8 | Linked Skill Area | `text` | `VARCHAR(255)` | `string` | Text | `SKL-EXAMPLE-001` |
 | 9 | Competency ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
 
 ## Select Options
+
+Starting set only. If the user supplied their own values, the user's values win.
 
 **Category**
 
@@ -201,7 +228,12 @@ L1 | L2 | L3 | L4 | L5 | M1 | M2
 
 ## Relations
 
-Link fields: `Linked Skill Area`
+Link fields: none
+
+`Linked Skill Area` is text, not a relation. It holds a reference such as `SKL-EXAMPLE-001`.
+The `skill-gap-analysis` table is a separate skill and is not created by this build, so there
+is no target database to link to. It becomes a real foreign key only if that table is built in
+the same artifact set.
 
 ## Examples
 
@@ -213,20 +245,21 @@ We want a consistent way to describe what good looks like per role.
 
 **Context first** - one question per message, nothing already answered:
 
-> **Q:** Which roles?
+> **Q:** Which roles need a competency model?
 > **A:** Delivery and support.
 >
-> **Q:** How many levels?
-> **A:** Four.
+> **Q:** Do you mean job grades (Grade Level) or proficiency (Expected Level)?
+> **A:** Proficiency.
 >
 > **Q:** Who assesses?
 > **A:** The manager.
 
 **Recommended next step** - offered, not built:
 
-> Define a small set of levels and attach them to roles, then link the assessment result to the skill gap record.
+> Define a small set of proficiency levels and attach each competency to Delivery and support.
+> Assessment is by the manager. Proficiency labels are Unknown until named.
 >
-> Workflow: Roles → Competencies → Level expectations → Assessment → Gap and training link
+> Workflow: Roles → Competencies → Level expectations → Assessment
 >
 > Want the CSV, SQL, JSON Schema and Notion mapping for this?
 
@@ -235,14 +268,13 @@ We want a consistent way to describe what good looks like per role.
 - Recommend before building. The recommendation is the product; the files are the follow-up.
 - One question per message. A batched intake reads as a form and gets guessed at.
 - Keep every field name identical across CSV, SQL and JSON Schema.
-- Use `relation` for anything that points at another table, `text` only for free text.
-- Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- Do not type `Linked Skill Area` as a Notion Relation; the target table is not in this build.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
+- Do not treat Grade Level and Expected Level as the same question.
 
 ## Limitations
 
 - Empty template only. It does not compute payroll, tax, leave balances or KPIs.
-- Notion relations need both databases imported before the link column resolves.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
 - Does not assess or certify competence.
@@ -251,8 +283,9 @@ We want a consistent way to describe what good looks like per role.
 ## Security & Safety Notes
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
-- Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything
@@ -268,12 +301,14 @@ We want a consistent way to describe what good looks like per role.
   **Solution:** derive all four from the field list in this file, never by hand.
 - **Problem:** Notion import shows every column as Text.
   **Solution:** that is expected. Apply the property mapping table once, after import.
+- **Problem:** "How many levels?" was answered as four, then the five-level starting set was emitted.
+  **Solution:** emit the confirmed labels; keep the starting set only when the user did not name theirs.
 
 ## Related Skills
 
-- `sme-ops-system-builder` - routes to this skill and the other 70 modules.
-- `people-directory` - the employee master record most modules link to.
-- `notification-reminder-hub` - turns due dates in this module into reminders.
+- `sme-ops-system-builder` - routes to this skill and the other modules.
+- `skill-gap-analysis` - actual vs expected for a named person; this skill stores expected
+  levels per role, not a person's gap.
 
 ## Reusable Prompt
 
@@ -283,4 +318,3 @@ Ask me one short question at a time, and only about what I have not already told
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
-

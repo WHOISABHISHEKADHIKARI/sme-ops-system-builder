@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, acquire]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Candidate Talent Pool
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -95,18 +97,22 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 
 **Workflow:** Candidate added → Consent → Re-engage date → Reminder → Reopen role
 
+**Re-engagement gate:** a candidate may carry a `Re-engage Date` only when `Consent Status` is `Granted`. If consent was never recorded, leave `Re-engage Date` empty, set `Consent Status` to `Not recorded`, and tell the user how many candidates are blocked on it. Do not infer consent from a role being open, from the candidate replying once, or from their CV being on file. `Declined` is final: never re-contact, and never quietly reset it to `Not recorded` to make a re-engagement list longer.
+
 ### Step 5 - Build only on request
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
-Candidate Name,Candidate ID,Department,Email,Experience (Years),Last Contact,LinkedIn URL,Notes,Phone,Re-engage Date,Referred By,Skills,Source,Status,Target Role
-Karan Malhotra,,Delivery,aarav.sharma@example.com,6,2026-01-20,https://example.com/in/neha-kapoor,Went cold in February after a counter-offer; worth re-approaching in six months.,+91 98xxxxxx21,2026-07-01,Rohit Verma,"Python, SQL, Stakeholder Management",Referral,Active,Delivery Manager
+Candidate Name,Candidate ID,Department,Email,Experience (Years),Last Contact,LinkedIn URL,Notes,Phone,Consent Status,Consent Date,Re-engage Date,Referred By,Skills,Source,Status,Target Role
+Example Person,,Delivery,person@example.com,6,2026-01-20,https://example.com/in/example-person,Went cold in February after a counter-offer; worth re-approaching in six months.,+91 98xxxxxx21,Granted,2026-01-05,2026-07-01,Example Referrer,"Python, SQL, Stakeholder Management",Referral,Active,Delivery Manager
 ```
 
 ```sql
@@ -120,17 +126,23 @@ CREATE TABLE candidate_talent_pool (
   linkedin_url TEXT,
   notes TEXT,
   phone VARCHAR(255),
-  re_engage_date DATE NOT NULL,
+  consent_status VARCHAR(100) NOT NULL,
+  consent_date DATE,
+  re_engage_date DATE,
   referred_by VARCHAR(255),
   skills VARCHAR(255),
   source VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   target_role VARCHAR(255),
   created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
+  updated_at TIMESTAMP DEFAULT NOW(),
+  -- Re-engage lists are only lawful for recorded consent.
+  CHECK (consent_status IN ('Not recorded', 'Granted', 'Declined')),
+  CHECK (consent_status = 'Granted' OR re_engage_date IS NULL)
 );
 
 CREATE INDEX idx_candidate_talent_pool_status ON candidate_talent_pool (status);
+CREATE INDEX idx_candidate_talent_pool_re_engage_date ON candidate_talent_pool (re_engage_date);
 ```
 
 ```json
@@ -149,6 +161,8 @@ CREATE INDEX idx_candidate_talent_pool_status ON candidate_talent_pool (status);
       "LinkedIn URL": { "type": "string", "format": "uri" },
       "Notes": { "type": "string" },
       "Phone": { "type": "string" },
+      "Consent Status": { "type": "string" },
+      "Consent Date": { "type": "string", "format": "date" },
       "Re-engage Date": { "type": "string", "format": "date" },
       "Referred By": { "type": "string" },
       "Skills": { "type": "string" },
@@ -159,7 +173,7 @@ CREATE INDEX idx_candidate_talent_pool_status ON candidate_talent_pool (status);
   "required": [
       "Experience (Years)",
       "Last Contact",
-      "Re-engage Date",
+      "Consent Status",
       "Status"
   ]
 }
@@ -177,7 +191,9 @@ CREATE INDEX idx_candidate_talent_pool_status ON candidate_talent_pool (status);
 | LinkedIn URL | URL | Convert to URL |
 | Notes | Text | Leave as Text |
 | Phone | Text | Leave as Text |
-| Re-engage Date | Date | Convert to Date |
+| Consent Status | Select (add options after import) | Convert to Select, add options: "Not recorded", "Granted", "Declined" |
+| Consent Date | Date | Convert to Date |
+| Re-engage Date | Date | Convert to Date, but only for rows where Consent Status is "Granted" |
 | Referred By | Text | Leave as Text |
 | Skills | Text | Leave as Text |
 | Source | Text | Leave as Text |
@@ -185,30 +201,40 @@ CREATE INDEX idx_candidate_talent_pool_status ON candidate_talent_pool (status);
 | Target Role | Text | Leave as Text |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Candidate Name | `text` | `VARCHAR(255)` | `string` | Text | `Karan Malhotra` |
+| 1 | Candidate Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Person` |
 | 2 | Candidate ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
 | 3 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
-| 4 | Email | `email` | `VARCHAR(255)` | `string, format: email` | Email | `aarav.sharma@example.com` |
+| 4 | Email | `email` | `VARCHAR(255)` | `string, format: email` | Email | `person@example.com` |
 | 5 | Experience (Years) | `number` | `NUMERIC` | `number` | Number | `6` |
 | 6 | Last Contact | `date` | `DATE` | `string, format: date` | Date | `2026-01-20` |
-| 7 | LinkedIn URL | `url` | `TEXT` | `string, format: uri` | URL | `https://example.com/in/neha-kapoor` |
+| 7 | LinkedIn URL | `url` | `TEXT` | `string, format: uri` | URL | `https://example.com/in/example-person` |
 | 8 | Notes | `long_text` | `TEXT` | `string` | Text | `Went cold in February after a counter-offer; worth re-approaching in six months.` |
 | 9 | Phone | `text` | `VARCHAR(255)` | `string` | Text | `+91 98xxxxxx21` |
-| 10 | Re-engage Date | `date` | `DATE` | `string, format: date` | Date | `2026-07-01` |
-| 11 | Referred By | `text` | `VARCHAR(255)` | `string` | Text | `Rohit Verma` |
-| 12 | Skills | `text` | `VARCHAR(255)` | `string` | Text | `Python, SQL, Stakeholder Management` |
-| 13 | Source | `text` | `VARCHAR(255)` | `string` | Text | `Referral` |
-| 14 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Active` |
-| 15 | Target Role | `text` | `VARCHAR(255)` | `string` | Text | `Delivery Manager` |
+| 10 | Consent Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Granted` |
+| 11 | Consent Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-05` |
+| 12 | Re-engage Date | `date` | `DATE` | `string, format: date` | Date | `2026-07-01` |
+| 13 | Referred By | `text` | `VARCHAR(255)` | `string` | Text | `Example Referrer` |
+| 14 | Skills | `text` | `VARCHAR(255)` | `string` | Text | `Python, SQL, Stakeholder Management` |
+| 15 | Source | `text` | `VARCHAR(255)` | `string` | Text | `Referral` |
+| 16 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Active` |
+| 17 | Target Role | `text` | `VARCHAR(255)` | `string` | Text | `Delivery Manager` |
 
 ## Select Options
+
+**Consent Status**
+
+```
+Not recorded | Granted | Declined
+```
+
+Only `Granted` unlocks a `Re-engage Date`. A verbal yes on a call is not recorded consent — record `Not recorded` and say why, so the gap stays visible instead of becoming a silent yes.
 
 **Status**
 
@@ -254,7 +280,7 @@ We keep losing good candidates we rejected 6 months ago.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -269,11 +295,16 @@ We keep losing good candidates we rejected 6 months ago.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything
   is acted on.
+- Consent to re-contact a rejected candidate is a legal question, not a data field you
+  can infer. Record only what the candidate actually agreed to, and route the decision to
+  a human.
 
 ## Common Pitfalls
 
@@ -285,6 +316,8 @@ We keep losing good candidates we rejected 6 months ago.
   **Solution:** derive all four from the field list in this file, never by hand.
 - **Problem:** Notion import shows every column as Text.
   **Solution:** that is expected. Apply the property mapping table once, after import.
+- **Problem:** a re-engagement list built from a pool with no recorded consent.
+  **Solution:** the list is unlawful, not just untidy. Block on `Consent Status` and report the count instead of emitting dates.
 
 ## Related Skills
 

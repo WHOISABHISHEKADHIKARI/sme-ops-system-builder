@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, operate]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Budget & Cash Flow
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -100,13 +102,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
 Budget Line,Line Type,Department,Category,Period,Fiscal Year,Budget Amount,Actual Amount,Variance,Used %,Linked Expenses,Owner,Status,Notes,Budget ID
-750000.00,Income,Delivery,General,2026-03,FY2026-27,450000.00,139240.00,-12000.00,64,EXP-2026-014,Sneha Iyer,Active,Forecast refreshed after the February numbers; the delivery line is still optimistic.,
+1000.00,Income,Delivery,General,2026-03,FY2026-27,600.00,400.00,-200.00,67,EXP-EXAMPLE-001,Example Owner,Active,Forecast refreshed after the February numbers; the delivery line is still optimistic.,
 ```
 
 ```sql
@@ -120,7 +124,7 @@ CREATE TABLE budget_cash_flow (
   budget_amount NUMERIC(14,2) NOT NULL,
   actual_amount NUMERIC(14,2) NOT NULL,
   variance VARCHAR(255),
-  used NUMERIC NOT NULL,
+  used_pct NUMERIC NOT NULL,
   linked_expenses VARCHAR(255),  -- relation -> target record
   owner VARCHAR(255),
   status VARCHAR(100) NOT NULL,
@@ -188,25 +192,25 @@ CREATE INDEX idx_budget_cash_flow_status ON budget_cash_flow (status);
 | Budget ID | Text (or Notion auto-ID) | Delete the column and switch the primary column to auto-ID, or keep as Text |
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Budget Line | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `750000.00` |
+| 1 | Budget Line | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1000.00` |
 | 2 | Line Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Income` |
 | 3 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 4 | Category | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `General` |
 | 5 | Period | `text` | `VARCHAR(255)` | `string` | Text | `2026-03` |
 | 6 | Fiscal Year | `text` | `VARCHAR(255)` | `string` | Text | `FY2026-27` |
-| 7 | Budget Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `450000.00` |
-| 8 | Actual Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `139240.00` |
-| 9 | Variance | `text` | `VARCHAR(255)` | `string` | Text | `-12000.00` |
-| 10 | Used % | `number` | `NUMERIC` | `number` | Number | `64` |
-| 11 | Linked Expenses | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `EXP-2026-014` |
-| 12 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
+| 7 | Budget Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `600.00` |
+| 8 | Actual Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `400.00` |
+| 9 | Variance | `text` | `VARCHAR(255)` | `string` | Text | `-200.00` |
+| 10 | Used % | `number` | `NUMERIC` | `number` | Number | `67` |
+| 11 | Linked Expenses | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `EXP-EXAMPLE-001` |
+| 12 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Example Owner` |
 | 13 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Active` |
 | 14 | Notes | `long_text` | `TEXT` | `string` | Text | `Forecast refreshed after the February numbers; the delivery line is still optimistic.` |
 | 15 | Budget ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (or Notion auto-ID) | `(blank)` |
@@ -267,7 +271,7 @@ We set a budget once and lost track of the actual position by month three.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -282,7 +286,9 @@ We set a budget once and lost track of the actual position by month three.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything

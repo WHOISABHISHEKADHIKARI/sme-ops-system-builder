@@ -70,7 +70,7 @@ A scale-tier system: build it when the business already runs on its own data rat
 | 5 | Expected Level | `select` |
 | 6 | Description | `long_text` |
 | 7 | Assessment Method | `text` |
-| 8 | Linked Skill Area | `relation` |
+| 8 | Linked Skill Area | `text` |
 | 9 | Competency ID | `id` |
 
 ## How it works
@@ -94,7 +94,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Competency,Category,Job Title,Grade Level,Expected Level,Description,Assessment Method,Linked Skill Area,Competency ID
-Stakeholder Management,General,Delivery Manager,L1,1 - Beginner,"Maps each role to the competencies it must show, with the level expected at each grade.",Manager observation plus a practical task,SKL-SQL,
+Example Competency,General,Example Role,L1,1 - Beginner,"States the expected stakeholder work at this grade.",Manager observation plus a practical task,SKL-EXAMPLE-001,
 ```
 
 ## Prompt for this

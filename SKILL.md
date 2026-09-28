@@ -8,10 +8,12 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business-operations, hr, finance, database, notion, csv, sql, router]
-tools: [claude-code, codex-cli, cursor, gemini-cli]
+tools: []
 ---
 
 # SME Ops System Builder
+
+**What it is:** Picks the two or three operational modules a small business should run.
 
 Router for 71 operational skills covering people, hiring, leave, finance, projects,
 governance, analytics, and exit. It identifies the smallest useful shortlist and hands
@@ -39,16 +41,24 @@ file - go straight to that module skill.
 
 ## How It Works
 
+Follow the [shared execution contract](references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+
 ### Step 1 - Identify intent, then ask only what is missing
 
 Read the request first. If the user already named a module, skip to Step 2.
 
 Ask one question per message, and only the ones still unanswered:
 
-> **Q:** What does the business do?
+- Ask what the business does when its activity is the highest-value missing routing fact.
+- Ask which operational need or workflow to track when the business activity is known or
+  would not narrow the route as much as the missing need.
 
 Never batch two questions into one message, and ask at most four in total. Stop as soon as
 the remaining answers would not change the route.
+
+If an answer is ambiguous, keep the route unresolved and clarify only one routing
+dimension at a time. Ask the highest-value explicit choice first; never ask for both the
+business type and the operational need in the same message.
 
 ### Step 2 - Recommend two or three modules
 
@@ -105,25 +115,29 @@ invoices-billing  -> skills/invoices-billing/SKILL.md
 **Prompt**
 
 ```
-Set up HR systems for my company
+I run a 14 person consultancy and we have nothing in place yet. Set up HR systems.
 ```
 
+The business activity is already known, so the highest-value missing routing fact is
+the need itself, asked as an explicit choice:
+
 ```
-> **Q:** What does the business do?
+> **Q:** Which HR process do you want tracked first: **leave requests**, **who is owed
+> what at period end**, or **joiners and leavers**?
 ```
 
 **User**
 
 ```
-A 14 person consultancy. We have nothing in place yet.
+Leave requests first.
 ```
 
 **Recommended**
 
 ```
 people-directory    -> skills/people-directory/SKILL.md    every module links to it
-leave-management    -> skills/leave-management/SKILL.md    14 people means leave gets requested
-onboarding-playbook -> skills/onboarding-playbook/SKILL.md  nothing in place, so start with joiners
+leave-management    -> skills/leave-management/SKILL.md    the need they named
+onboarding-playbook -> skills/onboarding-playbook/SKILL.md  nothing in place, so joiners come next
 ```
 
 **Which one should we start with?**
@@ -148,8 +162,8 @@ onboarding-playbook -> skills/onboarding-playbook/SKILL.md  nothing in place, so
 
 - Ask for headcount and function only. Never ask for names, salaries or client data.
 - This skill runs no commands, calls no APIs, and writes no files.
-- Generated modules carry fictional example rows, never real records. Real data is the
-  user to enter.
+- Documentation examples use fictional rows, never real records. Emitted templates
+  stay empty unless the user requests examples; real data is the user to enter.
 - Modules touching privacy, legal, payroll or disciplinary matters carry an explicit
   human-review requirement in their own skill file.
 

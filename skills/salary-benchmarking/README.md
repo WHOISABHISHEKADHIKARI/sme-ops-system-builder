@@ -217,7 +217,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/salary-benchmarking/what-is-salary-benchmarking> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: reports-analytics](../reports-analytics/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: skill-gap-analysis](../skill-gap-analysis/)
+**Navigation:** [Previous: reports-analytics](../reports-analytics/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: salary-wage-accounting](../salary-wage-accounting/)
 
 ### AI Training for Cooperatives
 

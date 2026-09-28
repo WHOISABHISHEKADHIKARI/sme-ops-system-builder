@@ -101,7 +101,7 @@ A fictional row, so the shape is obvious before you enter anything real:
 
 ```csv
 Module,Module ID,Layer,SME Tier,Owner / CEO,Board,Finance,Tax,HR,IT & Admin,Department Head,Line Manager,Employee,Intern,Client,Confidential
-Invoices & Billing,,Layer 8: Operate,Small,Full - all modules,Read - board pack only,"Read, add, edit - payroll and invoices","Read, add, edit - tax register",Full - people and compliance modules,"Read, add, edit - assets and access",Sneha Iyer,"Read, add, edit - own team",Read - own records,Read - onboarding only,Northwind Traders,Internal
+Invoices & Billing,,Layer 8: Operate,Small,Full - all modules,Read - board pack only,"Read, add, edit - payroll and invoices","Read, add, edit - tax register",Full - people and compliance modules,"Read, add, edit - assets and access",Example Reviewer,"Read, add, edit - own team",Read - own records,Read - onboarding only,Example Customer,Internal
 ```
 
 ## Prompt for this
@@ -223,7 +223,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/access-matrix/what-is-access-matrix> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: 360-feedback-system](../360-feedback-system/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: accounting-audit-system-builder/accounting-software-selection](../accounting-audit-system-builder/accounting-software-selection/)
+**Navigation:** [Previous: 360-feedback-system](../360-feedback-system/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: accounting-software-selection](../accounting-software-selection/)
 
 ### AI Training for Cooperatives
 

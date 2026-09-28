@@ -28,6 +28,9 @@ Four scripts. No dependencies beyond the Python 3 standard library.
 | [seo.py](seo.py) | canonicals, citations, backlinks, discovery files | `python3 tools/seo.py [--check]` |
 | [skillmd.py](skillmd.py) | reading a `SKILL.md` from your own code | `python3 tools/skillmd.py` |
 | [qa_verify.py](qa_verify.py) | category-nested pack artifact agreement | `python3 tools/qa_verify.py --pack skills/<pack>` |
+| [standardize_skills.py](standardize_skills.py) | shared-contract links and tool-neutral metadata | `python3 tools/standardize_skills.py` |
+| [build_skill_optimization_report.py](build_skill_optimization_report.py) | one-row-per-skill change report | `python3 tools/build_skill_optimization_report.py` |
+| [behavioral_qa.py](behavioral_qa.py) | five AI behavioral unit tests per skill | `python3 tools/behavioral_qa.py` |
 
 ## check.py
 

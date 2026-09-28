@@ -239,7 +239,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/promotion-upgrade-requests/what-is-promotion-and-upgrade-requests> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: projects-work-management](../projects-work-management/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: recognition-rewards](../recognition-rewards/)
+**Navigation:** [Previous: projects-work-management](../projects-work-management/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: purchase-accounting](../purchase-accounting/)
 
 ### AI Training for Cooperatives
 

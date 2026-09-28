@@ -215,7 +215,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/recognition-rewards/what-is-recognition-and-rewards> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: promotion-upgrade-requests](../promotion-upgrade-requests/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: recruitment-pipeline](../recruitment-pipeline/)
+**Navigation:** [Previous: receipt-accounting](../receipt-accounting/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: recruitment-pipeline](../recruitment-pipeline/)
 
 ### AI Training for Cooperatives
 
