@@ -213,7 +213,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/notification-reminder-hub/what-is-notification-and-reminder-hub> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](./)
-**Navigation:** [Previous: monthly-closing-statements](../monthly-closing-statements/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: offboarding-exit](../offboarding-exit/)
+**Navigation:** [Previous: monthly-closing-statements](../monthly-closing-statements/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: notion-manual-import](../notion-manual-import/)
 
 ### AI Training for Cooperatives
 

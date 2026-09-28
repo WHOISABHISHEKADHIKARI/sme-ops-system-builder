@@ -138,6 +138,15 @@ human under the disciplinary procedure
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Record ID,Person Reference,Role,Policy Version,Policy Type,Issued Date,Acknowledged Date,Understood,Questions Raised,Training Completed Date,Breach Category,Investigation Status,Action Taken,Follow Up Date,Reviewer,Status,Notes
 ,EMP-EXAMPLE-001,Example Role,1.0,Code of conduct,2026-09-27,2026-09-27,Yes,None recorded,2026-09-27,Not applicable,Not applicable,None,2026-10-27,Example Reviewer,Done,Example row - replace every value before use.
@@ -445,6 +454,9 @@ nothing was recorded anywhere.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** a code of conduct that says "report to the manager", where the manager is the

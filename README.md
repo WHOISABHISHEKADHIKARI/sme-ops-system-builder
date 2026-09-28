@@ -99,10 +99,54 @@ skills/<pack>/              a sub-pack: its own router, catalog and modules, sam
 tools/                      the checkers that keep the four artifacts in agreement
 ```
 
+### Helpers
+
+Four skills are helpers rather than modules. Each declares `table: none`, owns no field
+list, and renders whatever schema the module you picked already confirmed - in a file
+format rather than as DDL, integration code and app views:
+
+| Helper | Output format |
+|---|---|
+| `notion-manual-import` | CSV, Notion property mapping, import steps |
+| `spreadsheet-manual-build` | An empty `.xlsx` workbook, or a UTF-8 CSV with a format note |
+| `csv-manual-export` | One UTF-8 CSV, exact headers in canonical order, no invented rows |
+| `json-schema-manual` | A draft 2020-12 validation schema |
+
+Because there is no table of its own, a helper is exempt from the four-artifact
+requirements exactly as a router is, and it is not counted among the 71. A helper takes
+the field list as given: it never decides a field, never invents a required rule or a
+status, and never claims to have imported or published anything. `references/execution-contract.md`
+lists which helper handles which format, and `references/catalog.md` names all four.
+
+## Notion
+
+Selecting Notion as the output is the one case that cannot be text alone, so it has a
+prerequisite. Every module emits the connection steps from
+`references/execution-contract.md` before it builds anything, and waits for
+"Notion connected." - then either creates the database and its properties, or, if the user
+would rather not connect, hands over the property mapping and says plainly that it is
+unverified. No skill claims a connection it does not have, and none asks for a Notion
+password or token.
+
+## Single formats
+
+A user who wants the schema as a file rather than as a system gets a helper: the same
+confirmed field list, rendered in one format. Ask for a spreadsheet and
+`spreadsheet-manual-build` produces an empty, formatted workbook; ask for a CSV to import
+or hand over and `csv-manual-export` produces the file with the exact headers; ask for a
+JSON Schema or an API contract and `json-schema-manual` produces the validation schema;
+ask for Notion without connecting and `notion-manual-import` produces the CSV, the
+property mapping and the click-path.
+
+None of them replaces a module. The module still owns the field list and still emits its
+own artifacts; the helper only renders that same list as a file, empty by default, and it
+never invents a field, a required rule or a status to fill a gap.
+
 ## Conventions
 
 - One question per message. Never batched.
 - Data only in the output: CSV, SQL, JSON, Notion mapping, Excel workbook. No prose.
+- Notion output is gated on a connected workspace; the mapping is still available as text.
 - One example row, visibly fake. Never real names, salaries or client data.
 - Field names are identical across all four artifacts.
 - Cross-table links use `relation`, never `url` or free text.

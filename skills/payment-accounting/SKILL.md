@@ -111,6 +111,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Payment Number,Payment Date,Paid To,Purpose,Payment Mode,Cash/Bank Account,Reference (Cheque/UTR/ID),Gross Amount,TDS Rate %,TDS Deducted,Net Amount Paid,TDS Payable Ledger,Purchase Invoice Allocated,Advance Adjusted,Voucher Number,Voucher Type,Recipient Acknowledgement Ref,Approved By,Ledger Account,Source Document,Reconciliation Status,Entry Verified,Notes,Payment ID
 PAY-2026-0288,2026-08-20,Bluepeak Supplies,Settlement of INV-8841,Bank Transfer,HDFC Current ****0042,UTR-2026-0912,97597.50,2.5,2112.50,95485.00,TDS Payable - Contractors,PUR-2026-0041,12000.00,VCH-2026-1031,Payment Voucher,ACK-BPS-8841,Vikram Singh,Bank - HDFC Current,DOC-2026-0442,Reconciled,Done,"TDS deducted at 2.5% and carried to the TDS register; 12000.00 of the settlement adjusts the earlier advance.",
@@ -365,6 +374,9 @@ We pay suppliers on the last day of the month and nobody can show the TDS we ded
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** a receipt note is used as the voucher for every payment.

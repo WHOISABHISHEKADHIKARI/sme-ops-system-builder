@@ -50,6 +50,8 @@ Not for payroll, tax, legal, or employment-decision work. This skill does not au
 
 ## How It Works
 
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+
 The rules below stand on their own. If the shared execution contract at
 `../../references/execution-contract.md` is unavailable, follow this file directly; a missing
 reference never blocks basic execution.
@@ -157,6 +159,15 @@ Do not build unprompted. End with an offer naming the artifacts not yet requeste
 Once asked, derive the fields from the confirmed context and emit only the requested artifacts.
 When more than one is requested, generate every one of them from the same Field Reference, in one
 pass, so they cannot disagree.
+
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
 
 Validate before replying, then check cross-format consistency: same field names, same spelling,
 same order, same required set in all artifacts.
@@ -429,6 +440,9 @@ process facts supplied, not carried over from a template:
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** the response row ends up carrying configuration.
   **Solution:** weights, rounding and scale live in Scoring Configuration.
 - **Problem:** a field appears because a similar module has it.

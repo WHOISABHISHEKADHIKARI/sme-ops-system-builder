@@ -38,11 +38,15 @@ for f in files:
     heads = set(x.strip() for x in re.findall(r'^## (.+)$', t, re.M))
     for s in REQUIRED_SECTIONS:
         if s not in heads: errs['missing section ' + s].append(slug)
+    # Routers and helpers have no field list, so the table is not theirs to carry.
+    owns_table = f not in routers and not skillmd.is_helper(f)
+    if owns_table and 'Field Reference' not in heads:
+        errs['missing section Field Reference'].append(slug)
     if 'Reusable Prompt' not in heads: errs['no Reusable Prompt'].append(slug)
     if not t.rstrip().endswith('```'): errs['does not end with prompt block'].append(slug)
-    # A router routes between modules; it owns no table of its own, so the
-    # per-module artifact requirements below do not apply to it.
-    if f in routers:
+    # A router routes between modules and a helper renders another module's table;
+    # neither owns one, so the per-module artifact requirements below do not apply.
+    if not owns_table:
         rows.append((slug, len(t), 0))
         continue
     if '```csv' not in t or '```sql' not in t or '```json' not in t:

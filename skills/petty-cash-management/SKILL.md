@@ -123,6 +123,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Entry Number,Entry Date,Entry Type,Payee,Purpose,Cash Out,Cash In,Running Cash Balance,Cash Limit,Within Limit,Custodian,Supporting Document,Document Reference,Voucher Number,Approved By,Physical Count Date,Physical Count,Count Variance,Variance Status,Investigation Notes,Ledger Account,Entry Verified,Notes,Petty Cash ID
 PC-2026-0188,2026-08-31,Count,Several payees,Courier and postage paid from the float during August,7250.00,7000.00,2250.00,10000.00,Yes,Rohit Menon,Bill/Invoice,BILL-4471,VCH-2026-1044,Ananya Rao,2026-08-31,2100.00,150.00,Short,Count 150.00 short of the register; a courier bill of that amount may have been entered but not paid. Under investigation with the approver.,Petty Cash,In progress,Count sheet CNT-2026-08-31 signed by custodian and approver; replenishment drawn from bank on 01 Aug.,
@@ -386,6 +395,9 @@ Petty cash keeps running out before the month ends and we never know by how much
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the custodian counts their own cash and signs it off.

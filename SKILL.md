@@ -85,6 +85,10 @@ intake from there. This skill stops at the shortlist: it does not answer the mod
 questions, build its fields, or run a second module in the same conversation. Never merge
 two modules into one questionnaire.
 
+**Notion is the module's step, not this one's.** If the user wants the build in
+Notion, hand off first: the module emits the connection prerequisite and waits for
+"Notion connected." This router never prints the prerequisite itself.
+
 If a listed path is missing, stop and report the missing module instead of guessing a
 replacement. If no catalog entry clearly matches, say so and ask one question that
 distinguishes the closest candidates.
@@ -182,6 +186,8 @@ onboarding-playbook -> skills/onboarding-playbook/SKILL.md  nothing in place, so
 - `@people-directory` - the employee master record most modules link to.
 - `@clients-accounts` - the customer record invoicing and payments link to.
 - `@notification-reminder-hub` - turns due dates across modules into reminders.
+- `@notion-manual-import` - the unconnected path: CSV, property mapping and import steps
+  for a user who would rather not connect Notion. Reached through a module, not routed to.
 
 ### Sub-packs
 

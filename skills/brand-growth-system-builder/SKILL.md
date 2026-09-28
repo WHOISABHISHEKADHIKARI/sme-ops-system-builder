@@ -111,6 +111,10 @@ of a route:
 This router produces no files. When the user picks a module, say so and stop. Each module
 skill owns its own artifacts and its own field list.
 
+**Notion is the module's step, not this one's.** If the user wants the build in
+Notion, hand off first: the module emits the connection prerequisite and waits for
+"Notion connected." This router never prints the prerequisite itself.
+
 ## Examples
 
 **Prompt**

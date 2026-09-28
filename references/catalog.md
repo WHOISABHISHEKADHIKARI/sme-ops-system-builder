@@ -14,6 +14,23 @@ Route them from `skills/SKILL.md`. Where a topic exists
 in both, use that pack for the entry, the reconciliation or the audit trail, and this one
 for the ongoing operational process.
 
+## Helper
+
+Four skills own no table and so are not in a layer or in the totals below. Each one
+formats the field list of whichever module is active, in a different output format:
+
+| Helper | Format | What it does | Skill |
+|---|---|---|---|
+| Notion Manual Import | CSV + Notion | CSV, Notion property mapping and import steps for a user who uploads the database by hand. | `skills/notion-manual-import/SKILL.md` |
+| Spreadsheet Manual Build | `.xlsx` / CSV | An empty, formatted workbook: one sheet, frozen and filtered header, number and date formats, and data validation on confirmed select fields. No rows unless asked. | `skills/spreadsheet-manual-build/SKILL.md` |
+| CSV Manual Export | CSV | One UTF-8 file, exact headers in canonical order, no invented rows, and correct quoting for commas, quotes and line breaks. | `skills/csv-manual-export/SKILL.md` |
+| JSON Schema Manual | JSON Schema 2020-12 | A validation contract: one property per confirmed field, `required` and `enum` only where confirmed, strictness only where the contract is closed. | `skills/json-schema-manual/SKILL.md` |
+
+Reached through a module, not routed to: when a user selects a format, the module points
+at the helper for it. A module still emits its own artifacts - DDL, DDL notes, integration
+code, app views - and a helper never replaces them; the helper is the file form of the
+same confirmed field list. None of them connects to anything, and none decides the schema.
+
 ## Layer 1: Foundation
 
 Policy, org shape and who-can-see-what.
@@ -158,6 +175,8 @@ Offboarding and alumni.
 ## Totals
 
 - Modules: 71
+- Helpers: 4 (`notion-manual-import`, `spreadsheet-manual-build`, `csv-manual-export`,
+  `json-schema-manual`; no table of their own)
 - Fields: 1113
 - Starter: 17
 - Growth: 32

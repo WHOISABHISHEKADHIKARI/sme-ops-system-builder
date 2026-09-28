@@ -168,6 +168,15 @@ Once the user asks, derive the fields from the confirmed context and emit **only
 artifacts that were requested**. No preamble, no summary, no closing line, no unrequested
 artifact.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 The shapes below show the documented default for an expense-only setup. Drop any field the
 confirmed process does not justify; add a field only when a confirmed requirement does.
 The four blocks are one canonical field list rendered four ways - never edit one by hand.
@@ -483,6 +492,9 @@ asked for entries only.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** opened by asking for the largest expense category.

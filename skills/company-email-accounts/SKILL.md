@@ -8,7 +8,7 @@ source_type: self
 date_added: "2026-09-26"
 author: WHOISABHISHEKADHIKARI
 tags: [sme, business, operations, database, csv, notion, sql, onboard]
-tools: [claude, cursor, gemini, antigravity]
+tools: []
 ---
 
 # Company Email & Accounts
@@ -38,6 +38,8 @@ Do not use it for: payroll calculation, tax filing, or legal advice. This skill 
 empty templates only - it never holds or processes real employee or customer data.
 
 ## How It Works
+
+Follow the [shared execution contract](../../references/execution-contract.md). The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -117,8 +119,19 @@ Frequency` field unless the user states one - the cadence is theirs, not this mo
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
-An Excel workbook is the CSV emitted with a UTF-8 byte order mark, so Excel opens it with
-correct text and no import dialog. A CSV carries no types, so after it, name the columns
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
+For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the
+text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user
+requests a workbook.
+A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
@@ -236,7 +249,7 @@ CREATE INDEX idx_company_email_accounts_status ON company_email_accounts (status
 ```
 ```
 
-One example row per artifact, visibly fake. Money stays `currency`, dates stay `date`,
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
 ## Field Reference
@@ -329,7 +342,7 @@ People leave and their tool logins stay active for months.
 - Keep every field name identical across CSV, SQL and JSON Schema.
 - Use `relation` for anything that points at another table, `text` only for free text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
-- Keep the example row obviously fake so nobody imports it as real data.
+- If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
 ## Limitations
 
@@ -344,7 +357,9 @@ People leave and their tool logins stay active for months.
 
 - Never fill in real names, salaries, medical or banking data. Placeholders only.
 - Never mark an example row `Confidential`, and keep bank details masked.
-- This skill writes nothing outside the chat. It runs no commands and calls no APIs.
+- Creating a requested artifact may write that artifact locally. Do not run commands,
+  call APIs, provision infrastructure, or make other external changes unless the user
+  explicitly requests and authorizes them.
 - If the user pastes real employee data, generate the template and tell them to delete
   the pasted data from the conversation.
 - Privacy, legal and disciplinary cases need a qualified human reviewer before anything
@@ -352,6 +367,9 @@ People leave and their tool logins stay active for months.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** built a full system when one table was asked for.

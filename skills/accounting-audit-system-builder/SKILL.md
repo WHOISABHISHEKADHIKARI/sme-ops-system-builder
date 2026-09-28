@@ -126,6 +126,10 @@ intake from there. This skill stops at the shortlist: it does not answer the mod
 questions, build its fields, or run a second module in the same conversation. Never
 merge two modules into one questionnaire.
 
+**Notion is the module's step, not this one's.** If the user wants the build in
+Notion, hand off first: the module emits the connection prerequisite and waits for
+"Notion connected." This router never prints the prerequisite itself.
+
 ### Step 5 - Output
 
 One line per module in the shortlist: the slug and the path to its skill. That line list

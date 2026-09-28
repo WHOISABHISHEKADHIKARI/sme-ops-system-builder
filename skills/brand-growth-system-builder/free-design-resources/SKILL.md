@@ -138,6 +138,15 @@ Paid exception approved deliberately, not by default
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Resource ID,Resource Name,Category,Provider,Venue,Licence Type,Commercial Use Allowed,Attribution Required,Export Format,Vendor Lock-In Risk,Cost Today,Free Tier Limit,Best For,Accessibility Notes,Verification Source,Verified On,Status,Notes
 ,Example Open Source Font,Font,Example Foundry,Self-hosted,Open Font License,Yes,Yes,Open source files,None,0,None,Body text on screen at 16px or larger,Check the licence file shipped with the font and keep a copy,Provider licence page,2026-09-27,Approved,Example row - replace every value before use.
@@ -465,6 +474,9 @@ posts, and we keep paying for tools we barely use.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** a font chosen because it is free, with the licence never opened.

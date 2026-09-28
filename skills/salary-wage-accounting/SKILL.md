@@ -108,6 +108,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Payroll Run,Employee,Employee ID,Department,Period Start,Period End,Attendance Days,Paid Days,Gross Salary/Wages,Allowances,Deductions,TDS,SSF/PF Contribution,Other Deductions,Net Salary/Wages,Payment Date,Payment Mode,Ledger Account,Approval Reference,Payroll Liability Balance,Statutory Reconciliation Status,Source Document,Prepared By,Reviewed By,Status,Notes,Salary Record ID
 PAYRUN-2026-08,Rohit Menon,EMP-0114,Operations,2026-08-01,2026-08-31,26,26,96000.00,8400.00,1600.00,3600.00,7680.00,500.00,91020.00,2026-08-28,Bank Transfer,Salaries & Wages,APR-PR-2026-08,7680.00,Pending,DOC-2026-0470,Sneha Iyer,Ananya Rao,In progress,"Deductions of 1600.00 and other deductions of 500.00 total 2100.00; PF contribution carried as a liability until deposited.",
@@ -364,6 +373,9 @@ Payroll runs on a sheet and at month end we cannot tell what is still owed as PF
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** one row for the whole month, not per employee.

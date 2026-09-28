@@ -137,6 +137,15 @@ reviewed once a quarter → Anything with a mismatched NAP corrected or removed
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Citation ID,Platform Name,Domain,Tier,Category,Directory Type,Target URL,Link Type,Follow Attribute,Domain Authority,Domain Rating,Spam Score,Listing Status,Submitted Date,Approved Date,Approval Days,NAP Match,Referral Traffic,Review Date,Owner,Status,Notes
 ,Example Chamber of Commerce,examplechamber.org,Tier 1,Local chamber of commerce,Member directory,https://example.com/,Homepage,Nofollow,Unknown,Unknown,Unknown,Approved,2026-09-27,2026-10-02,5,Match,Unknown,2026-12-27,Unknown,Draft,Example row - replace every value before use.
@@ -469,6 +478,9 @@ and ask for a reciprocal link. Should we do them all?
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** 165 submissions in one weekend, paid for in two of them.

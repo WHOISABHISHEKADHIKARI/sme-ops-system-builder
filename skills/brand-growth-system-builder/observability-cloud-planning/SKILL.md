@@ -146,6 +146,15 @@ kept, deleted and added
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Service ID,Service Name,Purpose,Criticality,Owner,Environment,Monitored From,SLI Definition,SLO Target,Dashboard URL,Log Source,Alert Channel,Severity,Alert Threshold,Runbook URL,Escalation Path,Monthly Cost Estimate,Data Handled,Deployment Method,Dependencies,Phase,Review Date,Status,Notes
 ,Example Booking Service,Takes customer bookings and confirms by email,High,Example Owner,Production,External region outside the hosting provider,Uptime of the public booking page,99.5% monthly,Not yet created,Application and web server logs,Email and SMS to on-call,Critical,3 consecutive failed checks or 5 minutes above target,Not yet created,On-call then business owner,Unknown,Payment card details,Managed platform,None,1,2026-10-27,Not started,Example row - replace every value before use.
@@ -500,6 +509,9 @@ what we should be paying for all this.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** an uptime check running on the same server as the site.

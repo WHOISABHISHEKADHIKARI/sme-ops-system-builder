@@ -229,7 +229,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/offboarding-exit/what-is-offboarding-and-exit> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: notification-reminder-hub](../notification-reminder-hub/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: offer-appointment](../offer-appointment/)
+**Navigation:** [Previous: notion-manual-import](../notion-manual-import/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: offer-appointment](../offer-appointment/)
 
 ### AI Training for Cooperatives
 

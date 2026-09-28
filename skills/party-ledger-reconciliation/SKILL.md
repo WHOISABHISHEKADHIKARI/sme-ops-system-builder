@@ -108,6 +108,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Reconciliation Number,Period Start,Period End,Party Type,Party Name,Party PAN/VAT,Ledger Balance,Statement Balance,Difference,Missing Invoices,Missing Receipts/Payments,Duplicate Entries,Credit/Debit Notes,Unadjusted Advances,Confirmation Sent,Confirmation Date,Confirmation Status,Difference Reason,Adjustment Required,Adjustment Entry,Adjustment Date,Adjusted By,Reconciliation Frequency,Reviewed By,Status,Notes,Reconciliation ID
 REC-2026-0044,2026-08-01,2026-08-31,Customer/Debtor,Greyson Foods,33CDEFG9012H1Z9,486200.00,471200.00,15000.00,1,2,3,4500.00,15000.00,Yes,2026-09-03,Partially Confirmed,Advance held in our books but not credited by the party,Yes,ADJ-2026-0118,2026-09-05,Sneha Iyer,Monthly,Vikram Singh,In progress,"2 missing receipts, 3 duplicate entries and a 4500.00 credit note cleared on both sides; difference matches the unadjusted advance, adjustment raised and pending review.",
@@ -364,6 +373,9 @@ Our biggest customer says we owe them less than our books show and we cannot pro
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the difference is zero, so the record is marked Done without a review.

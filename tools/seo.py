@@ -358,6 +358,7 @@ def collect():
             'faq': faqs[:8],
             'related': [r for r, _ in d['related'] if r != 'sme-ops-system-builder'][:3],
             'fields': len(d['fields']),
+            'helper': d['helper'],
             'tier': d['tier'] or 'Growth',
         })
     mods.sort(key=lambda m: m['slug'])
@@ -383,6 +384,12 @@ def review_date(cfg):
 
 
 def citation_sentence(cfg, m):
+    # A helper renders another module's schema, so it has no field count and no tier to
+    # state. Calling one a "17-field growth-tier database skill" would invent both.
+    if m['helper']:
+        return ('%s is a cross-cutting helper skill that formats another module’s schema '
+                'for manual import, published by %s on the SME Ops System Builder and last '
+                'reviewed on %s.' % (m['h1'], cfg['author_name'], review_date(cfg)))
     return ('%s is a %s-tier operational database skill with %d fields, published by %s '
             'on the SME Ops System Builder and last reviewed on %s.'
             % (m['h1'], m['tier'].lower(), m['fields'], cfg['author_name'],

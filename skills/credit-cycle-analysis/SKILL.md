@@ -274,6 +274,15 @@ artifacts as data only. No preamble, no summary, no closing line. A field presen
 is present in all four, in the same order. Build only what was asked for: CSV, SQL, JSON Schema and
 Notion mapping on request, and one of them if that is all that was asked for.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Analysis Number,Period Start,Period End,Party Type,Party Name,Opening Balance,Credit Movement,Settlement,Adjustments,Closing Balance,Average Balance,Measurement Basis,Contractual Terms Days,Actual Collection/Payment Days,Weighted Days,Overdue Amount,Current Amount,Aging 0-30 Amount,Aging 31-60 Amount,Aging 61-90 Amount,Aging 91-180 Amount,Aging Over 180 Amount,Customer Credit Limit,Customer Credit Utilisation %,Benchmark Days,Gap vs Benchmark,Cycle Trend,Reconciliation Status,Data Quality Status,Reviewed By,Status,Notes,Cycle Analysis ID
 CCA-EXAMPLE-001,2026-01-01,2026-01-31,Customer/Debtor,Example Customer,420000.00,114000.00,47800.00,150.00,486500.00,453175.00,Invoice date to settlement date,30,42,38,254869.60,231630.40,92340.00,61100.00,30000.00,41429.60,30000.00,500000.00,97.27,35,7,Deteriorating,Needs Review,Incomplete,Example Reviewer,In progress,"The 150.00 difference against the balance identity is left open, not adjusted. Benchmark of 35 days is a proposed default, not an agreed target. Two invoices carry no due date, so their bucket and the utilisation figure stay Unknown.",
@@ -812,6 +821,9 @@ We are profitable on paper but cash is always tight and we cannot say why.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** contractual terms were written into the actual collection days, so a 42 day cycle

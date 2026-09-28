@@ -113,6 +113,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Receipt Number,Receipt Date,Received From,Receipt Mode,Cash/Bank Account,Reference (Cheque/UTR/ID),Gross Amount Received,Receipt Type,Treats as Sale Income,Sales Invoice Allocated,Amount Allocated,Unapplied Amount,Adjust Against,TDS Collected on Receipt,Voucher Number,Ledger Account,Source Document,Reconciliation Status,Prepared By,Verified By,Entry Verified,Notes,Receipt ID
 RCP-2026-0312,2026-08-19,Greyson Foods,Bank,HDFC Current ****0042,UTR-2026-0819,140000.00,Receivable Collection,No,SAL-2026-0033,130712.40,9287.60,Customer Advance - Greyson Foods,1307.12,VCH-2026-1027,Bank - HDFC Current,DOC-2026-0461,Unreconciled,Ananya Rao,Sneha Iyer,In progress,"Part collected against INV-2026-0733; TDS of 1307.12 remitted from this receipt; balance held as advance, not income.",
@@ -368,6 +377,9 @@ with the bank.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** every receipt posted as sales because the money arrived.

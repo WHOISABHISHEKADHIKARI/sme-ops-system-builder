@@ -247,6 +247,15 @@ Once the user asks for it, derive the fields from one canonical field list and e
 as data only. No preamble, no summary, no closing line. A field present in one artifact is present
 in all four, in the same order, with the same meaning. Build only what was asked for.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Entry Number,Entry Date,Row Type,Book Section,Transaction Reference,Voucher Number,Party,Narration,Mode,Cash In,Cash Out,Opening Cash Balance,Cash Closing Balance,Bank In,Bank Out,Opening Bank Balance,Bank Closing Balance,Digital In,Digital Out,Opening Digital Balance,Digital Closing Balance,Debit/Credit Presentation,Source Documents,Duplicate Check,Balance Difference,Reconciliation Status,Prepared By,Reviewed By,Entry Verified,Notes,Day Book ID
 DB-EXAMPLE-001,2026-01-15,Day Summary,All Books,DAY-EXAMPLE-001,VCH-EXAMPLE-001 to VCH-EXAMPLE-014,Several parties,Day total across the three books; each movement line carries its own reference,Mixed,15000.00,11800.00,25000.00,28050.00,140000.00,95485.00,1250000.00,1294515.00,24600.00,4300.00,5000.00,25300.00,As per software day-book format,DOC-EXAMPLE-001,Checked - Clear,-150.00,Needs Review,Example Preparer,Example Reviewer,In progress,"Cash counted 28050.00 against a book closing of 28200.00, so 150.00 is unexplained and is recorded rather than adjusted. Bank agrees to the statement and the wallet balance agrees to the app.",
@@ -627,6 +636,9 @@ same payment entered twice.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the day book was built with hardcoded Debit and Credit columns, or receipts were

@@ -126,6 +126,15 @@ Splitting payment state from aging state is what turns billing into a collection
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 The SQL below is written in PostgreSQL-flavoured DDL. `SERIAL PRIMARY KEY` and
 `TIMESTAMP DEFAULT NOW()` are PostgreSQL-specific; on another engine use that engine's
 identity column and default-timestamp syntax. `created_at` and `updated_at` are maintained
@@ -478,6 +487,9 @@ We issue credit invoices and nobody can tell which customers have actually paid.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** opened with "how are sales invoices raised today?" when the user had already

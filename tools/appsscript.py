@@ -33,7 +33,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from skillmd import all_slugs, read_module  # noqa: E402
+from skillmd import all_slugs, read_module, table_slugs  # noqa: E402
 
 ROOT = os.environ.get('SKILL_REPO') or os.path.dirname(
     os.path.dirname(os.path.abspath(__file__)))
@@ -527,10 +527,10 @@ def main():
     write = '--check' not in sys.argv
     args = [a for a in sys.argv[1:] if not a.startswith('-')]
     cfg = load_config()
-    slugs = args or all_slugs(ROOT)
+    slugs = args or table_slugs(ROOT)
     for slug in slugs:
-        if slug not in all_slugs(ROOT):
-            print('unknown module: %s' % slug)
+        if slug not in table_slugs(ROOT):
+            print('unknown module, or one with no table: %s' % slug)
             return 2
 
     bad = verify_files(slugs, cfg, write)

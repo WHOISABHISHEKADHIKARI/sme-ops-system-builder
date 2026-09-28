@@ -126,6 +126,15 @@ versioned
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Asset ID,Asset Name,Asset Type,Format,Dimensions,Aspect Ratio,Colour Mode,Background Variant,Minimum Size,Clear Space,Placement,Usage Approved,Usage Not Approved,Source,Rights Owner,Licence,Trademark Status,Version,Status,Notes
 ,Example Retail primary mark,Logo,SVG and PNG,512x512 and 2400x1200,1:1 and 2:1,CMYK and RGB,Light and dark,24 px digital,Mark height on all sides,Lockup left of text,"Website, social avatar, invoice header","Dark backgrounds, embroidery under 25 mm",Unsplash internal shoot,Example Retail,Example Retainers (transfer in writing),Not searched,1.0,Draft,Example row - replace every value before use.
@@ -400,6 +409,9 @@ is on the shopfront, and we are now printing visiting cards.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** a logo was designed before the name was checked, and the name is taken.

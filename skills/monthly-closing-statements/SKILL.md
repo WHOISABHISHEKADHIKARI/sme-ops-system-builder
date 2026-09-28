@@ -117,6 +117,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Closing Number,Period Start,Period End,Entries Completed,Cash Reconciled,Bank Reconciled,Party Ledgers Reconciled,Inventory Reconciled,TDS Reconciled,Other Statutory Liabilities Reconciled,Receivables Reviewed,Payables Reviewed,Depreciation Recorded,Accruals & Prepayments Reviewed,VAT/Tax Account Reviewed,Trial Balance Prepared,Financial Statements Prepared,Revenue,Gross Profit,Net Profit/Loss,Receivables Outstanding,Payables Outstanding,Working Capital,Cash Flow Position,Financial Position,Open Adjustments,Closing Date,Prepared By,Reviewed By,Status,Notes,Closing ID
 CL-2026-08,2026-08-01,2026-08-31,Complete,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,48200.00,Yes,Yes,Yes,Yes,4820000.00,1542400.00,612000.00,486200.00,394800.00,91400.00,1284500.00,"Solvent, working capital thin against a 42 day collection cycle.",3,2026-09-05,Ananya Rao,Vikram Singh,Done,Three accruals still open; statements marked draft until cleared.,
@@ -455,6 +464,9 @@ Month-end takes us ten days and we still find mistakes in the numbers afterwards
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** built a full system when one table was asked for.

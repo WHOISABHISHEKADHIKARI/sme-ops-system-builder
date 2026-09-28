@@ -118,6 +118,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Audit Item,Section,Document Required,Reference/Location,Period Covered,Requested Date,Received Date,Days Pending,Prepared By,Reviewed By,Query Raised,Query Detail,Auditor Note,Adjustment Required,Adjustment Reference,Adjusted,Status,Notes,Audit File ID
 Bank reconciliation statement,Banking & Financing,"Bank reconciliation statements for all accounts, for the period",Audit File 2026 / Section E,FY 2025-26,2026-08-05,2026-08-09,4,Example Preparer,Example Reviewer,No,None raised,No query this cycle,No,Not applicable,Not Required,Done,Filed with the reconciliation pack; no query raised.,
@@ -357,6 +366,9 @@ The auditor asked for twelve documents in one email and we found seven of them.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** built a full system when one table was asked for.

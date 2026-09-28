@@ -291,6 +291,15 @@ artifacts as data only, in the order they were asked for. No preamble, no summar
 closing line. All four come from the single field list in this file, so they cannot drift
 apart, and a field never appears in one artifact and not the others.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 The SQL below is written in PostgreSQL-flavoured DDL. `SERIAL PRIMARY KEY` and
 `TIMESTAMP DEFAULT NOW()` are PostgreSQL-specific; on another engine use that engine's
 identity column and default-timestamp syntax. `created_at` and `updated_at` are
@@ -1020,6 +1029,9 @@ We are replacing our accounting package and cannot tell which one actually cover
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** treated the average score as the answer.
   **Solution:** an average hides disagreement. Keep each evaluator's assessment separate and show the spread.
 - **Problem:** let a strong score in one category hide a failed Must-have.

@@ -124,6 +124,15 @@ print → Analytics and consent checked → Page published → Clicks reviewed a
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Link ID,Link Label,Destination URL,Link Type,Priority Order,Audience,Track Clicks,UTM Source,Enabled On,Thumbnail,Opens In,Schedule,Review Date,Click Count,Status,Notes
 ,Book a free 15-minute call,https://example.com/book,Conversion action,1,Prospective customer,true,social-bio,"LinkedIn bio, Facebook bio, WhatsApp status, print QR",None,Same tab,Always on,2026-10-27,0,Draft,Example row - replace every value before use.
@@ -391,6 +400,9 @@ bio points to it and our visiting cards point to the website homepage.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** eleven links on the hub and nobody clicks any of them.

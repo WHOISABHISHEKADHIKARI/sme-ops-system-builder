@@ -104,6 +104,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Document Reference,Document Type,Document Number,Document Date,Party Name,Party PAN/VAT,Amount,Currency,Tax Amount,TDS Amount,Source Department,Index Key,Storage Location,Retention Period,Linked Voucher,Linked Transaction,Document Availability,Verification Status,Verified By,Verified Date,Notes,Document Filing ID
 DOC-2026-0442,Purchase Invoice,INV-8841,2026-08-14,Bluepeak Supplies,29ABCDE1234F1Z5,84500.00,INR,15210.00,2112.50,Purchase,2026/08/BLUEPEAK,Rack B / Folder 7,8 years,VCH-2026-0912,PUR-2026-0041,Original on file,In progress,Sneha Iyer,2026-08-15,Challan and PO filed together with the invoice.,
@@ -325,6 +334,9 @@ Our accountant keeps asking for supporting documents and nobody can find them.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** built a full system when one table was asked for.

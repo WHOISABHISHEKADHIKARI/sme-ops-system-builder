@@ -231,7 +231,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/issue-grievance-tracker/what-is-issue-and-grievance-tracker> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: invoices-billing](../invoices-billing/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: knowledge-base](../knowledge-base/)
+**Navigation:** [Previous: invoices-billing](../invoices-billing/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: json-schema-manual](../json-schema-manual/)
 
 ### AI Training for Cooperatives
 

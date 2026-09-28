@@ -133,6 +133,15 @@ sentences → Tokens and layouts applied → Rehearsed to time → Appendix buil
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Slide ID,Slide Number,Section,Slide Title,Key Message,Bullets,Visual,Speaker Notes,Data Source,Duration Minutes,Sensitivity,Audience,Template Layout,Brand Token Applied,Version,Status,Owner,Notes
 ,1,Open,We started from one customer complaint,"Three customers asked the same thing in one month, and we built the service for it","The same request, three times; What we built; Who it is for",One photograph of the real premises,"This is the only slide that needs to be remembered if the rest is forgotten. Say it in a sentence, then stop talking.",Not applicable,1.5,Public,Bank and prospective partner,Title and single image,color.brand.primary on color.surface.page,1.0,Draft,Unknown,Example row - replace every value before use.
@@ -444,6 +453,9 @@ template that has been used for other loans. We have no idea what to put in it.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** a 30-slide template became a 28-slide presentation.

@@ -213,7 +213,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/knowledge-base/what-is-knowledge-base> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: issue-grievance-tracker](../issue-grievance-tracker/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: kpi-tracker](../kpi-tracker/)
+**Navigation:** [Previous: json-schema-manual](../json-schema-manual/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: kpi-tracker](../kpi-tracker/)
 
 ### AI Training for Cooperatives
 

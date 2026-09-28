@@ -128,6 +128,15 @@ approved → Print-ready export with marks → Proof checked on press → Master
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Item ID,Item Name,Item Type,Finished Size,Trim Size,Bleed,Colour Mode,Stock,Paper Weight GSM,Finish,Sides,Corner Radius,Safe Margin,Front Elements,Back Elements,Spot Colour,Print Method,Quantity,Cost Per Unit,Supplier,Version,Status,Notes
 ,Example Retail letterhead,Letterhead,A4,216x303 mm,3 mm,CMYK,Uncoated,120,Uncoated,One side,0,12 mm,"Logo top left, NAP block bottom left, contact strip bottom right",Reverse: repeat mark and the short URL only,None - build to process black only,Digital litho,250,0.00,Unknown,1.0,Draft,"Example row - replace every value before use."
@@ -436,6 +445,9 @@ with a white edge around the logo and the letterhead was a different blue to the
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** finished size and trim size are the same value.

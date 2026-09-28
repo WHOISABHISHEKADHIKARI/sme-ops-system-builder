@@ -134,6 +134,15 @@ Intent map shared with the website and the directories
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Row ID,Row Type,GBP Element,Value,Primary Keyword,Supporting Keywords,Search Intent,Landing Page URL,Media Attached,Post Type,Call To Action,Publish Date,Expiry Date,Review Rating,Review Date,Review Reply Status,Reviewer Response,Category Role,Visibility,Action Type,Data Quality Status,Verified,Owner,Review Date Check,Status,Notes
 ,Profile,Business description,"Example Retail is a home and kitchen goods shop in Example City selling cookware, storage and small appliances, with same-day local delivery across Example City and the surrounding area. Walk in for advice, order online, or call the shop.",example retail example city,"home and kitchen goods shop; small appliance shop",Local intent,https://example.com/,None,None,Visit the shop,2026-09-27,,0.0,2026-09-27,Not applicable,Not applicable,Primary,Public,Set up,Incomplete,false,Unknown,2026-10-27,Draft,"Example row - replace every value before use."
@@ -516,6 +525,9 @@ video of the shopfront.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the profile is unverified and everything else is being optimised.

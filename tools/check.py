@@ -7,6 +7,9 @@ all agree with it exactly. Usage: check.py <slug|all> [-v]
 """
 import re, os, sys, io, csv, json, glob, collections, datetime
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import skillmd
+
 ROOT = os.environ.get('SKILL_REPO') or os.path.dirname(
     os.path.dirname(os.path.abspath(__file__)))
 TYPES = {'id', 'text', 'long_text', 'select', 'checkbox', 'number', 'currency',
@@ -88,6 +91,17 @@ def is_router(path):
     return is_pack_dir(os.path.dirname(path))
 
 
+def owns_no_table(path):
+    """A router routes; a helper renders another module's table. Neither owns one.
+
+    Both are exempt from the artifact requirements below, for the same reason: there is
+    no Field Reference for a CSV, a schema or a mapping to agree with. A helper is
+    identified by ``table: none`` in its own frontmatter rather than by a hardcoded
+    slug, so declaring one is what opts a file out.
+    """
+    return is_router(path) or skillmd.is_helper(path)
+
+
 def check(path, verbose=False):
     slug = os.path.basename(os.path.dirname(path))
     t = open(path).read()
@@ -117,7 +131,11 @@ def check(path, verbose=False):
 
     # ---------------------------------------------------------- sections
     heads = re.findall(r'^## (.+)$', body, re.M)
+    no_table = owns_no_table(path)
     for s in SECTIONS:
+        # a router and a helper have no field list, so they carry no Field Reference
+        if s == 'Field Reference' and no_table:
+            continue
         if s not in set(heads):
             bad('missing section ' + s)
     if heads and heads[-1] != 'Reusable Prompt':
@@ -128,10 +146,10 @@ def check(path, verbose=False):
         if st not in body:
             bad('missing ' + st)
 
-    # A router routes between modules and defines no table of its own, so the
-    # artifact requirements below do not apply to it. Its frontmatter, section and
-    # step checks above still ran.
-    if is_router(path):
+    # A router routes between modules and a helper renders another module's table, so
+    # neither defines a table of its own and the artifact requirements below do not
+    # apply. The frontmatter, section and step checks above still ran.
+    if no_table:
         return slug, iss
 
     # ---------------------------------------------------------- blocks
@@ -489,6 +507,8 @@ if __name__ == '__main__':
     freq = collections.Counter()
     nbad = 0
     nmod = 0
+    nhelp = 0
+    nhbad = 0
     for f in files:
         # Sub-pack modules use the newer artifact contract checked by qa_verify.py
         # (including portable percentage names, custom SQL widths and booleans).
@@ -497,6 +517,21 @@ if __name__ == '__main__':
                 'brand-growth-system-builder')):
             continue
         if is_router(f):
+            continue
+        if skillmd.is_helper(f):
+            # A helper has no artifacts to disagree with, but its frontmatter, sections
+            # and intake steps are still checked, and it is reported on its own line
+            # rather than folded into the module count it does not belong in.
+            slug, iss = check(f, verbose)
+            nhelp += 1
+            if iss:
+                nhbad += 1
+                print('\n=== %s  (helper, %d)' % (slug, len(iss)))
+                for tag, d in iss:
+                    freq[tag.split(' (')[0][:52]] += 1
+                    print('    %-52s %s' % (tag, d))
+            elif verbose:
+                print('=== %s  OK  (helper, no table of its own)' % slug)
             continue
         nmod += 1
         slug, iss = check(f, verbose)
@@ -509,6 +544,11 @@ if __name__ == '__main__':
         elif verbose:
             print('=== %s  OK  (%d fields)' % (slug, len(open(f).read())))
     print('\n%d/%d modules clean' % (nmod - nbad, nmod))
+    if nhelp:
+        # counted apart from the modules: a helper has no table, so its failures are
+        # structure failures and folding them into the module ratio reads as -1/0
+        print('%d/%d helper skills clean (no table of their own)'
+              % (nhelp - nhbad, nhelp))
     if freq:
         print('\nissue frequency:')
         for tag, n in freq.most_common(30):

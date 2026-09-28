@@ -28,7 +28,7 @@ Four scripts. No dependencies beyond the Python 3 standard library.
 | [seo.py](seo.py) | canonicals, citations, backlinks, discovery files | `python3 tools/seo.py [--check]` |
 | [skillmd.py](skillmd.py) | reading a `SKILL.md` from your own code | `python3 tools/skillmd.py` |
 | [qa_verify.py](qa_verify.py) | category-nested pack artifact agreement | `python3 tools/qa_verify.py --pack skills/<pack>` |
-| [standardize_skills.py](standardize_skills.py) | shared-contract links and tool-neutral metadata | `python3 tools/standardize_skills.py` |
+| [standardize_skills.py](standardize_skills.py) | shared-contract links, tool-neutral metadata, the Notion connection gate | `python3 tools/standardize_skills.py` |
 | [build_skill_optimization_report.py](build_skill_optimization_report.py) | one-row-per-skill change report | `python3 tools/build_skill_optimization_report.py` |
 | [behavioral_qa.py](behavioral_qa.py) | five AI behavioral unit tests per skill | `python3 tools/behavioral_qa.py` |
 
@@ -118,6 +118,18 @@ A directory under `skills/` is a **pack** when it contains a child directory wit
 own `SKILL.md`; otherwise it is a module. Nothing is hardcoded, so a second pack needs
 no tool change. `validate.py` and `seo.py` take their file list from here, and
 `excel.py` and `appsscript.py` already resolved paths through `module_dir`.
+
+A **helper** is a module with `table: none` in its frontmatter: it renders another
+module's field list rather than owning one, so it has no Field Reference table and no
+artifacts of its own. `is_helper(path)` requires the key *and* the absence of a Field
+Reference table, so a file cannot opt out of the artifact checks by claiming the key while
+still shipping a table. Routers and helpers are both exempt from the four-artifact
+requirements for the same reason - there is no table to describe - and `check.py` reports
+them on their own lines rather than folding them into the module count. `table_slugs(root)`
+is `all_slugs` minus the helpers, and it is what the workbook and Apps Script generators
+iterate, since neither can emit anything without a field list. `read_skill` returns
+`helper: True` and an empty `fields` list for one, and leaves the artifact blocks as
+`None` instead of raising.
 
 `section(text, name)` returns one `## ` section, and both `select_options` and the FAQ
 extraction in `seo.py` go through it. It stops at the next H2 **or at end of file**.

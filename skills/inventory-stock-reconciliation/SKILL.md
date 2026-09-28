@@ -176,6 +176,15 @@ Once the user asks, derive the fields from the confirmed context and emit **only
 artifacts that were requested**. No preamble, no summary, no recommendation repeated, no
 unrequested artifact.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 **The output is an empty template.** The CSV is a header row with no example row unless the
 user explicitly asks for one; if they do ask, label the row clearly as illustrative and never
 make it look like a real count. The SQL is DDL with no sample records. The JSON Schema is a
@@ -537,6 +546,9 @@ is still `Unknown`, because nobody supplied it.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the user said `yes` to "a full count or a cycle count?" and it was recorded

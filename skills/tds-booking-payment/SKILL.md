@@ -111,6 +111,15 @@ Give a short recommendation, then ask whether to build it. Do not build unprompt
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 TDS Record Number,Tax Period,Nature of Payment,Payee Name,Payee PAN,Transaction Reference,Payment Date,Gross Payment/Base,TDS Rate %,TDS Deducted,Deducted On,TDS Payable Ledger,Deposit Date,Challan/Bank Reference,Amount Deposited,Return Filed Date,Return Reference,Ledger Reconciliation,Variance Amount,Reconciliation Frequency,Prepared By,Reviewed By,Status,Notes,TDS ID
 TDS-2026-0194,2026-08,Professional Fees,Pixelworks Studio,29ABCDE1234F1Z5,EXP-2026-0338,2026-08-18,32500.00,10,3250.00,2026-08-18,TDS Payable - Professional Fees,2026-09-15,CHL-2026-0912,48200.00,2026-10-15,TDS-Q2-2026-PF,Variance,325.00,Monthly,Sneha Iyer,Vikram Singh,In progress,Deposit and return agree to the challan; ledger short by 325.00 and under investigation.,
@@ -357,6 +366,9 @@ We deduct TDS on a few vendor payments and only find out at filing that the depo
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the deduction was recorded but the deposit challan never attached.

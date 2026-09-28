@@ -123,6 +123,15 @@ Components built from tokens only
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Token ID,Token Name,Token Group,Token Type,Value,Unit,Light Mode Value,Dark Mode Value,Contrast Ratio,Contrast Against,WCAG Level,Font Family,Font Size,Font Weight,Line Height,Letter Spacing,Usage Rule,Do Not Use For,Source Reference,Version,Status,Approved By,Last Reviewed,Notes
 TOK-EXAMPLE-001,color.brand.primary,Brand,Color,#1F4FD8,hex,#1F4FD8,#8FB4FF,7.02,color.surface.page,AA,,,,,,Primary action and brand accent,Body text on white surface,WCAG 2.2 SC 1.4.3,1.0,Draft,Unknown,2026-09-27,Example row - replace every value before use.
@@ -414,6 +423,9 @@ fine on the laptop but the founder says people struggle on the website.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the theme exists as a Figma file with no values written down.

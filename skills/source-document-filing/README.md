@@ -169,7 +169,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/source-document-filing/what-is-source-document-and-filing> |
 
 **Related modules:** [accounting-audit-system-builder](../accounting-audit-system-builder/) · [purchase-accounting](../purchase-accounting/) · [sales-accounting](../sales-accounting/)
-**Navigation:** [Previous: sop-company-wiki](../sop-company-wiki/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: stakeholder-investor-reports](../stakeholder-investor-reports/)
+**Navigation:** [Previous: sop-company-wiki](../sop-company-wiki/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: spreadsheet-manual-build](../spreadsheet-manual-build/)
 
 ### AI Training for Cooperatives
 

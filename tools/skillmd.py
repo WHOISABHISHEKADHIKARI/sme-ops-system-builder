@@ -77,11 +77,39 @@ def slugify(s):
     return re.sub(r'[^a-z0-9]+', '-', s.lower().replace('&', ' ')).strip('-')
 
 
+def is_helper(path):
+    """True when a SKILL.md declares ``table: none`` in its frontmatter.
+
+    A helper works on another module's field list instead of owning one - the manual
+    Notion import path formats a database the active module already defines, so it has
+    no Field Reference table, no CSV, and no SQL of its own to keep in agreement with
+    anything. The checkers exempt it from the artifact requirements for the same
+    reason a router is exempt: there is no table for the artifacts to describe.
+
+    Two conditions, because either alone lies. The key states the intent, and the
+    absent Field Reference *table* is what the tools can actually verify, so a module
+    that claims ``table: none`` and then ships a pipe table is not treated as a helper.
+    The section heading may still be there, explaining that the list lives elsewhere.
+    """
+    text = open(path).read()
+    m = re.match(r'---\n(.*?)\n---\n', text, re.S)
+    if not m or not re.search(r'^table:\s*none\s*$', m.group(1), re.M):
+        return False
+    return not re.search(r'## Field Reference\n\n\|', text)
+
+
+def block(text, lang):
+    """The contents of the first ```<lang> fence, or None when there is none."""
+    m = re.search(r'```%s\n(.*?)\n```' % lang, text, re.S)
+    return m.group(1) if m else None
+
+
 def read_skill(path):
     """Parse one SKILL.md. Raises KeyError if a required section is missing."""
     t = open(path).read()
     fm = re.match(r'---\n(.*?)\n---\n', t, re.S)
-    d = {'path': path, 'slug': os.path.basename(os.path.dirname(path))}
+    d = {'path': path, 'slug': os.path.basename(os.path.dirname(path)),
+         'helper': is_helper(path)}
 
     def sec(name, nxt=None):
         return section(t, name).strip()
@@ -96,9 +124,9 @@ def read_skill(path):
     d['related'] = re.findall(r'^- `([a-z0-9-]+)` - (.+)$',
                               sec('Related Skills', 'Reusable Prompt'), re.M)
     d['options'] = select_options(t)
-    d['csv'] = re.search(r'```csv\n(.*?)\n```', t, re.S).group(1)
-    d['sql'] = re.search(r'```sql\n(.*?)\n```', t, re.S).group(1)
-    d['json'] = re.search(r'```json\n(.*?)\n```', t, re.S).group(1)
+    d['csv'] = block(t, 'csv')
+    d['sql'] = block(t, 'sql')
+    d['json'] = block(t, 'json')
     d['prompt'] = re.search(r'## Reusable Prompt\n\n```\n(.*?)\n```', t, re.S).group(1).strip()
     d['first_q'] = re.search(r'> \*\*Q:\*\* (.+)', t).group(1).strip()
 
@@ -114,11 +142,15 @@ def read_skill(path):
     m = re.search(r'Fits: (\w+) stage', t)
     d['tier'] = m.group(1) if m else ''
 
-    table = re.search(r'## Field Reference\n\n(\|.*?)\n\n', t, re.S).group(1)
+    # A helper has no field list of its own: it renders whatever the active module
+    # defines, so the table is optional for it and its absence is not a parse failure.
     d['fields'] = []
-    for line in [x for x in table.split('\n') if x.startswith('|') and '---' not in x][1:]:
-        cols = [c.strip() for c in line.strip('|').split('|')]
-        d['fields'].append((cols[1].strip(BT), cols[2].strip(BT)))
+    table = re.search(r'## Field Reference\n\n(\|.*?)\n\n', t, re.S)
+    if table:
+        for line in [x for x in table.group(1).split('\n')
+                     if x.startswith('|') and '---' not in x][1:]:
+            cols = [c.strip() for c in line.strip('|').split('|')]
+            d['fields'].append((cols[1].strip(BT), cols[2].strip(BT)))
 
     if fm:
         m = re.search(r'^description: "(.*)"$', fm.group(1), re.M)
@@ -196,6 +228,17 @@ def all_routers(root):
     out = [os.path.join(root, 'SKILL.md')]
     out.extend(os.path.join(root, 'skills', p, 'SKILL.md') for p in all_packs(root))
     return out
+
+
+def table_slugs(root):
+    """The slugs that own a field list, i.e. every slug except the helpers.
+
+    The generators that emit a CSV, a workbook or a Google Sheet need a Field Reference
+    to emit anything from. A helper has none, so it is dropped here rather than being
+    discovered as a crash deep inside a writer.
+    """
+    return [s for s in all_slugs(root)
+            if not is_helper(os.path.join(module_dir(root, s), 'SKILL.md'))]
 
 
 def all_skill_files(root):

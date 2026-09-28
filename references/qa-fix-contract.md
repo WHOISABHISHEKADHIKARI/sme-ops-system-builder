@@ -189,6 +189,17 @@ output: the CSV is a header plus one clearly labelled illustrative row, SQL is D
 JSON Schema is a schema, and the Notion block is a mapping table. The skill's contract
 is still "output only what was asked for, and never invent values".
 
+### A helper, not a module
+
+A skill that renders another module's field list declares `table: none` in its
+frontmatter and keeps every section above except the Field Reference table and the four
+artifact blocks - there is no table for them to describe, so there is nothing for them to
+disagree with. `notion-manual-import` is the one: it turns a module's confirmed schema into
+a CSV, a Notion property mapping and the import steps. It is not a layer, is not counted
+among the modules, and `check.py` checks its structure and steps while skipping the
+artifact comparison. A helper that also ships a Field Reference table is not a helper, and
+the tools say so rather than trusting the key.
+
 ## 16. Internal context block
 
 ```yaml

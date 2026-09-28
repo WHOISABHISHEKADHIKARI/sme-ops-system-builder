@@ -136,6 +136,15 @@ the hour → Reviewed at 30 days against the stated purpose
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Row ID,Row Type,Platform,Account Handle,Account Type,Audience,Posting Cadence,Post Format,Post Caption,Hashtag Set,Media Asset,Link Destination,Publish Date,Publish Time,Call To Action,Approval Status,Owner,Brand Voice,Profile Checklist Complete,Review Date,Status,Notes
 ,Channel,Facebook Page,Unknown,Business page,Local customers within the service area,Three posts a week,"Photo or short video with a caption","Behind-the-scenes, a finished job, or one useful tip - one idea per post",Not used,"One photo per post, shot on a phone",https://example.com/,2026-09-27,,Reply within one hour,Not required,Unknown,Plain and direct,Not started,2026-10-27,Draft,Example row - replace every value before use.
@@ -487,6 +496,9 @@ want to be on TikTok because our competitor is. Nobody here has ever posted on i
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** five channels opened on day one, all abandoned by the end of month two.

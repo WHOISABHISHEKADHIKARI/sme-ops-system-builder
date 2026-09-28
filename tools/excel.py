@@ -31,7 +31,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from skillmd import all_slugs, read_module  # noqa: E402
+from skillmd import all_slugs, read_module, table_slugs  # noqa: E402
 
 ROOT = os.environ.get('SKILL_REPO') or os.path.dirname(
     os.path.dirname(os.path.abspath(__file__)))
@@ -285,7 +285,7 @@ def main():
     if args:
         slugs = args
     else:
-        slugs = all_slugs(ROOT)
+        slugs = table_slugs(ROOT)
 
     if check:
         bad = verify(slugs)

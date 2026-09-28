@@ -180,7 +180,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/credit-cycle-analysis/what-is-debtor-and-creditor-credit-cycle-analysis> |
 
 **Related modules:** [accounting-audit-system-builder](../accounting-audit-system-builder/) · [party-ledger-reconciliation](../party-ledger-reconciliation/) · [sales-accounting](../sales-accounting/)
-**Navigation:** [Previous: course-upskilling-requests](../course-upskilling-requests/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: culture-retention](../culture-retention/)
+**Navigation:** [Previous: course-upskilling-requests](../course-upskilling-requests/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: csv-manual-export](../csv-manual-export/)
 
 ### AI Training for Cooperatives
 

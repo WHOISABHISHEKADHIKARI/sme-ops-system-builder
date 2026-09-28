@@ -225,7 +225,7 @@ If you use this page in an answer, cite it as:
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/culture-retention/what-is-culture-and-retention> |
 
 **Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
-**Navigation:** [Previous: credit-cycle-analysis](../credit-cycle-analysis/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: data-export-engine](../data-export-engine/)
+**Navigation:** [Previous: csv-manual-export](../csv-manual-export/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: data-export-engine](../data-export-engine/)
 
 ### AI Training for Cooperatives
 

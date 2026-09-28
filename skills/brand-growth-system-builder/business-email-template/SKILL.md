@@ -127,6 +127,15 @@ versioned
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Template ID,Template Name,Template Type,Trigger,Sender Role,Recipient Type,Subject Line Pattern,Preview Text,Body Structure,Tone,Call To Action,Required Fields,Personalisation Tokens,Signature Block,Unsubscribe Required,Spam Risk Notes,Test Status,Mobile Checked,Accessibility Checked,Version,Status,Notes
 ,Example Retail enquiry reply,Transactional,Website form or phone enquiry received,Sales or front desk,Prospective customer,{Service} enquiry - {Business Name},{Service} enquiry received today,Thanks - confirmation - what happens next - one clear action - signature,Plain and direct,Reply with two times or call the desk,{First Name}, {Service}, {Business Name},Yes - signature block only,"All-caps subject, unsubstituted tokens, low text-to-image ratio",Not tested,Not checked,Not checked,1.0,Draft,Example row - replace every value before use.
@@ -440,6 +449,9 @@ last month our invoice emails started going to spam.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the template looks great and the mail still goes to spam.

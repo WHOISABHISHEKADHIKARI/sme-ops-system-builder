@@ -204,7 +204,7 @@ If you use this page in an answer, cite it as:
 | Last reviewed | 26 September 2026 |
 | Canonical URL | <https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/skills/competency-matrix/what-is-competency-matrix> |
 
-**Related modules:** [people-directory](../people-directory/) · [notification-reminder-hub](../notification-reminder-hub/)
+**Related modules:** [skill-gap-analysis](../skill-gap-analysis/)
 **Navigation:** [Previous: company-email-accounts](../company-email-accounts/) · [Index](https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/) · [Next: contract-document-renewal](../contract-document-renewal/)
 
 ### AI Training for Cooperatives

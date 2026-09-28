@@ -130,6 +130,15 @@ submitted
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only. No preamble, no summary, no closing line.
 
+**Notion needs a connected workspace first.** When the user selects Notion as the
+output, emit the connection prerequisite from the
+[shared execution contract](../../../references/execution-contract.md) verbatim before
+the Notion mapping, then stop and wait for the reply "Notion connected." If the user
+would rather not connect, emit the mapping as text, add one line saying it is
+unverified until the workspace is connected, and offer
+[notion-manual-import](../../notion-manual-import/SKILL.md) for the full manual path.
+Never claim a connection exists, and never ask for a Notion password or token.
+
 ```csv
 Page ID,Page URL,Page Title,Meta Description,Primary Keyword,Secondary Keywords,Search Intent,H1,NAP Block Present,Schema Type,Canonical URL,Indexable,Sitemap Included,Image Alt Text Rule,Target Device,Core Web Vitals Target,Build Platform,HTTPS,Mobile First,Structured Data Valid,Owner,Review Date,Status,Notes
 ,https://example.com/services/example-service,Example Service in Example City | Example Retail,"Book Example Service in Example City. Same-week appointments, fixed prices and a 12-month workmanship guarantee.",example service example city,example service near me,example service cost,Transactional,Example Service in Example City,Yes,Service,Yes,Yes,"Example image alt text",Mobile first,"LCP under 2.5s, INP under 200ms, CLS under 0.1",Unknown,Yes,Yes,Not tested,Unknown,2026-10-27,Draft,Example row - replace every value before use.
@@ -449,6 +458,9 @@ years.
 
 ## Common Pitfalls
 
+- **Problem:** the Notion mapping is handed over with no workspace connected.
+  **Solution:** the connection prerequisite goes first, and a mapping handed over as
+  text is labelled unverified until the workspace is connected.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** one homepage trying to rank for six services.
