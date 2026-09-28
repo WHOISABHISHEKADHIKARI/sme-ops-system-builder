@@ -28,7 +28,7 @@ Four scripts. No dependencies beyond the Python 3 standard library.
 | [seo.py](seo.py) | canonicals, citations, backlinks, discovery files | `python3 tools/seo.py [--check]` |
 | [skillmd.py](skillmd.py) | reading a `SKILL.md` from your own code | `python3 tools/skillmd.py` |
 | [qa_verify.py](qa_verify.py) | category-nested pack artifact agreement | `python3 tools/qa_verify.py --pack skills/<pack>` |
-| [standardize_skills.py](standardize_skills.py) | shared-contract links, tool-neutral metadata, the Notion connection gate | `python3 tools/standardize_skills.py` |
+| [standardize_skills.py](standardize_skills.py) | shared-contract links, tool-neutral metadata, the Notion connection gate, and each helper's `## Input Modules` index | `python3 tools/standardize_skills.py` |
 | [build_skill_optimization_report.py](build_skill_optimization_report.py) | one-row-per-skill change report | `python3 tools/build_skill_optimization_report.py` |
 | [behavioral_qa.py](behavioral_qa.py) | five AI behavioral unit tests per skill | `python3 tools/behavioral_qa.py` |
 
@@ -130,6 +130,16 @@ is `all_slugs` minus the helpers, and it is what the workbook and Apps Script ge
 iterate, since neither can emit anything without a field list. `read_skill` returns
 `helper: True` and an empty `fields` list for one, and leaves the artifact blocks as
 `None` instead of raising.
+
+Each helper carries a generated `## Input Modules` section naming every module it can
+render, so a helper loaded on its own still knows what its input is. `standardize_skills.py`
+builds it from all three catalogs - the main one plus one per sub-pack - because the flat
+layout is not a single catalog: the accounting pack's catalog still lists its 16 modules
+after they were flattened into `skills/`. Rows resolve against the filesystem, so a
+catalog that names a module where it used to live still finds it, and a module with no row
+anywhere raises rather than vanishing from the index. The section is replaced wholesale on
+every run instead of appended, so adding a module refreshes all four helpers at once and
+the field counts come from the Field Reference rather than from a second hand-kept copy.
 
 `section(text, name)` returns one `## ` section, and both `select_options` and the FAQ
 extraction in `seo.py` go through it. It stops at the next H2 **or at end of file**.

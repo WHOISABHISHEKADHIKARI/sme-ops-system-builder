@@ -35,6 +35,121 @@ EXCEL_COMPATIBLE_CSV_RULE = (
     "text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user\n"
     "requests a workbook."
 )
+INPUT_INDEX_HEADING = "## Input Modules"
+CATALOG_ROW = re.compile(
+    r"^\| (?P<title>[^|]+?) \| (?P<code>[^|]*) \| (?P<tier>[^|]*) \| (?P<fields>\d+) \| "
+    r"`(?P<path>[^`]+)` \|\s*$")
+CATALOG_LAYER = re.compile(r"^## (Layer \d+: .+)$")
+INPUT_INDEX_INTRO = (
+    "A helper has no field list of its own, so its input is a module: the Field Reference\n"
+    "that module already confirmed. Read that section - field names, types, order,\n"
+    "requiredness, options and calculations - and render exactly that. The list below is\n"
+    "every module that owns a field list, grouped by the layer its catalog gives it, and it\n"
+    "is generated from those catalogs and the module files, so it cannot name a module that\n"
+    "does not exist. `references/catalog.md` is the index to show a user; the module's own\n"
+    "`SKILL.md` holds the field list."
+)
+INPUT_INDEX_FOOTER = (
+    "If the user has not named a module, ask which one before building: a file rendered from\n"
+    "a guess is the guess again, in a format the user did not choose."
+)
+
+
+def catalog_groups(catalog):
+    """Layer -> [(title, fields, slug)], read from a catalog file.
+
+    The catalogs are the repo's own grouping of the modules, so reusing them keeps this
+    generator from inventing a second ordering that disagrees with the published one.
+    The ``Fields`` column is read but not trusted for the count: the number is taken from
+    the module's Field Reference, which is what every other artifact is checked against.
+    """
+    text = Path(catalog).read_text(encoding="utf-8")
+    out, layer = [], None
+    for line in text.splitlines():
+        heading = CATALOG_LAYER.match(line)
+        if heading:
+            layer = heading.group(1)
+            continue
+        row = CATALOG_ROW.match(line)
+        if not row or layer is None:
+            continue
+        slug = os.path.basename(os.path.dirname(row.group("path")))
+        out.append([layer, row.group("title").strip(), slug])
+    return out
+
+
+def module_path(slug, pack=None):
+    """The real SKILL.md path for a catalog row.
+
+    A catalog row is written pack-relative even when the module has been flattened into
+    ``skills/``, so the path is resolved against the filesystem: the pack first, then the
+    flat layout. The slug was taken from the row's own path, and no flat module shares a
+    name with a pack module, so the two layouts cannot be confused.
+    """
+    for prefix in ([pack] if pack else []) + [None]:
+        path = skillmd.module_dir(ROOT, "%s/%s" % (prefix, slug) if prefix else slug)
+        path = os.path.join(path, "SKILL.md")
+        if os.path.isfile(path):
+            return path
+    raise ValueError("no SKILL.md for catalog row %r in %s" % (slug, pack or "the flat layout"))
+
+
+def input_index_groups():
+    """[(group label, [index line, ...])] for every module that owns a field list.
+
+    Read from all three catalogs, because the flat layout is not one catalog: the
+    accounting and audit modules were flattened out of their pack and are still listed
+    in that pack's catalog. The union is checked against the modules on disk, so a module
+    added without a catalog row fails this run rather than being silently absent from the
+    index.
+    """
+    out, seen = [], set()
+    sources = [(ROOT / "references" / "catalog.md", None)]
+    sources.extend((Path(skillmd.module_dir(ROOT, p)) / "catalog.md", p)
+                   for p in skillmd.all_packs(ROOT))
+    for catalog, pack in sources:
+        rows = catalog_groups(catalog)
+        if not rows:
+            continue
+        by_layer, order = {}, []
+        for layer, title, slug in rows:
+            path = module_path(slug, pack)
+            d = skillmd.read_skill(path)
+            rel = os.path.relpath(path, ROOT).replace(os.sep, "/")
+            by_layer.setdefault(layer, []).append(
+                "- `%s` - %s (%d fields)" % (rel, d['title'], len(d['fields'])))
+            if layer not in order:
+                order.append(layer)
+            # Qualified from the resolved path, not from the catalog the row came from:
+            # the accounting pack's catalog still lists its 16 modules after they were
+            # flattened into skills/, so the catalog says pack and the disk says flat.
+            seen.add(os.path.relpath(os.path.dirname(path),
+                                     os.path.join(ROOT, "skills")).replace(os.sep, "/"))
+        for layer in order:
+            label = "**%s**" % layer
+            if pack:
+                label = "**Sub-pack `%s` - %s**" % (pack, layer)
+            out.append((label, by_layer[layer]))
+    missing = set(skillmd.table_slugs(ROOT)) - seen
+    if missing:
+        raise ValueError("modules missing from every catalog: %s"
+                         % ", ".join(sorted(missing)))
+    return out
+
+
+def input_index():
+    """The Input Modules section, regenerated from the repo on every run."""
+    parts = [INPUT_INDEX_HEADING, "", INPUT_INDEX_INTRO, ""]
+    for label, lines in input_index_groups():
+        parts.append("%s - %d module%s" % (label, len(lines),
+                                            "" if len(lines) == 1 else "s"))
+        parts.append("")
+        parts.extend(lines)
+        parts.append("")
+    parts.append(INPUT_INDEX_FOOTER)
+    return "\n".join(parts)
+
+
 EXTERNAL_ACTION_RULE = (
     "- Creating a requested artifact may write that artifact locally. Do not run commands,\n"
     "  call APIs, provision infrastructure, or make other external changes unless the user\n"
@@ -154,6 +269,28 @@ def helpers(root):
             if skillmd.is_helper(os.path.join(root, 'skills', s, 'SKILL.md'))}
 
 
+def add_input_index(path, text):
+    """Give a helper the full list of modules it can render, right after its Field Reference.
+
+    Regenerated rather than appended: the section is replaced wholesale on every run, so
+    adding a module refreshes all four helpers with one command instead of leaving four
+    hand-maintained copies to drift. A module or router has no input index - it owns the
+    field list, and the list of other modules is its catalog's job.
+    """
+    if os.fspath(path) not in helpers(ROOT):
+        return text
+    # Drop the previous block, so the section is rewritten rather than duplicated.
+    text = re.sub(r"^%s\n.*?(?=^## |\Z)" % re.escape(INPUT_INDEX_HEADING), "", text,
+                  flags=re.S | re.M)
+    m = re.search(r"^## Field Reference\n", text, re.M)
+    if not m:
+        raise ValueError(f"no Field Reference to anchor the input index: {path}")
+    at = re.search(r"^## ", text[m.end():], re.M)
+    # The index belongs with the field list it describes, so it follows Field Reference.
+    cut = m.end() + (at.start() if at else len(text) - m.end())
+    return text[:cut].rstrip("\n") + "\n\n" + input_index() + "\n\n" + text[cut:]
+
+
 def standardize(path):
     text = path.read_text(encoding="utf-8")
     original = text
@@ -241,6 +378,7 @@ def standardize(path):
 
     text = add_notion_gate(path, text)
     text = add_notion_pitfall(path, text)
+    text = add_input_index(path, text)
 
     if text != original:
         path.write_text(text, encoding="utf-8")
