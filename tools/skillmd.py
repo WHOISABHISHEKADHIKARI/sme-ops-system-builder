@@ -105,6 +105,23 @@ def block(text, lang):
     return m.group(1) if m else None
 
 
+def _wrapped(text, label):
+    """The paragraph that starts at ``label``, joined back into one line.
+
+    These three are written as a wrapped paragraph with no indent, so a single-line match
+    cut them mid-sentence - logo-image-design's approach stopped at "one primary mark with
+    three". The paragraph ends at the blank line, so that is the boundary taken here.
+    Returns '' when the label is absent, which is how a module that never states an
+    approach is distinguished from one whose approach is empty.
+    """
+    m = re.search(re.escape(label) + r'[ \t]*(.*?)\n[ \t]*\n', text, re.S)
+    if not m:
+        m = re.search(re.escape(label) + r'[ \t]*(.*)\Z', text, re.S)
+        if not m:
+            return ''
+    return re.sub(r'\s+', ' ', m.group(1)).strip()
+
+
 def read_skill(path):
     """Parse one SKILL.md. Raises KeyError if a required section is missing."""
     t = open(path).read()
@@ -152,11 +169,14 @@ def read_skill(path):
     d['prompt'] = re.search(r'## Reusable Prompt\n\n```\n(.*?)\n```', t, re.S).group(1).strip()
     d['first_q'] = re.search(r'> \*\*Q:\*\* (.+)', t).group(1).strip()
 
-    for key, pat in (('approach', r'\*\*Recommended approach:\*\* (.+)'),
-                     ('why', r'\*\*Why this one:\*\* (.+)'),
-                     ('flow', r'\*\*Workflow:\*\* (.+)')):
-        m = re.search(pat, t)
-        d[key] = m.group(1).strip() if m else ''
+    # These three run on for several wrapped lines, so a single-line match truncates
+    # them mid-sentence: logo-image-design's approach stopped at "one primary mark with
+    # three". Continuation lines are indented, which is what distinguishes them from the
+    # next paragraph.
+    for key, label in (('approach', '**Recommended approach:**'),
+                       ('why', '**Why this one:**'),
+                       ('flow', '**Workflow:**')):
+        d[key] = _wrapped(t, label)
 
     # the layer line runs on: "Layer 4: Manage. Fits: Growth stage. Table code: n/a."
     m = re.search(r'Layer (\d+): ([^.|]+?)\.', t)

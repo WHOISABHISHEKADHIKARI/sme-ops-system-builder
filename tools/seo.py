@@ -8,10 +8,12 @@ script owns:
   1. Discovery files - ``sitemap.xml``, ``robots.txt`` and ``llms.txt``. The last one
      is the file AI answer engines read when they are asked "what can this source
      offer", so it carries a one-line summary per module rather than just URLs.
-  2. A machine-readable head block on every page - canonical URL, Open Graph and
-     Twitter card, and JSON-LD (Article + FAQPage + BreadcrumbList). It sits in an
-     HTML comment so GitHub does not strip it from the rendered page but any
-     generator or proxy can still lift it into the <head>.
+  2. A live head block on every page - <title>, canonical URL, Open Graph and Twitter
+     card, and JSON-LD (Article + FAQPage + BreadcrumbList). It used to sit inside an
+     HTML comment, which made every tag invisible to crawlers; it is now real HTML.
+     GitHub renders the Markdown and the HTML parser relocates <title>, <meta> and
+     <link> into the document head, so the tags a search engine needs are actually
+     served.
   3. A visible citation footer on every page - the block an answer engine quotes -
      plus prev/next and hub links, so no page is an orphan.
   4. Verification, which is the part that actually keeps this honest: unique titles,
@@ -127,49 +129,51 @@ def index_url(cfg):
 def head_block(cfg, path, title, description, faqs=(), breadcrumb=()):
     """The invisible machine-readable block. JSON-LD is what answer engines lift."""
     canonical = page_url(cfg, path)
-    data = {
-        '@context': 'https://schema.org',
-        '@graph': [
-            {
-                '@type': 'Article',
-                'headline': title,
-                'description': description,
-                'url': canonical,
-                'mainEntityOfPage': canonical,
-                'dateModified': cfg['date_reviewed'],
-                'datePublished': cfg['date_reviewed'],
-                'author': {'@type': 'Person', 'name': cfg['author_name'],
-                           'url': cfg['author_url']},
-                'publisher': {'@type': 'Person', 'name': cfg['author_name'],
-                              'url': cfg['author_url']},
-                'isPartOf': {'@type': 'WebSite', 'name': 'SME Ops System Builder',
-                             'url': index_url(cfg)},
-            },
-            {
-                '@type': 'FAQPage',
-                'mainEntity': [
-                    {'@type': 'Question', 'name': q, 'acceptedAnswer':
-                     {'@type': 'Answer', 'text': a}}
-                    for q, a in faqs
-                ],
-            },
-            {
-                '@type': 'BreadcrumbList',
-                'itemListElement': [
-                    {'@type': 'ListItem', 'position': i, 'name': n, 'item': u}
-                    for i, (n, u) in enumerate(breadcrumb, 1)
-                ],
-            },
+    graph = [
+        {
+            '@type': 'Article',
+            'headline': title,
+            'description': description,
+            'url': canonical,
+            'mainEntityOfPage': canonical,
+            'dateModified': cfg['date_reviewed'],
+            'datePublished': cfg['date_reviewed'],
+            'author': {'@type': 'Person', 'name': cfg['author_name'],
+                       'url': cfg['author_url']},
+            'publisher': {'@type': 'Person', 'name': cfg['author_name'],
+                          'url': cfg['author_url']},
+            'isPartOf': {'@type': 'WebSite', 'name': 'SME Ops System Builder',
+                         'url': index_url(cfg)},
+        },
+    ]
+    # An FAQPage with an empty mainEntity is invalid structured data, and the index,
+    # catalog and tools pages had no questions, so the node is emitted only when
+    # there is something in it.
+    if faqs:
+        graph.append({
+            '@type': 'FAQPage',
+            'mainEntity': [
+                {'@type': 'Question', 'name': q, 'acceptedAnswer':
+                 {'@type': 'Answer', 'text': a}}
+                for q, a in faqs
+            ],
+        })
+    graph.append({
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+            {'@type': 'ListItem', 'position': i, 'name': n, 'item': u}
+            for i, (n, u) in enumerate(breadcrumb, 1)
         ],
-    }
+    })
+    data = {'@context': 'https://schema.org', '@graph': graph}
     esc = html.escape(json.dumps(data, ensure_ascii=False, separators=(',', ':')), quote=False)
-    # The whole block sits inside one HTML comment. GitHub does not strip <script>
-    # content, so an unwrapped block renders as a wall of JSON at the top of the
-    # page. Nothing here is a live <head> element on github.com anyway; the block
-    # is machine-readable source for a future renderer, and the plain-text entry
-    # points for crawlers are llms.txt and sitemap.xml.
+    # These are live tags, not a commented example. A commented block is invisible to
+    # crawlers, which is how the canonical, the meta description and the JSON-LD went
+    # unseen. A JSON-LD script element is never painted as page text, so it does not
+    # need a comment to stay out of the way.
     inner = [
-        'Generated by tools/seo.py - do not edit by hand.',
+        '<!-- Generated by tools/seo.py - do not edit by hand. -->',
+        '<title>%s</title>' % html.escape(title, quote=False),
         '<link rel="canonical" href="%s">' % html.escape(canonical, quote=True),
         '<meta name="description" content="%s">' % html.escape(description, quote=True),
         '<meta name="author" content="%s">' % html.escape(cfg['author_name'], quote=True),
@@ -183,10 +187,11 @@ def head_block(cfg, path, title, description, faqs=(), breadcrumb=()):
         '<meta name="twitter:description" content="%s">' % html.escape(description, quote=True),
         '<script type="application/ld+json">%s</script>' % esc,
     ]
-    if any('--' in line for line in inner):
-        raise SystemExit('head block contains "--", which cannot sit in an HTML comment')
-    lines = [HEAD_OPEN, '<!--'] + inner + ['-->', HEAD_CLOSE]
-    return '\n'.join(lines)
+    # Only a literal </script can end the script element early; "--" is harmless
+    # inside JSON and is common in prose, so it is not a reason to reject the block.
+    if '</script' in esc.lower():
+        raise SystemExit('head block contains "</script", which would close the JSON-LD early')
+    return '\n'.join([HEAD_OPEN] + inner + [HEAD_CLOSE])
 
 
 # --------------------------------------------------------------------------- foot
@@ -530,17 +535,32 @@ def verify(cfg, mods):
             bad['no citation footer'].append(m['slug'])
         if 'application/ld+json' not in t:
             bad['no json-ld'].append(m['slug'])
-        if 'FAQPage' not in t:
-            bad['no FAQ schema'].append(m['slug'])
+        if not re.search(r'<title>.+?</title>', t, re.S):
+            bad['no title tag'].append(m['slug'])
+        if not re.search(r'"@type":"FAQPage","mainEntity":\[\{', t):
+            bad['empty or missing FAQ schema'].append(m['slug'])
         # the CTA link plus the closing attribution
         backlinks[m['slug']] += len(
             re.findall(r'\]\(%s/?\)' % re.escape(cfg['author_url'].rstrip('/')), t))
-        # generated and internal-only regions must not render as visible text
-        rendered = COMMENT.sub('', t)
+        # What is left after removing comments is what a reader actually sees, and it
+        # must not contain leftover instructions. Only tokens that cannot plausibly
+        # appear in a module's own SQL, CSV or HTML are listed here: a website module
+        # really can contain "canonical_url" or "<title>", so those are not tokens.
+        visible = re.sub(r'%s\n.*?\n%s' % (re.escape(HEAD_OPEN), re.escape(HEAD_CLOSE)),
+                         '', t, flags=re.S)
+        visible = re.sub(r'%s\n.*?\n%s' % (re.escape(FOOT_OPEN), re.escape(FOOT_CLOSE)),
+                         '', visible, flags=re.S)
+        rendered = COMMENT.sub('', visible)
         for token in ('Primary keyword', 'Publish as', 'Title tag',
-                      'Meta description', 'ld+json', '<script'):
+                      'Meta description', 'ld+json', 'do not edit by hand'):
             if token in rendered:
                 bad['markup leaks into page'].append('%s (%s)' % (m['slug'], token))
+        # The regression that made canonical, meta description and JSON-LD invisible
+        # to crawlers: the whole head block wrapped in an HTML comment. The old
+        # signal was the open marker directly followed by a lone comment-open line,
+        # so HEAD_OPEN then "<!--" on its own line is still treated as commented out.
+        if re.search(r'%s\n\s*<!--\s*$' % re.escape(HEAD_OPEN), t, re.M):
+            bad['head block is commented out'].append(m['slug'])
 
         # the field count stated in hand-written prose must match the Field Reference.
         # Both halves matter: an unresolved token means a run has not happened since the
