@@ -14,369 +14,77 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SME Ops System Builder: 100 Operational Database Skills for Small Teams">
 <meta name="twitter:description" content="100 operational database skills for small and medium businesses, plus one router that picks the right two or three. Each defines one process as a real table.">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"SME Ops System Builder: 100 Operational Database Skills for Small Teams","description":"100 operational database skills for small and medium businesses, plus one router that picks the right two or three. Each defines one process as a real table.","url":"https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/","mainEntityOfPage":"https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/","dateModified":"2026-09-26","datePublished":"2026-09-26","author":{"@type":"Person","name":"Abhishek Adhikari","url":"https://abhishekadhikari.com/"},"publisher":{"@type":"Person","name":"Abhishek Adhikari","url":"https://abhishekadhikari.com/"},"isPartOf":{"@type":"WebSite","name":"SME Ops System Builder","url":"https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"SME Ops System Builder","item":"https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/"}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"SME Ops System Builder: 100 Operational Database Skills for Small Teams","description":"100 operational database skills for small and medium businesses, plus one router that picks the right two or three. Each defines one process as a real table.","author":{"@type":"Person","name":"Abhishek Adhikari"},"publisher":{"@type":"Organization","name":"SME Ops System Builder"},"mainEntityOfPage":{"@type":"WebSite","@id":"https://WHOISABHISHEKADHIKARI.github.io/sme-ops-system-builder/"}}]}</script>
 <!-- /seo:head -->
 
+A practical library of operational database skills for small and medium businesses.
 
-100 operational database skills for small and medium businesses, plus one router that
-picks the right two or three.
+Each skill turns one business process into a real table with a fixed field list, then emits the same schema as CSV, PostgreSQL DDL, JSON Schema and a Notion mapping so the artifacts cannot drift apart.
 
-Each skill takes one business process - leave, invoices, suppliers, probation - and
-defines it as a real table: named fields, fixed types, one example row. The same field
-list is emitted as CSV, PostgreSQL DDL, JSON Schema and a Notion property mapping, so
-the four artifacts cannot drift apart. Nothing is invented at the point of use, and no
-module asks you a question you have already answered.
+## Why this exists
 
-## Who this is for
+Small teams often have the same process tracked in spreadsheets, emails, Notion pages and chat threads — and no one is certain which version is current.
 
-A small team that has outgrown the shared spreadsheet: the same request tracked in
-three places, a balance that is wrong by the time anyone checks, and nobody certain
-which version of a document is current. You do not need a data team to fix that. You
-need one table per process, agreed field names, and a review rhythm.
+This project fixes that by making every process explicit:
 
-## How to use a module
+- one table per workflow
+- one agreed field list
+- one example row only
+- the same contract across CSV, SQL, JSON Schema and Notion
 
-1. Open the module page and read **What is this** and **What it tracks**.
-2. Copy the field list. Change nothing you cannot defend.
-3. Take the CSV into your tool of choice, or the SQL into Postgres, or the mapping
-   table into Notion. If someone asks for an Excel template, ask for the Excel
-   workbook output: it is the CSV with a byte order mark, plus a note of which
-   columns need a number, date or currency format.
-4. Delete the example row once real data is in.
-5. Reuse the **Reusable Prompt** in the module's `SKILL.md` when you want the skill to
-   build it for you instead.
+## How to use it
 
-Prefer the router plus two or three modules over installing all 100. They are
-deliberately similar, and the router exists to pick for you.
+1. Start with the router in `SKILL.md`.
+2. Pick the module that matches the business process you need.
+3. Use the module's `SKILL.md` to collect the missing answers in order.
+4. Generate the output you want: CSV, SQL, JSON Schema, Notion import, or Excel workbook.
+5. Reuse the `Reusable Prompt` when you want the same intake flow again.
 
-## The contract every module follows
+Prefer the router and a small set of modules over installing all 100. The router exists to narrow the choice.
 
-1. **Identify intent** before asking anything.
-2. **Ask one question per message**, and only about what is still missing.
-3. **Stop early** once the remaining answers would not change the output.
-4. **Hold the answers internally** as a small YAML context; never invent a value.
-5. **Recommend the smallest workflow** that fits, then wait.
-6. **Build only on request**: CSV, SQL, JSON Schema, Notion mapping, Excel workbook,
-   data only. Never build before the user asks.
+## Repository layout
 
-## What each module ships
-
-| Artifact | Detail |
-|---|---|
-| CSV | header row + exactly one placeholder example row |
-| SQL DDL | `CREATE TABLE`, primary key, timestamps, status index |
-| JSON Schema | draft 2020-12, same field list, `additionalProperties: false` |
-| Notion template | property-mapping table, one row per CSV column |
-| Excel workbook | the CSV with a UTF-8 byte order mark, so Excel opens it with correct text and no import dialog, plus the columns that need a number, date or currency format |
-| Reusable prompt | the intake questions, ready to paste |
-
-## Field types
-
-| Type | SQL | JSON Schema | Notion |
-|---|---|---|---|
-| `id` | `SERIAL PRIMARY KEY` | `integer` | Text or Notion auto-ID |
-| `relation` | `VARCHAR(255)` | `string` | Relation |
-| `text` | `VARCHAR(255)` | `string` | Text |
-| `long_text` | `TEXT` | `string` | Text |
-| `select` | `VARCHAR(100)` | `string` | Select |
-| `checkbox` | `BOOLEAN` | `boolean` | Checkbox |
-| `number` | `NUMERIC` | `number` | Number |
-| `currency` | `NUMERIC(14,2)` | `number` | Number, currency format |
-| `date` | `DATE` | `string, format: date` | Date |
-| `datetime` | `TIMESTAMP` | `string, format: date-time` | Date with time |
-| `email` | `VARCHAR(255)` | `string, format: email` | Email |
-| `url` | `TEXT` | `string, format: uri` | URL |
-
-## Layout
-
-```
-SKILL.md                    router - intake, then hand off
-references/catalog.md       all 100 modules, grouped by layer
-skills/<slug>/SKILL.md      one module: context-first intake, 4 artifacts, field reference
-skills/<slug>/README.md     human-facing: what it is, how to set it up
-skills/<pack>/              a sub-pack: its own router, catalog and modules, same shape
-tools/                      the checkers that keep the four artifacts in agreement
+```text
+SKILL.md                    router for the full system
+references/                 shared catalogs and contracts
+skills/                     one directory per module
+tools/                      validation and consistency checks
 ```
 
-### Helpers
+## Core module contract
 
-Four skills are helpers rather than modules. Each declares `table: none`, owns no field
-list, and renders whatever schema the module you picked already confirmed - in a file
-format rather than as DDL, integration code and app views:
+Every module follows the same pattern:
 
-| Helper | Output format |
-|---|---|
-| `notion-manual-import` | The Notion step for every module: CSV, property mapping, import steps, verification |
-| `spreadsheet-manual-build` | An empty `.xlsx` workbook, or a UTF-8 CSV with a format note |
-| `csv-manual-export` | One UTF-8 CSV, exact headers in canonical order, no invented rows |
-| `json-schema-manual` | A draft 2020-12 validation schema |
+- identify the real intent before asking for details
+- ask one question at a time
+- stop once the remaining answers would not change the result
+- keep answers as internal context, never invent values
+- build only on request
 
-Because there is no table of its own, a helper is exempt from the four-artifact
-requirements exactly as a router is, and it is not counted among the 100. A helper takes
-the field list as given: it never decides a field, never invents a required rule or a
-status, and never claims to have imported or published anything. `references/execution-contract.md`
-lists which helper handles which format, and `references/catalog.md` names all four.
+## Important links
 
-## Notion
+- [Skills index](./skills/README.md)
+- [Module catalog](./references/catalog.md)
+- [Shared execution contract](./references/execution-contract.md)
+- [Root router](./SKILL.md)
 
-Notion is one workflow, and it lives in one file. Whenever a user selects Notion as the
-output, the module that confirmed the fields routes that step to
-`notion-manual-import`, which holds the CSV, the property mapping, the import steps and
-the verification checklist. The mapping and the click-path therefore exist in exactly one
-place instead of being restated - slightly differently - by each of the 100 modules.
-
-Selecting Notion is also the one case that cannot be text alone, so it has a prerequisite:
-if the platform exposes a Notion connector, the module emits the connection steps from
-`references/execution-contract.md` and waits for "Notion connected.", and the helper then
-builds the database in the workspace. If the user would rather not connect, the helper's
-manual route is already the plan and asks for no connection. No skill claims a connection
-it does not have, and none asks for a Notion password or token.
-
-## Single formats
-
-A user who wants the schema as a file rather than as a system gets a helper: the same
-confirmed field list, rendered in one format. Ask for a spreadsheet and
-`spreadsheet-manual-build` produces an empty, formatted workbook; ask for a CSV to import
-or hand over and `csv-manual-export` produces the file with the exact headers; ask for a
-JSON Schema or an API contract and `json-schema-manual` produces the validation schema;
-ask for Notion and `notion-manual-import` produces the CSV, the property mapping, the
-click-path and the verification checklist, whether or not a workspace is connected.
-
-None of them replaces a module. The module still owns the field list and still emits its
-own artifacts; the helper only renders that same list as a file, empty by default, and it
-never invents a field, a required rule or a status to fill a gap.
-
-## Conventions
-
-- One question per message. Never batched.
-- Data only in the output: CSV, SQL, JSON, Notion mapping, Excel workbook. No prose.
-- Notion output is gated on a connected workspace; the mapping is still available as text.
-- One example row, visibly fake. Never real names, salaries or client data.
-- Field names are identical across all four artifacts.
-- Cross-table links use `relation`, never `url` or free text.
-- Fields are derived from the answers, not fixed in advance. A module that is not
-  requested as a database gets a recommendation, not a file.
-
-## Verifying the repository
+## Validation
 
 ```bash
-python3 tools/check.py all        # per-module agreement across the four artifacts
-python3 tools/validate.py         # structure, sections, frontmatter, prompt blocks
-python3 tools/seo.py --check      # canonicals, citations, backlinks, link integrity
-python3 tools/seo.py              # rewrite the generated SEO blocks and discovery files
+python3 tools/check.py all
+python3 tools/validate.py
+python3 tools/seo.py --check
 ```
 
-`tools/seo.py` owns the `<!-- seo:head -->` and `<!-- seo:foot -->` blocks, plus
-`sitemap.xml`, `robots.txt` and `llms.txt`. Edit the prose outside those markers; the
-tool will not duplicate a block on a second run.
+## Notes
 
-## Install
+This repo intentionally separates runtime-oriented module files from human-facing documentation:
 
-```bash
-npx agentic-awesome-skills --path .agents/skills \
-  --category business --risk safe
-```
+- `SKILL.md` is the executable intake and output contract
+- `README.md` is the readable overview
+- `references/` holds the shared catalog and schema references
 
-## Provenance
-
-Schemas, intake questions and field types were written for this repository. The
-10-layer taxonomy was informed by the CompanyOS SME Edition layout; no table, column
-or CSV was copied from it.
-
-
-## All 100 modules
-
-Grouped by layer, then alphabetically. **Tier** is the size of team the module is
-designed for; **fields** is the width of the table; **one row is** tells you what a
-single record actually represents.
-
-### Layer 1: Foundation
-
-| Module | Tier | Fields | One row is |
-|---|---|---|---|
-| [Access Matrix](./skills/access-matrix/README.md) | Growth | 16 | access row |
-| [Organization Design](./skills/organization-design/README.md) | Starter | 13 | department |
-| [Policy Acknowledgement](./skills/policy-acknowledgement/README.md) | Starter | 12 | acknowledgement |
-| [Policy Library](./skills/policy-library/README.md) | Starter | 14 | policy |
-| [SOP & Company Wiki](./skills/sop-company-wiki/README.md) | Growth | 12 | process |
-| [Accounting Software Selection](./skills/accounting-software-selection/README.md) | Growth | 57 | software package |
-
-### Layer 2: Acquire
-
-| Module | Tier | Fields | One row is |
-|---|---|---|---|
-| [Candidate Talent Pool](./skills/candidate-talent-pool/README.md) | Growth | 17 | candidate |
-| [Recruitment Pipeline](./skills/recruitment-pipeline/README.md) | Growth | 21 | candidate |
-| [Salary Benchmarking](./skills/salary-benchmarking/README.md) | Scale | 13 | benchmark |
-
-### Layer 3: Onboard
-
-| Module | Tier | Fields | One row is |
-|---|---|---|---|
-| [Asset & IT Management](./skills/asset-it-management/README.md) | Growth | 19 | asset |
-| [Buddy Program Manager](./skills/buddy-program-manager/README.md) | Scale | 12 | pairing |
-| [Company Email & Accounts](./skills/company-email-accounts/README.md) | Starter | 23 | account |
-| [Intern Program](./skills/intern-program/README.md) | Growth | 20 | intern |
-| [Offer & Appointment](./skills/offer-appointment/README.md) | Growth | 18 | offer |
-| [Onboarding Playbook](./skills/onboarding-playbook/README.md) | Growth | 9 | onboarding step |
-| [People Directory](./skills/people-directory/README.md) | Starter | 28 | person |
-| [Pre-boarding](./skills/pre-boarding/README.md) | Growth | 14 | pre-boarding task |
-| [Probation Tracker](./skills/probation-tracker/README.md) | Growth | 19 | probation review |
-
-### Layer 4: Manage
-
-| Module | Tier | Fields | One row is |
-|---|---|---|---|
-| [360° Feedback](./skills/360-feedback-system/README.md) | Growth | 11 | feedback response |
-| [Attendance](./skills/attendance/README.md) | Starter | 15 | attendance record |
-| [Capacity & Workload Planner](./skills/capacity-workload-planner/README.md) | Scale | 12 | capacity record |
-| [Disciplinary & PIP Tracker](./skills/disciplinary-pip-tracker/README.md) | Growth | 17 | performance issue |
-| [Expense Management](./skills/expense-management/README.md) | Starter | 18 | expense claim |
-| [Issue & Grievance Tracker](./skills/issue-grievance-tracker/README.md) | Starter | 19 | grievance |
-| [KPI Tracker](./skills/kpi-tracker/README.md) | Growth | 18 | KPI |
-| [Leave Management](./skills/leave-management/README.md) | Starter | 17 | leave request |
-| [OKR System](./skills/okr-system/README.md) | Growth | 20 | objective |
-| [Payroll & Finance](./skills/payroll-finance/README.md) | Starter | 19 | payroll record |
-| [Performance Management](./skills/performance-management/README.md) | Growth | 22 | review |
-| [Team Calendar](./skills/team-calendar/README.md) | Growth | 13 | event |
-| [Time Tracking](./skills/time-tracking/README.md) | Starter | 20 | time entry |
-| [Expense Accounting](./skills/expense-accounting/README.md) | Starter | 22 | bill or supporting document |
-| [Salary & Wage Accounting](./skills/salary-wage-accounting/README.md) | Growth | 27 | employee pay run |
-
-### Layer 5: Develop
-
-| Module | Tier | Fields | One row is |
-|---|---|---|---|
-| [Competency Matrix](./skills/competency-matrix/README.md) | Scale | 9 | competency requirement |
-| [Course & Upskilling Requests](./skills/course-upskilling-requests/README.md) | Growth | 22 | training request |
-| [Gamification Engine](./skills/gamification-engine/README.md) | Scale | 11 | award |
-| [Knowledge Base](./skills/knowledge-base/README.md) | Scale | 12 | article |
-| [Learning & Career Development](./skills/learning-career-development/README.md) | Growth | 19 | development plan |
-| [Mentorship Program](./skills/mentorship-program/README.md) | Scale | 16 | mentoring pair |
-| [Promotion & Upgrade Requests](./skills/promotion-upgrade-requests/README.md) | Growth | 25 | upgrade request |
-| [Recognition & Rewards](./skills/recognition-rewards/README.md) | Growth | 14 | recognition |
-| [Skill Gap Analysis](./skills/skill-gap-analysis/README.md) | Growth | 14 | skill gap |
-
-### Layer 6: Engage
-
-| Module | Tier | Fields | One row is |
-|---|---|---|---|
-| [Announcement Board](./skills/announcement-board/README.md) | Starter | 13 | announcement |
-| [Culture & Retention](./skills/culture-retention/README.md) | Growth | 18 | retention signal |
-| [DEI Dashboard](./skills/dei-dashboard/README.md) | Scale | 11 | metric |
-| [Employee Suggestion Hub](./skills/employee-suggestion-hub/README.md) | Scale | 13 | suggestion |
-| [Events & Activities](./skills/events-activities/README.md) | Growth | 20 | event |
-| [Health & Wellness](./skills/health-wellness/README.md) | Scale | 13 | wellbeing record |
-| [Internal Communication](./skills/internal-communication/README.md) | Scale | 12 | communication |
-
-### Layer 7: Protect
-
-| Module | Tier | Fields | One row is |
-|---|---|---|---|
-| [Admin Access Register](./skills/admin-access-register/README.md) | Growth | 22 | admin right |
-| [Audit Log](./skills/audit-log/README.md) | Scale | 11 | log entry |
-| [Board & Governance](./skills/board-governance/README.md) | Growth | 16 | board item |
-| [Contract & Document Renewal](./skills/contract-document-renewal/README.md) | Growth | 16 | contract |
-| [Data Privacy Controls](./skills/data-privacy-controls/README.md) | Scale | 12 | control |
-| [Document Management System](./skills/document-management-system/README.md) | Growth | 13 | document |
-| [ESOP Equity Tracker](./skills/esop-equity-tracker/README.md) | Scale | 14 | vesting event |
-| [Legal & Compliance Vault](./skills/legal-compliance-vault/README.md) | Growth | 12 | legal document |
-| [Tax Register](./skills/tax-register/README.md) | Starter | 21 | tax period |
-| [Template Library](./skills/template-library/README.md) | Growth | 9 | template |
-| [Source Document & Filing](./skills/source-document-filing/README.md) | Growth | 22 | filing index entry |
-| [TDS Booking & Payment](./skills/tds-booking-payment/README.md) | Starter | 25 | deduction and payee |
-| [Audit Preparation](./skills/audit-preparation/README.md) | Growth | 19 | audit document |
-
-### Layer 8: Operate
-
-| Module | Tier | Fields | One row is |
-|---|---|---|---|
-| [Budget & Cash Flow](./skills/budget-cash-flow/README.md) | Growth | 15 | budget line |
-| [Clients & Accounts](./skills/clients-accounts/README.md) | Starter | 21 | client |
-| [Invoices & Billing](./skills/invoices-billing/README.md) | Starter | 26 | invoice |
-| [Payments Received](./skills/payments-received/README.md) | Starter | 13 | payment |
-| [Project-Based Performance](./skills/project-based-performance/README.md) | Scale | 14 | project review |
-| [Projects & Work Management](./skills/projects-work-management/README.md) | Starter | 22 | project |
-| [Remote Work Tracker](./skills/remote-work-tracker/README.md) | Scale | 12 | work location record |
-| [Vendor & Contractor Management](./skills/vendor-contractor-management/README.md) | Scale | 14 | vendor |
-| [Purchase Accounting](./skills/purchase-accounting/README.md) | Growth | 29 | purchase record |
-| [Sales Accounting](./skills/sales-accounting/README.md) | Starter | 33 | sales record |
-| [Receipt Accounting](./skills/receipt-accounting/README.md) | Starter | 23 | receipt record |
-| [Payment Accounting](./skills/payment-accounting/README.md) | Starter | 24 | payment record |
-| [Petty Cash Management](./skills/petty-cash-management/README.md) | Starter | 24 | cash movement |
-| [Day Book](./skills/day-book/README.md) | Starter | 31 | day-book entry |
-| [Party / Ledger Reconciliation](./skills/party-ledger-reconciliation/README.md) | Growth | 27 | party and period |
-| [Inventory / Stock Reconciliation](./skills/inventory-stock-reconciliation/README.md) | Growth | 28 | counted item |
-
-### Layer 9: Analyze
-
-| Module | Tier | Fields | One row is |
-|---|---|---|---|
-| [Advanced Analytics Dashboard](./skills/advanced-analytics-dashboard/README.md) | Scale | 11 | metric |
-| [Data Export Engine](./skills/data-export-engine/README.md) | Scale | 11 | export |
-| [Notification & Reminder Hub](./skills/notification-reminder-hub/README.md) | Growth | 12 | notification |
-| [Reports & Analytics](./skills/reports-analytics/README.md) | Scale | 11 | report |
-| [Stakeholder & Investor Reports](./skills/stakeholder-investor-reports/README.md) | Scale | 10 | report |
-| [Monthly Closing & Statements](./skills/monthly-closing-statements/README.md) | Growth | 32 | closing month |
-| [Debtor & Creditor Credit-Cycle Analysis](./skills/credit-cycle-analysis/README.md) | Growth | 33 | party and period |
-
-### Layer 10: Exit
-
-| Module | Tier | Fields | One row is |
-|---|---|---|---|
-| [Alumni & Re-hire Tracker](./skills/alumni-re-hire-tracker/README.md) | Scale | 12 | alumni record |
-| [Offboarding & Exit](./skills/offboarding-exit/README.md) | Growth | 18 | exit record |
-
-## The accounting & audit pack
-
-The accounting cycle - 16 modules, one per stage, from choosing the software to preparing
-for the auditor - was a sub-pack of its own until 158fc1e promoted its modules into the
-layers above. What is left under `skills/accounting-audit-system-builder/` is the router
-and the catalog:
-
-```
-skills/accounting-audit-system-builder/            its own router and catalog
-```
-
-Route an accounting request from
-[that router](./skills/accounting-audit-system-builder/SKILL.md), which places the request
-on the cycle and hands off to the module for the stage, and read
-[its catalog](./skills/accounting-audit-system-builder/catalog.md) for the stage-by-stage
-list. The modules follow the same contract as the rest - same five intake steps, same four
-artifacts, same field reference as the source of truth. The split is by question, not by
-layout: use the pack when the question is about the entry, the reconciliation or the audit
-trail, and the flat layers when it is about the ongoing operational process.
-
-## The brand & growth pack
-
-13 more modules, covering how the business looks and how it gets found, in a second
-sub-pack of the same shape:
-
-```
-skills/brand-growth-system-builder/                its own router, catalog and 13 modules
-```
-
-Route them from `skills/brand-growth-system-builder/SKILL.md`, and read
-[its catalog](./skills/brand-growth-system-builder/catalog.md) for the full list. They
-follow the same contract as the other 87.
-
-This pack routes on three jobs - **consistent**, **findable**, **credible** - and orders
-its modules upstream first, because tokens and the mark are inherited by everything
-downstream. Two of the 13 sit outside the brand line and are grouped with the jobs
-rather than the layers: `code-of-conduct` is a credibility record, and
-`observability-cloud-planning` answers "do you know what breaks if this is down" for a
-technology business.
-
-The 13 arrived under 8 working categories. Paths are flat inside the pack, so the
-grouping is recorded in the catalog rather than in the URL.
-
-<!-- seo:foot -->
-## AI Training for Cooperatives
-
-Looking for **AI training for your cooperative**? We offer practical, customized AI training packages designed around your team’s needs and workflows. For training packages, customization, and inquiries, please visit **[abhishekadhikari.com](https://abhishekadhikari.com/)** and get in touch.
-
-<!-- /seo:foot -->
-
+The generated SEO blocks are maintained by `tools/seo.py` and should not be edited by hand.
 
 ---
 
