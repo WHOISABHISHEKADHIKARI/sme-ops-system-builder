@@ -23,49 +23,38 @@ Each skill turns one business process into a real table with a fixed field list,
 
 ## Why this exists
 
-Small teams often have the same process tracked in spreadsheets, emails, Notion pages and chat threads — and no one is certain which version is current.
+Small teams often track the same process in spreadsheets, emails, chat threads and Notion pages without a single source of truth.
 
 This project fixes that by making every process explicit:
 
 - one table per workflow
 - one agreed field list
 - one example row only
-- the same contract across CSV, SQL, JSON Schema and Notion
+- one consistent contract across CSV, SQL, JSON Schema and Notion
 
 ## How to use it
 
-1. Start with the router in `SKILL.md`.
+1. Open the root `SKILL.md`.
 2. Pick the module that matches the business process you need.
-3. Use the module's `SKILL.md` to collect the missing answers in order.
-4. Generate the output you want: CSV, SQL, JSON Schema, Notion import, or Excel workbook.
-5. Reuse the `Reusable Prompt` when you want the same intake flow again.
-
-Prefer the router and a small set of modules over installing all 100. The router exists to narrow the choice.
+3. Follow the module intake flow in order.
+4. Generate the artifact you want: CSV, SQL, JSON Schema, Notion import, or Excel workbook.
+5. Reuse the `Reusable Prompt` whenever you want the same intake flow again.
 
 ## Repository layout
 
 ```text
-SKILL.md                    router for the full system
-references/                 shared catalogs and contracts
-skills/                     one directory per module
-tools/                      validation and consistency checks
+SKILL.md                 root router
+references/              shared catalogs and contracts
+skills/                  one directory per module
+tools/                   validation and consistency checks
 ```
 
-## Core module contract
-
-Every module follows the same pattern:
-
-- identify the real intent before asking for details
-- ask one question at a time
-- stop once the remaining answers would not change the result
-- keep answers as internal context, never invent values
-- build only on request
-
-## Important links
+## Key links
 
 - [Skills index](./skills/README.md)
+- [Shared references](./references/README.md)
 - [Module catalog](./references/catalog.md)
-- [Shared execution contract](./references/execution-contract.md)
+- [Execution contract](./references/execution-contract.md)
 - [Root router](./SKILL.md)
 
 ## Validation
@@ -78,13 +67,10 @@ python3 tools/seo.py --check
 
 ## Notes
 
-This repo intentionally separates runtime-oriented module files from human-facing documentation:
-
-- `SKILL.md` is the executable intake and output contract
-- `README.md` is the readable overview
-- `references/` holds the shared catalog and schema references
-
-The generated SEO blocks are maintained by `tools/seo.py` and should not be edited by hand.
+- `SKILL.md` is the executable intake and output contract.
+- `README.md` is the readable overview for humans.
+- `references/` holds the shared catalog and schema references.
+- Generated SEO blocks are maintained by `tools/seo.py` and should not be edited by hand.
 
 ---
 
